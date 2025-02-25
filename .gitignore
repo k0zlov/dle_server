@@ -8,3 +8,5 @@ coverage/
 *.iml
 
 pubspec.lock
+
+.env
