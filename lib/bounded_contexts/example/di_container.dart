@@ -6,7 +6,7 @@ import 'package:uuid/v4.dart';
 
 final String _contextId = const UuidV4().generate();
 
-Future<void> registerExampleDependencies() async {
+Future<void> _registerExampleDependencies() async {
   _repositories();
   _services();
   _eventBus();
@@ -21,20 +21,20 @@ void _repositories() {}
 void _services() {}
 
 void _eventBus() {
-  getIt.registerLazySingleton<EventBus>(
+  getIt.registerLazySingleton<DomainEventBus>(
     instanceName: _contextId,
     InMemoryEventBus.new,
   );
 }
 
 void _useCases() {
-  final EventBus domainEventBus = getIt(instanceName: _contextId);
+  final DomainEventBus domainEventBus = getIt(instanceName: _contextId);
 }
 
 void _listeners() {
   final List<DomainEventListener> domainListeners = [];
 
-  final EventBus domainEventBus = getIt(instanceName: _contextId);
+  final DomainEventBus domainEventBus = getIt(instanceName: _contextId);
 
   for (final DomainEventListener listener in domainListeners) {
     domainEventBus.subscribe(listener.call, eventType: listener.eventType);

@@ -1,11 +1,11 @@
 import 'package:dle_server/shared_kernel/application/ports/event_bus.dart';
 import 'package:dle_server/shared_kernel/domain/events/events.dart';
 
-class InMemoryEventBus implements EventBus {
+class InMemoryEventBus<T extends Event> implements EventBus<T> {
   final Map<Type, List<Function>> _handlersMap = {};
 
   @override
-  void publish<T extends Event>(T event) {
+  void publish(T event) {
     final handlers = _handlersMap[event.runtimeType];
     if (handlers == null) return;
 
@@ -15,17 +15,13 @@ class InMemoryEventBus implements EventBus {
   }
 
   @override
-  void subscribe<T extends Event>(
+  void subscribe(
     EventHandler<T> handler, {
     required Type eventType,
   }) {
-    if (T != eventType) {
-      throw Exception(
-        'The generic type parameter does not match the provided eventType.',
-      );
-    }
-
-    if (T == Event || T == DomainEvent || T == IntegrationEvent) {
+    if (eventType == Event ||
+        eventType == DomainEvent ||
+        eventType == IntegrationEvent) {
       throw Exception(
         'Subscribing to abstract event types (Event, DomainEvent, IntegrationEvent) is not allowed.',
       );

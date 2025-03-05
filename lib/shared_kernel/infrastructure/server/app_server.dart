@@ -1,18 +1,18 @@
 import 'dart:io';
 
 import 'package:dle_server/shared_kernel/adapters/primary/middlewares/app_middleware.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/controller/api_handler.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/controller/app_controller.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/route/app_route.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/controllers/app/api_handler.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/controllers/app/app_controller.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/route/app_route.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-export 'package:dle_server/shared_kernel/infrastructure/server/entities/request/http_method.dart';
-export 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_context.dart';
-export 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_validation.dart';
-export 'package:dle_server/shared_kernel/infrastructure/server/entities/rest/app_endpoint.dart';
-export 'package:dle_server/shared_kernel/infrastructure/server/entities/rest/rest_controller.dart';
+export 'package:dle_server/shared_kernel/infrastructure/server/api/route/http_method.dart';
+export 'package:dle_server/shared_kernel/infrastructure/server/api/request/request_context.dart';
+export 'package:dle_server/shared_kernel/infrastructure/server/api/request/request_validation.dart';
+export 'package:dle_server/shared_kernel/infrastructure/server/api/controllers/rest/app_endpoint.dart';
+export 'package:dle_server/shared_kernel/infrastructure/server/api/controllers/rest/rest_controller.dart';
 
 typedef AppServerConfig = ({int port, Object ip});
 
@@ -67,8 +67,8 @@ class AppServer {
   Future<void> start(List<String> args) async {
     final bool printMessage = args
             .firstWhere(
-              (arg) => arg.startsWith('--print-message='),
-              orElse: () => '--print-message=false',
+              (arg) => arg.startsWith('--first-start='),
+              orElse: () => '--first-start=false',
             )
             .split('=')
             .last ==

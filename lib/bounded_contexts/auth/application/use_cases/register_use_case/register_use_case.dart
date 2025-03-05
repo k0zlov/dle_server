@@ -3,13 +3,15 @@ import 'package:dle_server/bounded_contexts/auth/domain/entities/auth_session/au
 import 'package:dle_server/bounded_contexts/auth/domain/entities/user/user.dart';
 import 'package:dle_server/bounded_contexts/auth/domain/events/user_registered.dart';
 import 'package:dle_server/bounded_contexts/auth/domain/value_objects/auth_tokens/auth_tokens.dart';
+import 'package:dle_server/shared_kernel/application/integration_events/user_registered.dart';
 import 'package:dle_server/shared_kernel/infrastructure/services/token/token_service.dart';
 import 'package:dle_server/shared_kernel/application/ports/event_bus.dart';
 import 'package:dle_server/shared_kernel/application/use_cases/use_case.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/exceptions/api_exception.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/exceptions/api_exception.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'register_use_case.freezed.dart';
+
 part 'register_use_case.g.dart';
 
 @freezed
@@ -28,11 +30,13 @@ class RegisterParams with _$RegisterParams {
 class RegisterUseCase implements UseCase<AuthTokens, RegisterParams> {
   const RegisterUseCase({
     required this.domainEventBus,
+    required this.integrationEventBus,
     required this.usersRepository,
     required this.tokenService,
   });
 
-  final EventBus domainEventBus;
+  final DomainEventBus domainEventBus;
+  final IntegrationEventBus integrationEventBus;
 
   final UsersRepositoryPort usersRepository;
   final TokenService tokenService;
@@ -62,7 +66,13 @@ class RegisterUseCase implements UseCase<AuthTokens, RegisterParams> {
 
     final User saved = await usersRepository.saveUser(user);
 
-    domainEventBus.publish(UserRegistered(id: user.id));
+    domainEventBus.publish(
+      UserRegistered(userId: user.id),
+    );
+
+    integrationEventBus.publish(
+      UserRegisteredIntegrationEvent(userId: user.id),
+    );
 
     return AuthTokens(
       refreshToken: session.refreshToken,

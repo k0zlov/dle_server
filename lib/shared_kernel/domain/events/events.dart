@@ -6,6 +6,4 @@ sealed class Event {
 
 abstract class DomainEvent extends Event {}
 
-abstract class IntegrationEvent extends Event {
-  String get name => runtimeType.toString();
-}
+abstract class IntegrationEvent extends Event {}

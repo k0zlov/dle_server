@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dle_server/shared_kernel/infrastructure/extensions/enum_extension.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/exceptions/api_exception.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/http_method.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/exceptions/api_exception.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/route/http_method.dart';
 import 'package:shelf/shelf.dart';
 
 part 'request_parameters.dart';

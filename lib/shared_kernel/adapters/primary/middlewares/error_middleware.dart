@@ -1,4 +1,4 @@
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/exceptions/api_exception.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/exceptions/api_exception.dart';
 import 'package:drift/drift.dart';
 import 'package:shelf/shelf.dart';
 

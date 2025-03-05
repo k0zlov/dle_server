@@ -1,5 +1,5 @@
 import 'package:dle_server/bounded_contexts/auth/domain/entities/auth_session/auth_session.dart';
-import 'package:dle_server/bounded_contexts/auth/infrastructure/tables/users.dart';
+import 'package:dle_server/bounded_contexts/auth/infrastructure/persistence/tables/users.dart';
 import 'package:dle_server/shared_kernel/infrastructure/database/index.dart';
 
 @UseRowClass(AuthSession)

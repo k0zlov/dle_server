@@ -1,6 +1,7 @@
 import 'package:dle_server/bounded_contexts/auth/application/use_cases/register_use_case/register_use_case.dart';
 import 'package:dle_server/bounded_contexts/auth/domain/value_objects/auth_tokens/auth_tokens.dart';
 import 'package:dle_server/shared_kernel/infrastructure/server/app_server.dart';
+import 'package:dle_server/shared_kernel/infrastructure/validation/validators.dart';
 import 'package:shelf/shelf.dart';
 
 class AuthRestController extends RestController {
@@ -17,9 +18,9 @@ class AuthRestController extends RestController {
     return AppEndpoint(
       method: HttpMethod.POST,
       name: 'register',
-      bodySchema: const {
-        Parameter<String>('email'),
-        Parameter<String>('password'),
+      bodySchema: {
+        Parameter<String>('email', validators: [Validators.email()]),
+        Parameter<String>('password', validators: [Validators.password()]),
       },
       handler: (context) async {
         final AuthTokens tokens = await registerUseCase(

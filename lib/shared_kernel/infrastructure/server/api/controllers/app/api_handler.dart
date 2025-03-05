@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dle_server/shared_kernel/adapters/primary/middlewares/app_middleware.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/http_method.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_context.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_validation.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/route/http_method.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/request/request_context.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/request/request_validation.dart';
 import 'package:shelf/shelf.dart';
 
 typedef AppHandler = FutureOr<Response> Function(RequestContext context);

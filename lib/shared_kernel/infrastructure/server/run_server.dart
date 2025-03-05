@@ -18,7 +18,7 @@ Future<void> runServer({
       'dart',
       [
         serverPath,
-        '--print-message=$firstStart',
+        '--first-start==$firstStart',
       ],
       mode: ProcessStartMode.detachedWithStdio,
     );

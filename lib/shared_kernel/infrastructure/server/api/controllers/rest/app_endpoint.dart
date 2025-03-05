@@ -1,4 +1,4 @@
-import 'package:dle_server/shared_kernel/infrastructure/server/entities/controller/api_handler.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/api/controllers/app/api_handler.dart';
 
 final class AppEndpoint extends ApiHandler {
   AppEndpoint({

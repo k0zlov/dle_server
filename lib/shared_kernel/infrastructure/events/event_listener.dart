@@ -3,13 +3,15 @@ import 'dart:async';
 import 'package:dle_server/shared_kernel/domain/events/events.dart';
 
 sealed class EventListener<T extends Event> {
-  FutureOr<void> call(T event);
+  EventListener() : eventType = T;
 
-  Type get eventType => T;
+  final Type eventType;
+
+  FutureOr<void> call(T event);
 }
 
-abstract interface class DomainEventListener<T extends DomainEvent>
-    implements EventListener<T> {}
+abstract class DomainEventListener<T extends DomainEvent>
+    extends EventListener<T> {}
 
-abstract interface class IntegrationEventListener<T extends IntegrationEvent>
-    implements EventListener<T> {}
+abstract class IntegrationEventListener<T extends IntegrationEvent>
+    extends EventListener<T> {}
