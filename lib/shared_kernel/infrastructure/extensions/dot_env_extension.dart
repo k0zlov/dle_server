@@ -1,7 +1,17 @@
 import 'package:dotenv/dotenv.dart';
 
+final DotEnv env = DotEnv(includePlatformEnvironment: true)..load();
+
 enum DotEnvKey {
-  test('123');
+  accessTokenSecret('ACCESS_TOKEN_SECRET'),
+  refreshTokenSecret('REFRESH_TOKEN_SECRET'),
+  accessTokenValidityMinutes('REFRESH_TOKEN_VALIDITY_MINUTES'),
+  refreshTokenValidityDays('REFRESH_TOKEN_VALIDITY_DAYS'),
+  databaseHost('DATABASE_HOST'),
+  databaseName('DATABASE_NAME'),
+  databasePassword('DATABASE_PASSWORD'),
+  databasePort('DATABASE_PORT'),
+  databaseUsername('DATABASE_USERNAME');
 
   const DotEnvKey(this.name);
 

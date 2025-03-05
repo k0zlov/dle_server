@@ -1,11 +1,13 @@
 import 'package:dle_server/shared_kernel/infrastructure/server/entities/controller/app_controller.dart';
 
-class AppRoute {
-  AppRoute({
-    required this.name,
-    this.controllers = const [],
-  });
+abstract class AppRoute {
+  const AppRoute();
 
-  final String name;
-  final List<AppController> controllers;
+  String get name {
+    final className = runtimeType.toString();
+    final firstWord = className.split(RegExp('(?=[A-Z])')).first.toLowerCase();
+    return firstWord;
+  }
+
+  Set<AppController> get controllers;
 }

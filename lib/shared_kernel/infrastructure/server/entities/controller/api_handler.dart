@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dle_server/shared_kernel/adapters/middlewares/app_middleware.dart';
+import 'package:dle_server/shared_kernel/adapters/primary/middlewares/app_middleware.dart';
 import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/http_method.dart';
 import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_context.dart';
 import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/request_validation.dart';

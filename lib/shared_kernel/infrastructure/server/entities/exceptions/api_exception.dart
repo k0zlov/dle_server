@@ -5,9 +5,9 @@ import 'package:shelf/shelf.dart';
 
 class ApiException implements Exception {
   const ApiException(
-    this.errorMessage, {
-    required this.statusCode,
-  });
+      this.errorMessage, {
+        required this.statusCode,
+      });
 
   const ApiException.badRequest(this.errorMessage)
       : statusCode = HttpStatus.badRequest;

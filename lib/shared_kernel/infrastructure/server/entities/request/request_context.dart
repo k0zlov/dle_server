@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dle_server/shared_kernel/infrastructure/extensions/enum_extension.dart';
+import 'package:dle_server/shared_kernel/infrastructure/server/entities/exceptions/api_exception.dart';
 import 'package:dle_server/shared_kernel/infrastructure/server/entities/request/http_method.dart';
 import 'package:shelf/shelf.dart';
 
@@ -14,7 +15,7 @@ class RequestContext {
       query: uri.queryParameters,
       uriSegments: url.pathSegments,
       routePattern: routePattern,
-      body: _json<Map<String, dynamic>>(),
+      body: _json(),
     );
   }
 
@@ -88,14 +89,16 @@ class RequestContext {
     return completer.future;
   }
 
-  Future<T> _json<T>() async {
-    final dynamic json = jsonDecode(await _body());
+  Future<Map<String, dynamic>> _json() async {
+    final String body = await _body();
 
+    if (body.isEmpty) return {};
+
+    final dynamic json = jsonDecode(await _body());
     try {
-      json as T;
+      json as Map<String, dynamic>;
     } catch (e) {
-      /// Throw ApiException Bad Request
-      throw Exception('JSON DECODING FAILED');
+      throw const ApiException.badRequest('Invalid body data type.');
     }
 
     return json;

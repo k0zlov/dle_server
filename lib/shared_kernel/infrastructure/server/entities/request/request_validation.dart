@@ -7,15 +7,6 @@ class Parameter<T> {
 
   final String name;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Parameter && other.name == name;
-  }
-
-  @override
-  int get hashCode => name.hashCode;
-
   bool _check(dynamic value) {
     try {
       const ValueSerializer.defaults().fromJson<T>(value);
