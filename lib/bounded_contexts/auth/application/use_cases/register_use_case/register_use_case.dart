@@ -67,7 +67,7 @@ class RegisterUseCase implements UseCase<AuthTokens, RegisterParams> {
     final User saved = await usersRepository.saveUser(user);
 
     domainEventBus.publish(
-      UserRegistered(userId: user.id),
+      UserRegisteredEvent(userId: user.id),
     );
 
     integrationEventBus.publish(
