@@ -1,8 +1,8 @@
 import 'package:dle_server/bounded_contexts/auth/application/use_cases/register_use_case/register_use_case.dart';
 import 'package:dle_server/bounded_contexts/auth/domain/value_objects/auth_tokens/auth_tokens.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/app_server.dart';
-import 'package:dle_server/shared_kernel/infrastructure/validation/validators.dart';
+import 'package:dle_server/shared_kernel/infrastructure/validators/validators.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelfster/shelfster.dart';
 
 class AuthRestController extends RestController {
   AuthRestController({

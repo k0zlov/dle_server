@@ -1,6 +1,6 @@
-import 'package:dle_server/shared_kernel/infrastructure/server/api/exceptions/api_exception.dart';
 import 'package:drift/drift.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelfster/shelfster.dart';
 
 /// Middleware for handling errors in request processing.
 Middleware errorMiddleware() {

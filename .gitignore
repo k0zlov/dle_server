@@ -10,3 +10,5 @@ coverage/
 pubspec.lock
 
 .env
+
+openapi.json

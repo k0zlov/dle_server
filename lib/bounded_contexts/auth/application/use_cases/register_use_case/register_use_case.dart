@@ -4,11 +4,11 @@ import 'package:dle_server/bounded_contexts/auth/domain/entities/user/user.dart'
 import 'package:dle_server/bounded_contexts/auth/domain/events/user_registered.dart';
 import 'package:dle_server/bounded_contexts/auth/domain/value_objects/auth_tokens/auth_tokens.dart';
 import 'package:dle_server/shared_kernel/application/integration_events/user_registered.dart';
-import 'package:dle_server/shared_kernel/infrastructure/services/token/token_service.dart';
 import 'package:dle_server/shared_kernel/application/ports/event_bus.dart';
 import 'package:dle_server/shared_kernel/application/use_cases/use_case.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/api/exceptions/api_exception.dart';
+import 'package:dle_server/shared_kernel/infrastructure/services/token/token_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shelfster/shelfster.dart';
 
 part 'register_use_case.freezed.dart';
 

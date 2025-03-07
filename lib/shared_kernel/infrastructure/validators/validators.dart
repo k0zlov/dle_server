@@ -1,6 +1,4 @@
-import 'package:dle_server/shared_kernel/infrastructure/validation/validation_result.dart';
-
-typedef Validator<T> = ValidationResult Function(T value);
+import 'package:shelfster/shelfster.dart';
 
 class Validators {
   static Validator<String> email({String message = 'Invalid email format'}) {

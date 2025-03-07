@@ -7,10 +7,8 @@ void _middlewares() {
   };
 
   getIt
-    ..registerLazySingleton<Map<AppMiddleware, Middleware>>(
+    ..registerLazySingleton<Map<Object, Middleware>>(
       () => {
-        AppMiddleware.logging: logRequests(),
-        AppMiddleware.corsHeaders: corsHeaders(),
         AppMiddleware.error: errorMiddleware(),
         AppMiddleware.headers: getIt(instanceName: AppMiddleware.headers.name),
       },
@@ -27,10 +25,14 @@ AppServer _server() {
       port: int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080,
       ip: InternetAddress.anyIPv4,
     ),
+    openApiConfig: (
+      docsTitle: 'Dle Server',
+      authMiddleware: 'none',
+    ),
     middlewares: [
-      AppMiddleware.corsHeaders,
+      DefaultMiddleware.corsHeaders,
       AppMiddleware.headers,
-      AppMiddleware.logging,
+      DefaultMiddleware.logging,
       AppMiddleware.error,
     ],
     middlewareMapping: getIt(),

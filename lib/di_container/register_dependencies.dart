@@ -11,22 +11,20 @@ import 'package:dle_server/shared_kernel/infrastructure/database/database.dart';
 import 'package:dle_server/shared_kernel/infrastructure/database/index.dart';
 import 'package:dle_server/shared_kernel/infrastructure/events/event_listener.dart';
 import 'package:dle_server/shared_kernel/infrastructure/extensions/dot_env_extension.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/app_server.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/api/route/app_route.dart';
 import 'package:dle_server/shared_kernel/infrastructure/services/token/jwt_client.dart';
 import 'package:dle_server/shared_kernel/infrastructure/services/token/token_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_cors_headers/shelf_cors_headers.dart';
-
-part 'server.dart';
-
-part 'database.dart';
+import 'package:shelfster/shelfster.dart';
 
 part 'contexts.dart';
 
+part 'database.dart';
+
 part 'integration_events.dart';
+
+part 'server.dart';
 
 part 'services.dart';
 

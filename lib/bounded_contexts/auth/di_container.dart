@@ -9,7 +9,7 @@ import 'package:dle_server/di_container/register_dependencies.dart';
 import 'package:dle_server/shared_kernel/adapters/secondary/event_bus/in_memory_event_bus.dart';
 import 'package:dle_server/shared_kernel/application/ports/event_bus.dart';
 import 'package:dle_server/shared_kernel/infrastructure/events/event_listener.dart';
-import 'package:dle_server/shared_kernel/infrastructure/server/api/route/app_route.dart';
+import 'package:shelfster/shelfster.dart';
 import 'package:uuid/v4.dart';
 
 final String _contextId = const UuidV4().generate();

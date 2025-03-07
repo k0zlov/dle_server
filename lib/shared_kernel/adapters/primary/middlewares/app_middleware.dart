@@ -1,6 +1,5 @@
 enum AppMiddleware {
-  corsHeaders,
   headers,
   error,
-  logging,
+  auth,
 }
