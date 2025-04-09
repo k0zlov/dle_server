@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          test_dir: test/drift/
+          schema_dir: drift_schemas/
+          prod:
+            database: lib/shared_kernel/infrastructure/database/database.dart
+          store_date_time_values_as_text: true
+          sql:
+            dialects:
+              - sqlite
+              - postgres

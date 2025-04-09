@@ -1,0 +1,14 @@
+.dart_tool/
+.packages
+build/
+coverage/
+*.lock
+
+.idea/
+*.iml
+
+pubspec.lock
+
+.env
+
+.ruta/
