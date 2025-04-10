@@ -1,4 +1,4 @@
-import 'package:users_api/shared_kernel/infrastructure/database/database.dart';
+import 'package:dle_server/kernel/infrastructure/database/database.dart';
 
 class DialectAwareTimestamp implements DialectAwareSqlType<PgDateTime> {
   /// The underlying type used when this dialect-aware type is used on postgres

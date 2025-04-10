@@ -22,11 +22,13 @@ dependencies:
   collection: ^1.19.1
   logger: ^2.5.0
   injectable: ^2.5.0
-  ruta: ^0.1.9
+  ruta: ^0.1.11
+  dartz: ^0.10.1
 
 dev_dependencies:
   test: ^1.24.0
   very_good_analysis: ^5.1.0
+  json_serializable: ^6.9.0
   build_runner: ^2.4.13
   drift_dev: ^2.26.0
   dart_mappable_builder: ^4.3.1+1

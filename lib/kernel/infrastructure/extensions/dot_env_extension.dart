@@ -1,11 +1,7 @@
 import 'package:dotenv/dotenv.dart';
 
 /// A singleton instance of DotEnv used for loading and accessing environment variables.
-final DotEnv env = DotEnv(includePlatformEnvironment: true)
-  ..load([
-    '.env',
-    '.env.users',
-  ]);
+final DotEnv env = DotEnv(includePlatformEnvironment: true)..load(['.env']);
 
 /// Enum representing all the keys used for environment variables.
 ///
@@ -18,20 +14,12 @@ enum DotEnvKey {
 
   /// Indicates whether the application is running in test mode.
   testLogs('TEST_LOGS'),
-  useDatabase('USE_DATABASE'),
-  insertTestData('INSERT_TEST_DATA'),
 
   /// Secret used for signing access tokens.
   accessTokenSecret('ACCESS_TOKEN_SECRET'),
 
-  /// Secret used for signing refresh tokens.
-  refreshTokenSecret('REFRESH_TOKEN_SECRET'),
-
   /// Validity duration of an access token in minutes.
   accessTokenValidityMinutes('ACCESS_TOKEN_VALIDITY_MINUTES'),
-
-  /// Validity duration of a refresh token in days.
-  refreshTokenValidityDays('REFRESH_TOKEN_VALIDITY_DAYS'),
 
   /// Host for the production database.
   databaseHost('DATABASE_HOST'),

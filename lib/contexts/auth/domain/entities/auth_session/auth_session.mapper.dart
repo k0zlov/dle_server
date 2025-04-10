@@ -20,16 +20,16 @@ class AuthSessionMapper extends ClassMapperBase<AuthSession> {
   @override
   final String id = 'AuthSession';
 
-  static const Field<AuthSession, dynamic> _f$id =
-      Field('id', null, mode: FieldMode.param, opt: true);
+  static String _$id(AuthSession v) => v.id;
+  static const Field<AuthSession, String> _f$id = Field('id', _$id, opt: true);
   static String _$userId(AuthSession v) => v.userId;
   static const Field<AuthSession, String> _f$userId = Field('userId', _$userId);
+  static String _$ip(AuthSession v) => v.ip;
+  static const Field<AuthSession, String> _f$ip = Field('ip', _$ip);
   static String _$refreshToken(AuthSession v) => v.refreshToken;
   static const Field<AuthSession, String> _f$refreshToken =
       Field('refreshToken', _$refreshToken);
-  static String? _$ip(AuthSession v) => v.ip;
-  static const Field<AuthSession, String> _f$ip = Field('ip', _$ip);
-  static String? _$deviceInfo(AuthSession v) => v.deviceInfo;
+  static String _$deviceInfo(AuthSession v) => v.deviceInfo;
   static const Field<AuthSession, String> _f$deviceInfo =
       Field('deviceInfo', _$deviceInfo);
   static DateTime _$expiresAt(AuthSession v) => v.expiresAt;
@@ -46,8 +46,8 @@ class AuthSessionMapper extends ClassMapperBase<AuthSession> {
   final MappableFields<AuthSession> fields = const {
     #id: _f$id,
     #userId: _f$userId,
-    #refreshToken: _f$refreshToken,
     #ip: _f$ip,
+    #refreshToken: _f$refreshToken,
     #deviceInfo: _f$deviceInfo,
     #expiresAt: _f$expiresAt,
     #updatedAt: _f$updatedAt,
@@ -58,8 +58,8 @@ class AuthSessionMapper extends ClassMapperBase<AuthSession> {
     return AuthSession(
         id: data.dec(_f$id),
         userId: data.dec(_f$userId),
-        refreshToken: data.dec(_f$refreshToken),
         ip: data.dec(_f$ip),
+        refreshToken: data.dec(_f$refreshToken),
         deviceInfo: data.dec(_f$deviceInfo),
         expiresAt: data.dec(_f$expiresAt),
         updatedAt: data.dec(_f$updatedAt),
@@ -118,10 +118,10 @@ extension AuthSessionValueCopy<$R, $Out>
 abstract class AuthSessionCopyWith<$R, $In extends AuthSession, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call(
-      {required dynamic id,
+      {String? id,
       String? userId,
-      String? refreshToken,
       String? ip,
+      String? refreshToken,
       String? deviceInfo,
       DateTime? expiresAt,
       DateTime? updatedAt,
@@ -139,30 +139,30 @@ class _AuthSessionCopyWithImpl<$R, $Out>
       AuthSessionMapper.ensureInitialized();
   @override
   $R call(
-          {required dynamic id,
+          {Object? id = $none,
           String? userId,
+          String? ip,
           String? refreshToken,
-          Object? ip = $none,
-          Object? deviceInfo = $none,
+          String? deviceInfo,
           DateTime? expiresAt,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
-        #id: id,
+        if (id != $none) #id: id,
         if (userId != null) #userId: userId,
+        if (ip != null) #ip: ip,
         if (refreshToken != null) #refreshToken: refreshToken,
-        if (ip != $none) #ip: ip,
-        if (deviceInfo != $none) #deviceInfo: deviceInfo,
+        if (deviceInfo != null) #deviceInfo: deviceInfo,
         if (expiresAt != null) #expiresAt: expiresAt,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
       }));
   @override
   AuthSession $make(CopyWithData data) => AuthSession(
-      id: data.get(#id),
+      id: data.get(#id, or: $value.id),
       userId: data.get(#userId, or: $value.userId),
-      refreshToken: data.get(#refreshToken, or: $value.refreshToken),
       ip: data.get(#ip, or: $value.ip),
+      refreshToken: data.get(#refreshToken, or: $value.refreshToken),
       deviceInfo: data.get(#deviceInfo, or: $value.deviceInfo),
       expiresAt: data.get(#expiresAt, or: $value.expiresAt),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),

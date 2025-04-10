@@ -1,5 +1,5 @@
-import 'package:users_api/shared_kernel/application/ports/event_bus.dart';
-import 'package:users_api/shared_kernel/domain/events/events.dart';
+import 'package:dle_server/kernel/application/ports/event_bus.dart';
+import 'package:dle_server/kernel/domain/events/events.dart';
 
 class InMemoryEventBus<T extends Event> implements EventBus<T> {
   final Map<Type, List<Function>> _handlersMap = {};
@@ -15,10 +15,7 @@ class InMemoryEventBus<T extends Event> implements EventBus<T> {
   }
 
   @override
-  void subscribe(
-    EventHandler<T> handler, {
-    required Type eventType,
-  }) {
+  void subscribe(EventHandler<T> handler, {required Type eventType}) {
     if (eventType == Event ||
         eventType == DomainEvent ||
         eventType == IntegrationEvent) {

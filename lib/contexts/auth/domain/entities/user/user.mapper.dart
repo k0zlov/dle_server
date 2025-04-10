@@ -14,6 +14,7 @@ class UserMapper extends ClassMapperBase<User> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserMapper._());
       AuthSessionMapper.ensureInitialized();
+      EmailCodeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -21,14 +22,10 @@ class UserMapper extends ClassMapperBase<User> {
   @override
   final String id = 'User';
 
-  static const Field<User, dynamic> _f$id =
-      Field('id', null, mode: FieldMode.param, opt: true);
+  static String _$id(User v) => v.id;
+  static const Field<User, String> _f$id = Field('id', _$id, opt: true);
   static String _$email(User v) => v.email;
   static const Field<User, String> _f$email = Field('email', _$email);
-  static String _$name(User v) => v.name;
-  static const Field<User, String> _f$name = Field('name', _$name);
-  static String _$surname(User v) => v.surname;
-  static const Field<User, String> _f$surname = Field('surname', _$surname);
   static String _$passwordHash(User v) => v.passwordHash;
   static const Field<User, String> _f$passwordHash =
       Field('passwordHash', _$passwordHash);
@@ -38,36 +35,38 @@ class UserMapper extends ClassMapperBase<User> {
   static DateTime _$createdAt(User v) => v.createdAt;
   static const Field<User, DateTime> _f$createdAt =
       Field('createdAt', _$createdAt);
-  static bool _$isBanned(User v) => v.isBanned;
-  static const Field<User, bool> _f$isBanned = Field('isBanned', _$isBanned);
+  static bool _$emailVerified(User v) => v.emailVerified;
+  static const Field<User, bool> _f$emailVerified =
+      Field('emailVerified', _$emailVerified);
   static Set<AuthSession> _$sessions(User v) => v.sessions;
   static const Field<User, Set<AuthSession>> _f$sessions =
       Field('sessions', _$sessions, opt: true, def: const <AuthSession>{});
+  static Set<EmailCode> _$emailCodes(User v) => v.emailCodes;
+  static const Field<User, Set<EmailCode>> _f$emailCodes =
+      Field('emailCodes', _$emailCodes, opt: true, def: const <EmailCode>{});
 
   @override
   final MappableFields<User> fields = const {
     #id: _f$id,
     #email: _f$email,
-    #name: _f$name,
-    #surname: _f$surname,
     #passwordHash: _f$passwordHash,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
-    #isBanned: _f$isBanned,
+    #emailVerified: _f$emailVerified,
     #sessions: _f$sessions,
+    #emailCodes: _f$emailCodes,
   };
 
   static User _instantiate(DecodingData data) {
     return User(
         id: data.dec(_f$id),
         email: data.dec(_f$email),
-        name: data.dec(_f$name),
-        surname: data.dec(_f$surname),
         passwordHash: data.dec(_f$passwordHash),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt),
-        isBanned: data.dec(_f$isBanned),
-        sessions: data.dec(_f$sessions));
+        emailVerified: data.dec(_f$emailVerified),
+        sessions: data.dec(_f$sessions),
+        emailCodes: data.dec(_f$emailCodes));
   }
 
   @override
@@ -117,15 +116,14 @@ extension UserValueCopy<$R, $Out> on ObjectCopyWith<$R, User, $Out> {
 abstract class UserCopyWith<$R, $In extends User, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call(
-      {required dynamic id,
+      {String? id,
       String? email,
-      String? name,
-      String? surname,
       String? passwordHash,
       DateTime? updatedAt,
       DateTime? createdAt,
-      bool? isBanned,
-      Set<AuthSession>? sessions});
+      bool? emailVerified,
+      Set<AuthSession>? sessions,
+      Set<EmailCode>? emailCodes});
   UserCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -137,37 +135,34 @@ class _UserCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, User, $Out>
   late final ClassMapperBase<User> $mapper = UserMapper.ensureInitialized();
   @override
   $R call(
-          {required dynamic id,
+          {Object? id = $none,
           String? email,
-          String? name,
-          String? surname,
           String? passwordHash,
           DateTime? updatedAt,
           DateTime? createdAt,
-          bool? isBanned,
-          Set<AuthSession>? sessions}) =>
+          bool? emailVerified,
+          Set<AuthSession>? sessions,
+          Set<EmailCode>? emailCodes}) =>
       $apply(FieldCopyWithData({
-        #id: id,
+        if (id != $none) #id: id,
         if (email != null) #email: email,
-        if (name != null) #name: name,
-        if (surname != null) #surname: surname,
         if (passwordHash != null) #passwordHash: passwordHash,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt,
-        if (isBanned != null) #isBanned: isBanned,
-        if (sessions != null) #sessions: sessions
+        if (emailVerified != null) #emailVerified: emailVerified,
+        if (sessions != null) #sessions: sessions,
+        if (emailCodes != null) #emailCodes: emailCodes
       }));
   @override
   User $make(CopyWithData data) => User(
-      id: data.get(#id),
+      id: data.get(#id, or: $value.id),
       email: data.get(#email, or: $value.email),
-      name: data.get(#name, or: $value.name),
-      surname: data.get(#surname, or: $value.surname),
       passwordHash: data.get(#passwordHash, or: $value.passwordHash),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt),
-      isBanned: data.get(#isBanned, or: $value.isBanned),
-      sessions: data.get(#sessions, or: $value.sessions));
+      emailVerified: data.get(#emailVerified, or: $value.emailVerified),
+      sessions: data.get(#sessions, or: $value.sessions),
+      emailCodes: data.get(#emailCodes, or: $value.emailCodes));
 
   @override
   UserCopyWith<$R2, User, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

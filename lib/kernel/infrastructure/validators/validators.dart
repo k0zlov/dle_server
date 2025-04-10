@@ -1,6 +1,8 @@
 import 'package:ruta/ruta.dart';
 
 class Validators {
+  const Validators._();
+
   static Validator<String> email({String message = 'Invalid email format'}) {
     final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
     return (String value) {
@@ -29,9 +31,9 @@ class Validators {
       if (value.length >= length) {
         return ValidationResult.valid();
       }
-      return ValidationResult.invalid(
-        [message ?? 'Must be at least $length characters'],
-      );
+      return ValidationResult.invalid([
+        message ?? 'Must be at least $length characters',
+      ]);
     };
   }
 

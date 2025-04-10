@@ -1,12 +1,27 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:dle_server/kernel/infrastructure/extensions/map_extension.dart';
 
-/// A client for generating and validating JWT tokens.
+class TokenPayload {
+  const TokenPayload({required this.userId, required this.sessionId});
+
+  factory TokenPayload.fromMap(Map<String, dynamic> map) {
+    return TokenPayload(
+      userId: map['userId'] as String,
+      sessionId: map['sessionId'] as String,
+    );
+  }
+
+  final String userId;
+  final String sessionId;
+
+  Map<String, dynamic> toMap() {
+    return {'userId': userId, 'sessionId': sessionId};
+  }
+}
+
 class JwtClient {
   /// Constructs a [JwtClient] with a given [secretKey] and [expiresIn] duration.
-  const JwtClient({
-    required this.secretKey,
-    required this.expiresIn,
-  });
+  const JwtClient({required this.secretKey, required this.expiresIn});
 
   /// The secret key used to sign and verify JWT tokens.
   final SecretKey secretKey;
@@ -14,39 +29,15 @@ class JwtClient {
   /// The duration for which the token will be valid.
   final Duration expiresIn;
 
-  /// Generates the payload with the user ID and expiration time.
-  ///
-  /// Takes the user ID and the expiration time in seconds since epoch as parameters.
-  Map<String, dynamic> _generatePayload({
-    required int userId,
-    required int expiresIn,
-  }) {
-    return {
-      'userId': userId,
-      'exp': expiresIn,
-    };
-  }
-
-  /// Generates a JWT token for the given user ID.
-  ///
-  /// Returns the signed token as a [String].
-  String generateToken(int userId) {
+  String generateToken(TokenPayload payload) {
     final DateTime expiringDate = DateTime.now().add(expiresIn);
     final int exp = expiringDate.millisecondsSinceEpoch ~/ 1000;
 
-    final Map<String, dynamic> payload = _generatePayload(
-      userId: userId,
-      expiresIn: exp,
-    );
-
-    final jwt = JWT(payload);
-    final String token = jwt.sign(secretKey);
-
-    return token;
+    final jwt = JWT(payload.toMap().copyWith({'exp': exp}));
+    return jwt.sign(secretKey);
   }
 
-  /// Returns userId from token or null if token is not valid
-  int? getUserIdFromToken(String token) {
+  TokenPayload? getPayloadFromToken(String token) {
     final bool isValid = validateToken(token);
 
     if (!isValid) return null;
@@ -54,10 +45,9 @@ class JwtClient {
     try {
       final jwt = JWT.decode(token);
 
-      final Map<String, dynamic> payload = jwt.payload as Map<String, dynamic>;
-
-      final userId = payload['userId'] as int;
-      return userId;
+      final rawPayload = jwt.payload as Map<String, dynamic>;
+      final TokenPayload payload = TokenPayload.fromMap(rawPayload);
+      return payload;
     } catch (e) {
       return null;
     }

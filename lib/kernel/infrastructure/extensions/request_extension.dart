@@ -1,8 +1,9 @@
+import 'package:dle_server/kernel/infrastructure/services/token/jwt_client.dart';
 import 'package:ruta/ruta.dart';
 
 extension RequestExtension on Request {
-  int get userId {
-    final int? userId = context['userId'] as int?;
+  TokenPayload get payload {
+    final TokenPayload? userId = context['payload'] as TokenPayload?;
 
     if (userId == null) {
       throw const ApiException.unauthorized();

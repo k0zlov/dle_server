@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:users_api/shared_kernel/domain/events/events.dart';
+import 'package:dle_server/kernel/domain/events/events.dart';
 
 sealed class EventListener<T extends Event> {
   EventListener() : eventType = T;
