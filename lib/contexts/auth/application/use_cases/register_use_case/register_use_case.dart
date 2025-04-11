@@ -50,7 +50,9 @@ class RegisterUseCase implements UseCase<RegisterError, User, RegisterParams> {
 
     await repository.saveUser(user);
 
-    domainEventBus.publish(UserRegisteredEvent(userId: user.id));
+    domainEventBus.publish(
+      UserRegisteredEvent(userId: user.id, userEmail: user.email),
+    );
 
     return Right(user);
   }

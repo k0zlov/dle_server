@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/ports/email_codes_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
@@ -22,7 +23,7 @@ enum ConfirmEmailError {
 class ConfirmEmailParams with _$ConfirmEmailParams {
   const factory ConfirmEmailParams({
     required String code,
-    required String userId,
+    required String email,
   }) = _ConfirmEmailParams;
 
   factory ConfirmEmailParams.fromJson(Map<String, dynamic> json) =>
@@ -32,34 +33,52 @@ class ConfirmEmailParams with _$ConfirmEmailParams {
 @lazySingleton
 class ConfirmEmailUseCase
     implements UseCase<ConfirmEmailError, User, ConfirmEmailParams> {
-  const ConfirmEmailUseCase({required this.repository});
+  const ConfirmEmailUseCase({
+    required this.repository,
+    required this.emailCodesRepository,
+  });
 
   final UsersRepositoryPort repository;
+  final EmailCodesRepositoryPort emailCodesRepository;
 
   @override
   Future<Either<ConfirmEmailError, User>> call(
     ConfirmEmailParams params,
   ) async {
-    final User? foundUser = await repository.findUser(
-      id: params.userId,
-      includeEmailCodes: true,
-    );
+    final User? foundUser = await repository.findUser(email: params.email);
 
     if (foundUser == null) {
       return const Left(ConfirmEmailError.userNotFound);
     }
 
-    final userOrError = foundUser.verifyEmail(params.code);
+    if (foundUser.emailVerified) {
+      return const Left(ConfirmEmailError.alreadyVerified);
+    }
 
-    return userOrError.fold(
+    final EmailCode? emailCode = await emailCodesRepository.findByCode(
+      userId: foundUser.id,
+      code: params.code,
+    );
+
+    if (emailCode == null) {
+      return const Left(ConfirmEmailError.codeNotFound);
+    }
+
+    final codeOrError = emailCode.verify(params.code);
+
+    return codeOrError.fold(
       (err) => Left(switch (err) {
         EmailCodeError.codeNotFound => ConfirmEmailError.codeNotFound,
         EmailCodeError.alreadyVerified => ConfirmEmailError.alreadyVerified,
         EmailCodeError.invalidCode => ConfirmEmailError.invalidCode,
         EmailCodeError.codeExpired => ConfirmEmailError.codeExpired,
       }),
-      (user) async {
-        await repository.saveUser(user, overrideEmailCodes: true);
+      (code) async {
+        await emailCodesRepository.save(code);
+
+        final user = foundUser.verifyEmail();
+        await repository.saveUser(user);
+
         return Right(user);
       },
     );

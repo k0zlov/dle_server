@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
 import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
+import 'package:dle_server/contexts/auth/domain/entities/password_reset_token/password_reset_token.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/auth_sessions.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/email_verification_codes.dart';
+import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/password_reset_tokens.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/users.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
@@ -22,7 +24,9 @@ export 'package:drift_postgres/drift_postgres.dart';
 part 'database.g.dart';
 
 @lazySingleton
-@DriftDatabase(tables: [Users, AuthSessions, EmailVerificationCodes])
+@DriftDatabase(
+  tables: [Users, AuthSessions, EmailVerificationCodes, PasswordResetTokens],
+)
 class Database extends _$Database {
   Database(super.e);
 

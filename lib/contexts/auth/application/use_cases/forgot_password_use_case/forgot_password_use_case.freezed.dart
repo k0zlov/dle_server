@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'send_email_code_use_case.dart';
+part of 'forgot_password_use_case.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,44 +14,45 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SendEmailCodeParams _$SendEmailCodeParamsFromJson(Map<String, dynamic> json) {
-  return _SendEmailCodeParams.fromJson(json);
+ForgotPasswordParams _$ForgotPasswordParamsFromJson(Map<String, dynamic> json) {
+  return _ForgotPasswordParams.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SendEmailCodeParams {
+mixin _$ForgotPasswordParams {
   String get email => throw _privateConstructorUsedError;
 
-  /// Serializes this SendEmailCodeParams to a JSON map.
+  /// Serializes this ForgotPasswordParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of SendEmailCodeParams
+  /// Create a copy of ForgotPasswordParams
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $SendEmailCodeParamsCopyWith<SendEmailCodeParams> get copyWith =>
+  $ForgotPasswordParamsCopyWith<ForgotPasswordParams> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SendEmailCodeParamsCopyWith<$Res> {
-  factory $SendEmailCodeParamsCopyWith(
-          SendEmailCodeParams value, $Res Function(SendEmailCodeParams) then) =
-      _$SendEmailCodeParamsCopyWithImpl<$Res, SendEmailCodeParams>;
+abstract class $ForgotPasswordParamsCopyWith<$Res> {
+  factory $ForgotPasswordParamsCopyWith(ForgotPasswordParams value,
+          $Res Function(ForgotPasswordParams) then) =
+      _$ForgotPasswordParamsCopyWithImpl<$Res, ForgotPasswordParams>;
   @useResult
   $Res call({String email});
 }
 
 /// @nodoc
-class _$SendEmailCodeParamsCopyWithImpl<$Res, $Val extends SendEmailCodeParams>
-    implements $SendEmailCodeParamsCopyWith<$Res> {
-  _$SendEmailCodeParamsCopyWithImpl(this._value, this._then);
+class _$ForgotPasswordParamsCopyWithImpl<$Res,
+        $Val extends ForgotPasswordParams>
+    implements $ForgotPasswordParamsCopyWith<$Res> {
+  _$ForgotPasswordParamsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of SendEmailCodeParams
+  /// Create a copy of ForgotPasswordParams
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -68,32 +69,32 @@ class _$SendEmailCodeParamsCopyWithImpl<$Res, $Val extends SendEmailCodeParams>
 }
 
 /// @nodoc
-abstract class _$$SendEmailCodeParamsImplCopyWith<$Res>
-    implements $SendEmailCodeParamsCopyWith<$Res> {
-  factory _$$SendEmailCodeParamsImplCopyWith(_$SendEmailCodeParamsImpl value,
-          $Res Function(_$SendEmailCodeParamsImpl) then) =
-      __$$SendEmailCodeParamsImplCopyWithImpl<$Res>;
+abstract class _$$ForgotPasswordParamsImplCopyWith<$Res>
+    implements $ForgotPasswordParamsCopyWith<$Res> {
+  factory _$$ForgotPasswordParamsImplCopyWith(_$ForgotPasswordParamsImpl value,
+          $Res Function(_$ForgotPasswordParamsImpl) then) =
+      __$$ForgotPasswordParamsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String email});
 }
 
 /// @nodoc
-class __$$SendEmailCodeParamsImplCopyWithImpl<$Res>
-    extends _$SendEmailCodeParamsCopyWithImpl<$Res, _$SendEmailCodeParamsImpl>
-    implements _$$SendEmailCodeParamsImplCopyWith<$Res> {
-  __$$SendEmailCodeParamsImplCopyWithImpl(_$SendEmailCodeParamsImpl _value,
-      $Res Function(_$SendEmailCodeParamsImpl) _then)
+class __$$ForgotPasswordParamsImplCopyWithImpl<$Res>
+    extends _$ForgotPasswordParamsCopyWithImpl<$Res, _$ForgotPasswordParamsImpl>
+    implements _$$ForgotPasswordParamsImplCopyWith<$Res> {
+  __$$ForgotPasswordParamsImplCopyWithImpl(_$ForgotPasswordParamsImpl _value,
+      $Res Function(_$ForgotPasswordParamsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of SendEmailCodeParams
+  /// Create a copy of ForgotPasswordParams
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? email = null,
   }) {
-    return _then(_$SendEmailCodeParamsImpl(
+    return _then(_$ForgotPasswordParamsImpl(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -104,25 +105,25 @@ class __$$SendEmailCodeParamsImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SendEmailCodeParamsImpl implements _SendEmailCodeParams {
-  const _$SendEmailCodeParamsImpl({required this.email});
+class _$ForgotPasswordParamsImpl implements _ForgotPasswordParams {
+  const _$ForgotPasswordParamsImpl({required this.email});
 
-  factory _$SendEmailCodeParamsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SendEmailCodeParamsImplFromJson(json);
+  factory _$ForgotPasswordParamsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ForgotPasswordParamsImplFromJson(json);
 
   @override
   final String email;
 
   @override
   String toString() {
-    return 'SendEmailCodeParams(email: $email)';
+    return 'ForgotPasswordParams(email: $email)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SendEmailCodeParamsImpl &&
+            other is _$ForgotPasswordParamsImpl &&
             (identical(other.email, email) || other.email == email));
   }
 
@@ -130,37 +131,38 @@ class _$SendEmailCodeParamsImpl implements _SendEmailCodeParams {
   @override
   int get hashCode => Object.hash(runtimeType, email);
 
-  /// Create a copy of SendEmailCodeParams
+  /// Create a copy of ForgotPasswordParams
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SendEmailCodeParamsImplCopyWith<_$SendEmailCodeParamsImpl> get copyWith =>
-      __$$SendEmailCodeParamsImplCopyWithImpl<_$SendEmailCodeParamsImpl>(
-          this, _$identity);
+  _$$ForgotPasswordParamsImplCopyWith<_$ForgotPasswordParamsImpl>
+      get copyWith =>
+          __$$ForgotPasswordParamsImplCopyWithImpl<_$ForgotPasswordParamsImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SendEmailCodeParamsImplToJson(
+    return _$$ForgotPasswordParamsImplToJson(
       this,
     );
   }
 }
 
-abstract class _SendEmailCodeParams implements SendEmailCodeParams {
-  const factory _SendEmailCodeParams({required final String email}) =
-      _$SendEmailCodeParamsImpl;
+abstract class _ForgotPasswordParams implements ForgotPasswordParams {
+  const factory _ForgotPasswordParams({required final String email}) =
+      _$ForgotPasswordParamsImpl;
 
-  factory _SendEmailCodeParams.fromJson(Map<String, dynamic> json) =
-      _$SendEmailCodeParamsImpl.fromJson;
+  factory _ForgotPasswordParams.fromJson(Map<String, dynamic> json) =
+      _$ForgotPasswordParamsImpl.fromJson;
 
   @override
   String get email;
 
-  /// Create a copy of SendEmailCodeParams
+  /// Create a copy of ForgotPasswordParams
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SendEmailCodeParamsImplCopyWith<_$SendEmailCodeParamsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ForgotPasswordParamsImplCopyWith<_$ForgotPasswordParamsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

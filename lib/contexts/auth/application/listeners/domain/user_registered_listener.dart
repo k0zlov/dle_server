@@ -17,7 +17,7 @@ class UserRegisteredDomainListener
     print('SENDING');
 
     final SendEmailCodeParams params = SendEmailCodeParams(
-      userId: event.userId,
+      email: event.userEmail,
     );
 
     await sendEmailCodeUseCase(params);

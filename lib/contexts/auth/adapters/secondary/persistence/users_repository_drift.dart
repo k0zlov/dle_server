@@ -1,6 +1,5 @@
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
-import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/extensions/table_extension.dart';
@@ -36,23 +35,10 @@ class UsersRepositoryDrift implements UsersRepositoryPort {
     );
   }
 
-  Insertable<EmailCode> mapEmailCode(EmailCode code) {
-    return EmailVerificationCodesCompanion(
-      id: Value(code.id),
-      userId: Value(code.userId),
-      code: Value(code.code),
-      isSuccess: Value(code.isSuccess),
-      expiresAt: Value(code.expiresAt),
-      updatedAt: Value(code.updatedAt),
-      createdAt: Value(code.createdAt),
-    );
-  }
-
   @override
   Future<User?> findUser({
     String? id,
     String? email,
-    bool includeEmailCodes = false,
     bool includeSessions = false,
   }) async {
     assert(
@@ -70,15 +56,6 @@ class UsersRepositoryDrift implements UsersRepositoryPort {
 
     if (user == null) return null;
 
-    if (includeEmailCodes) {
-      user = user.copyWith(
-        emailCodes:
-            (await db.emailVerificationCodes.getWhere(
-              (tbl) => tbl.userId.equals(UuidValue.fromString(user!.id)),
-            )).toSet(),
-      );
-    }
-
     if (includeSessions) {
       user = user.copyWith(
         sessions:
@@ -92,22 +69,9 @@ class UsersRepositoryDrift implements UsersRepositoryPort {
   }
 
   @override
-  Future<void> saveUser(
-    User user, {
-    bool overrideSessions = false,
-    bool overrideEmailCodes = false,
-  }) async {
+  Future<void> saveUser(User user, {bool overrideSessions = false}) async {
     return db.transaction<void>(() async {
       await db.users.insertOnConflictUpdate(mapUser(user));
-
-      if (overrideEmailCodes && user.emailCodes.isNotEmpty) {
-        await db.batch((batch) {
-          batch.insertAllOnConflictUpdate(
-            db.emailVerificationCodes,
-            user.emailCodes.map(mapEmailCode),
-          );
-        });
-      }
 
       if (overrideSessions) {
         final List<UuidValue> sessionIds =
@@ -150,12 +114,5 @@ class UsersRepositoryDrift implements UsersRepositoryPort {
   @override
   Future<void> updateSession(AuthSession session) {
     return db.authSessions.replaceOne(mapSession(session));
-  }
-
-  @override
-  Future<void> saveEmailCode(EmailCode emailCode) {
-    return db.emailVerificationCodes.insertOnConflictUpdate(
-      mapEmailCode(emailCode),
-    );
   }
 }

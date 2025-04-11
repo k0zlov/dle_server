@@ -1,21 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'confirm_email_use_case.dart';
+part of 'forgot_password_use_case.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConfirmEmailParamsImpl _$$ConfirmEmailParamsImplFromJson(
+_$ForgotPasswordParamsImpl _$$ForgotPasswordParamsImplFromJson(
         Map<String, dynamic> json) =>
-    _$ConfirmEmailParamsImpl(
-      code: json['code'] as String,
+    _$ForgotPasswordParamsImpl(
       email: json['email'] as String,
     );
 
-Map<String, dynamic> _$$ConfirmEmailParamsImplToJson(
-        _$ConfirmEmailParamsImpl instance) =>
+Map<String, dynamic> _$$ForgotPasswordParamsImplToJson(
+        _$ForgotPasswordParamsImpl instance) =>
     <String, dynamic>{
-      'code': instance.code,
       'email': instance.email,
     };

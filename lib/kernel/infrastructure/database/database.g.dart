@@ -787,6 +787,236 @@ class EmailVerificationCodesCompanion extends UpdateCompanion<EmailCode> {
   }
 }
 
+class $PasswordResetTokensTable extends PasswordResetTokens
+    with TableInfo<$PasswordResetTokensTable, PasswordResetToken> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PasswordResetTokensTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($PasswordResetTokensTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> userId =
+      GeneratedColumn<UuidValue>('user_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES users (id) ON DELETE CASCADE'))
+          .withConverter<String>($PasswordResetTokensTable.$converteruserId);
+  static const VerificationMeta _isUsedMeta = const VerificationMeta('isUsed');
+  @override
+  late final GeneratedColumn<bool> isUsed = GeneratedColumn<bool>(
+      'is_used', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(false));
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> expiresAt =
+      GeneratedColumn<PgDateTime>('expires_at', aliasedName, false,
+              type: dialectAwareTimestamp, requiredDuringInsert: true)
+          .withConverter<DateTime>(
+              $PasswordResetTokensTable.$converterexpiresAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>(
+              $PasswordResetTokensTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>(
+              $PasswordResetTokensTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, isUsed, expiresAt, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'password_reset_tokens';
+  @override
+  VerificationContext validateIntegrity(Insertable<PasswordResetToken> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('is_used')) {
+      context.handle(_isUsedMeta,
+          isUsed.isAcceptableOrUnknown(data['is_used']!, _isUsedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PasswordResetToken map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PasswordResetToken(
+      id: $PasswordResetTokensTable.$converterid.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      userId: $PasswordResetTokensTable.$converteruserId.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}user_id'])!),
+      expiresAt: $PasswordResetTokensTable.$converterexpiresAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}expires_at'])!),
+      updatedAt: $PasswordResetTokensTable.$converterupdatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $PasswordResetTokensTable.$convertercreatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+      isUsed: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_used'])!,
+    );
+  }
+
+  @override
+  $PasswordResetTokensTable createAlias(String alias) {
+    return $PasswordResetTokensTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converteruserId =
+      const UuidValueToStringConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterexpiresAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class PasswordResetTokensCompanion extends UpdateCompanion<PasswordResetToken> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<bool> isUsed;
+  final Value<DateTime> expiresAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const PasswordResetTokensCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.isUsed = const Value.absent(),
+    this.expiresAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PasswordResetTokensCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    this.isUsed = const Value.absent(),
+    required DateTime expiresAt,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : userId = Value(userId),
+        expiresAt = Value(expiresAt);
+  static Insertable<PasswordResetToken> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? userId,
+    Expression<bool>? isUsed,
+    Expression<PgDateTime>? expiresAt,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (isUsed != null) 'is_used': isUsed,
+      if (expiresAt != null) 'expires_at': expiresAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PasswordResetTokensCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? userId,
+      Value<bool>? isUsed,
+      Value<DateTime>? expiresAt,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return PasswordResetTokensCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      isUsed: isUsed ?? this.isUsed,
+      expiresAt: expiresAt ?? this.expiresAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $PasswordResetTokensTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<UuidValue>(
+          $PasswordResetTokensTable.$converteruserId.toSql(userId.value),
+          PgTypes.uuid);
+    }
+    if (isUsed.present) {
+      map['is_used'] = Variable<bool>(isUsed.value);
+    }
+    if (expiresAt.present) {
+      map['expires_at'] = Variable<PgDateTime>(
+          $PasswordResetTokensTable.$converterexpiresAt.toSql(expiresAt.value),
+          dialectAwareTimestamp);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $PasswordResetTokensTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $PasswordResetTokensTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PasswordResetTokensCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('isUsed: $isUsed, ')
+          ..write('expiresAt: $expiresAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -794,12 +1024,14 @@ abstract class _$Database extends GeneratedDatabase {
   late final $AuthSessionsTable authSessions = $AuthSessionsTable(this);
   late final $EmailVerificationCodesTable emailVerificationCodes =
       $EmailVerificationCodesTable(this);
+  late final $PasswordResetTokensTable passwordResetTokens =
+      $PasswordResetTokensTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [users, authSessions, emailVerificationCodes];
+      [users, authSessions, emailVerificationCodes, passwordResetTokens];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -815,6 +1047,13 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('email_verification_codes', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('password_reset_tokens', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -875,6 +1114,25 @@ final class $$UsersTableReferences
 
     final cache = $_typedResult
         .readTableOrNull(_EmailVerificationCodesInUsersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$PasswordResetTokensTable,
+      List<PasswordResetToken>> _PasswordResetTokensInUsersTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.passwordResetTokens,
+          aliasName:
+              $_aliasNameGenerator(db.users.id, db.passwordResetTokens.userId));
+
+  $$PasswordResetTokensTableProcessedTableManager
+      get PasswordResetTokensInUsers {
+    final manager = $$PasswordResetTokensTableTableManager(
+            $_db, $_db.passwordResetTokens)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_PasswordResetTokensInUsersTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -953,6 +1211,27 @@ class $$UsersTableFilterComposer extends Composer<_$Database, $UsersTable> {
                   $removeJoinBuilderFromRootComposer:
                       $removeJoinBuilderFromRootComposer,
                 ));
+    return f(composer);
+  }
+
+  Expression<bool> PasswordResetTokensInUsers(
+      Expression<bool> Function($$PasswordResetTokensTableFilterComposer f) f) {
+    final $$PasswordResetTokensTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.passwordResetTokens,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PasswordResetTokensTableFilterComposer(
+              $db: $db,
+              $table: $db.passwordResetTokens,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
     return f(composer);
   }
 }
@@ -1055,6 +1334,29 @@ class $$UsersTableAnnotationComposer extends Composer<_$Database, $UsersTable> {
                 ));
     return f(composer);
   }
+
+  Expression<T> PasswordResetTokensInUsers<T extends Object>(
+      Expression<T> Function($$PasswordResetTokensTableAnnotationComposer a)
+          f) {
+    final $$PasswordResetTokensTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.passwordResetTokens,
+            getReferencedColumn: (t) => t.userId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$PasswordResetTokensTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.passwordResetTokens,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -1069,7 +1371,9 @@ class $$UsersTableTableManager extends RootTableManager<
     (User, $$UsersTableReferences),
     User,
     PrefetchHooks Function(
-        {bool SessionsInUsers, bool EmailVerificationCodesInUsers})> {
+        {bool SessionsInUsers,
+        bool EmailVerificationCodesInUsers,
+        bool PasswordResetTokensInUsers})> {
   $$UsersTableTableManager(_$Database db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -1122,12 +1426,14 @@ class $$UsersTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {SessionsInUsers = false,
-              EmailVerificationCodesInUsers = false}) {
+              EmailVerificationCodesInUsers = false,
+              PasswordResetTokensInUsers = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (SessionsInUsers) db.authSessions,
-                if (EmailVerificationCodesInUsers) db.emailVerificationCodes
+                if (EmailVerificationCodesInUsers) db.emailVerificationCodes,
+                if (PasswordResetTokensInUsers) db.passwordResetTokens
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -1155,6 +1461,19 @@ class $$UsersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (PasswordResetTokensInUsers)
+                    await $_getPrefetchedData<User, $UsersTable,
+                            PasswordResetToken>(
+                        currentTable: table,
+                        referencedTable: $$UsersTableReferences
+                            ._PasswordResetTokensInUsersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .PasswordResetTokensInUsers,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
                         typedResults: items)
                 ];
               },
@@ -1175,7 +1494,9 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
     (User, $$UsersTableReferences),
     User,
     PrefetchHooks Function(
-        {bool SessionsInUsers, bool EmailVerificationCodesInUsers})>;
+        {bool SessionsInUsers,
+        bool EmailVerificationCodesInUsers,
+        bool PasswordResetTokensInUsers})>;
 typedef $$AuthSessionsTableCreateCompanionBuilder = AuthSessionsCompanion
     Function({
   Value<String> id,
@@ -1823,6 +2144,308 @@ typedef $$EmailVerificationCodesTableProcessedTableManager
         (EmailCode, $$EmailVerificationCodesTableReferences),
         EmailCode,
         PrefetchHooks Function({bool userId})>;
+typedef $$PasswordResetTokensTableCreateCompanionBuilder
+    = PasswordResetTokensCompanion Function({
+  Value<String> id,
+  required String userId,
+  Value<bool> isUsed,
+  required DateTime expiresAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$PasswordResetTokensTableUpdateCompanionBuilder
+    = PasswordResetTokensCompanion Function({
+  Value<String> id,
+  Value<String> userId,
+  Value<bool> isUsed,
+  Value<DateTime> expiresAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$PasswordResetTokensTableReferences extends BaseReferences<
+    _$Database, $PasswordResetTokensTable, PasswordResetToken> {
+  $$PasswordResetTokensTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$Database db) => db.users.createAlias(
+      $_aliasNameGenerator(db.passwordResetTokens.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<UuidValue>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$PasswordResetTokensTableFilterComposer
+    extends Composer<_$Database, $PasswordResetTokensTable> {
+  $$PasswordResetTokensTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get isUsed => $composableBuilder(
+      column: $table.isUsed, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get expiresAt => $composableBuilder(
+          column: $table.expiresAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PasswordResetTokensTableOrderingComposer
+    extends Composer<_$Database, $PasswordResetTokensTable> {
+  $$PasswordResetTokensTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isUsed => $composableBuilder(
+      column: $table.isUsed, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get expiresAt => $composableBuilder(
+      column: $table.expiresAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PasswordResetTokensTableAnnotationComposer
+    extends Composer<_$Database, $PasswordResetTokensTable> {
+  $$PasswordResetTokensTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get isUsed =>
+      $composableBuilder(column: $table.isUsed, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get expiresAt =>
+      $composableBuilder(column: $table.expiresAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PasswordResetTokensTableTableManager extends RootTableManager<
+    _$Database,
+    $PasswordResetTokensTable,
+    PasswordResetToken,
+    $$PasswordResetTokensTableFilterComposer,
+    $$PasswordResetTokensTableOrderingComposer,
+    $$PasswordResetTokensTableAnnotationComposer,
+    $$PasswordResetTokensTableCreateCompanionBuilder,
+    $$PasswordResetTokensTableUpdateCompanionBuilder,
+    (PasswordResetToken, $$PasswordResetTokensTableReferences),
+    PasswordResetToken,
+    PrefetchHooks Function({bool userId})> {
+  $$PasswordResetTokensTableTableManager(
+      _$Database db, $PasswordResetTokensTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PasswordResetTokensTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PasswordResetTokensTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PasswordResetTokensTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<bool> isUsed = const Value.absent(),
+            Value<DateTime> expiresAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PasswordResetTokensCompanion(
+            id: id,
+            userId: userId,
+            isUsed: isUsed,
+            expiresAt: expiresAt,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String userId,
+            Value<bool> isUsed = const Value.absent(),
+            required DateTime expiresAt,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PasswordResetTokensCompanion.insert(
+            id: id,
+            userId: userId,
+            isUsed: isUsed,
+            expiresAt: expiresAt,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$PasswordResetTokensTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$PasswordResetTokensTableReferences._userIdTable(db),
+                    referencedColumn: $$PasswordResetTokensTableReferences
+                        ._userIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$PasswordResetTokensTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $PasswordResetTokensTable,
+    PasswordResetToken,
+    $$PasswordResetTokensTableFilterComposer,
+    $$PasswordResetTokensTableOrderingComposer,
+    $$PasswordResetTokensTableAnnotationComposer,
+    $$PasswordResetTokensTableCreateCompanionBuilder,
+    $$PasswordResetTokensTableUpdateCompanionBuilder,
+    (PasswordResetToken, $$PasswordResetTokensTableReferences),
+    PasswordResetToken,
+    PrefetchHooks Function({bool userId})>;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -1834,4 +2457,6 @@ class $DatabaseManager {
   $$EmailVerificationCodesTableTableManager get emailVerificationCodes =>
       $$EmailVerificationCodesTableTableManager(
           _db, _db.emailVerificationCodes);
+  $$PasswordResetTokensTableTableManager get passwordResetTokens =>
+      $$PasswordResetTokensTableTableManager(_db, _db.passwordResetTokens);
 }

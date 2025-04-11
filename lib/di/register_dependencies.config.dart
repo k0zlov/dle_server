@@ -10,20 +10,32 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dle_server/contexts/auth/adapters/primary/api/controllers/auth_controller.dart'
     as _i685;
+import 'package:dle_server/contexts/auth/adapters/secondary/persistence/email_codes_repository_drift.dart'
+    as _i865;
+import 'package:dle_server/contexts/auth/adapters/secondary/persistence/password_reset_tokens_repository_drift.dart'
+    as _i350;
 import 'package:dle_server/contexts/auth/adapters/secondary/persistence/users_repository_drift.dart'
     as _i558;
 import 'package:dle_server/contexts/auth/application/listeners/domain/user_registered_listener.dart'
     as _i689;
+import 'package:dle_server/contexts/auth/application/ports/email_codes_repository_port.dart'
+    as _i765;
+import 'package:dle_server/contexts/auth/application/ports/password_reset_tokens_repository_port.dart'
+    as _i482;
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart'
     as _i221;
 import 'package:dle_server/contexts/auth/application/use_cases/confirm_email_use_case/confirm_email_use_case.dart'
     as _i792;
+import 'package:dle_server/contexts/auth/application/use_cases/forgot_password_use_case/forgot_password_use_case.dart'
+    as _i176;
 import 'package:dle_server/contexts/auth/application/use_cases/login_use_case/login_use_case.dart'
     as _i924;
 import 'package:dle_server/contexts/auth/application/use_cases/refresh_session_use_case/refresh_session_use_case.dart'
     as _i277;
 import 'package:dle_server/contexts/auth/application/use_cases/register_use_case/register_use_case.dart'
     as _i288;
+import 'package:dle_server/contexts/auth/application/use_cases/reset_password_use_case/reset_password_use_case.dart'
+    as _i141;
 import 'package:dle_server/contexts/auth/application/use_cases/revoke_all_sessions_use_case/revoke_all_sessions_use_case.dart'
     as _i540;
 import 'package:dle_server/contexts/auth/application/use_cases/revoke_session_use_case/revoke_session_use_case.dart'
@@ -81,23 +93,60 @@ extension GetItInjectableX on _i174.GetIt {
       () => dependencyContainer.emailUrl,
       instanceName: 'emailUrl',
     );
+    gh.factory<String>(
+      () => dependencyContainer.websiteUrl,
+      instanceName: 'websiteUrl',
+    );
+    gh.factory<String>(
+      () => dependencyContainer
+          .passwordResetUrl(gh<String>(instanceName: 'websiteUrl')),
+      instanceName: 'passwordResetUrl',
+    );
     gh.lazySingleton<_i44.MailService>(() => _i44.MailServiceImpl(
           smtpServer: gh<_i576.SmtpServer>(),
           emailUrl: gh<String>(instanceName: 'emailUrl'),
         ));
     gh.lazySingletonAsync<_i221.UsersRepositoryPort>(() async =>
         _i558.UsersRepositoryDrift(db: await getAsync<_i780.Database>()));
+    gh.lazySingletonAsync<_i482.PasswordResetTokensRepositoryPort>(() async =>
+        _i350.PasswordresetTokensRepositoryDrift(
+            db: await getAsync<_i780.Database>()));
+    gh.lazySingletonAsync<_i141.ResetPasswordUseCase>(
+        () async => _i141.ResetPasswordUseCase(
+              repository: await getAsync<_i221.UsersRepositoryPort>(),
+              passwordResetTokensRepository:
+                  await getAsync<_i482.PasswordResetTokensRepositoryPort>(),
+            ));
+    gh.lazySingletonAsync<_i765.EmailCodesRepositoryPort>(() async =>
+        _i865.EmailCodesRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i601.AuthMiddleware>(
         () => _i601.AuthMiddleware(tokenService: gh<_i665.TokenService>()));
     gh.lazySingletonAsync<_i546.SendEmailCodeUseCase>(
         () async => _i546.SendEmailCodeUseCase(
               repository: await getAsync<_i221.UsersRepositoryPort>(),
+              emailCodesRepository:
+                  await getAsync<_i765.EmailCodesRepositoryPort>(),
               mailService: gh<_i44.MailService>(),
+            ));
+    gh.lazySingletonAsync<_i792.ConfirmEmailUseCase>(
+        () async => _i792.ConfirmEmailUseCase(
+              repository: await getAsync<_i221.UsersRepositoryPort>(),
+              emailCodesRepository:
+                  await getAsync<_i765.EmailCodesRepositoryPort>(),
             ));
     gh.lazySingletonAsync<_i689.UserRegisteredDomainListener>(() async =>
         _i689.UserRegisteredDomainListener(
             sendEmailCodeUseCase:
                 await getAsync<_i546.SendEmailCodeUseCase>()));
+    gh.lazySingletonAsync<_i176.ForgotPasswordUseCase>(() async =>
+        _i176.ForgotPasswordUseCase(
+          repository: await getAsync<_i221.UsersRepositoryPort>(),
+          mailService: gh<_i44.MailService>(),
+          passwordResetTokensRepository:
+              await getAsync<_i482.PasswordResetTokensRepositoryPort>(),
+          sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
+          passwordResetUrl: gh<String>(instanceName: 'passwordResetUrl'),
+        ));
     gh.lazySingletonAsync<_i924.LoginUseCase>(() async => _i924.LoginUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
           tokenService: gh<_i665.TokenService>(),
@@ -107,9 +156,6 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i221.UsersRepositoryPort>(),
               tokenService: gh<_i665.TokenService>(),
             ));
-    gh.lazySingletonAsync<_i792.ConfirmEmailUseCase>(() async =>
-        _i792.ConfirmEmailUseCase(
-            repository: await getAsync<_i221.UsersRepositoryPort>()));
     gh.lazySingletonAsync<_i540.RevokeAllSessionsUseCase>(() async =>
         _i540.RevokeAllSessionsUseCase(
             repository: await getAsync<_i221.UsersRepositoryPort>()));
@@ -136,6 +182,9 @@ extension GetItInjectableX on _i174.GetIt {
           revokeAllSessionsUseCase:
               await getAsync<_i540.RevokeAllSessionsUseCase>(),
           confirmEmailUseCase: await getAsync<_i792.ConfirmEmailUseCase>(),
+          sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
+          forgotPasswordUseCase: await getAsync<_i176.ForgotPasswordUseCase>(),
+          resetPasswordUseCase: await getAsync<_i141.ResetPasswordUseCase>(),
         ));
     return this;
   }

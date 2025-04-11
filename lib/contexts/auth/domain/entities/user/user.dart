@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
-import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'user.mapper.dart';
@@ -18,14 +17,12 @@ class User extends Entity with UserMappable {
     required this.createdAt,
     required this.emailVerified,
     this.sessions = const <AuthSession>{},
-    this.emailCodes = const <EmailCode>{},
   });
 
   User.create({
     required this.email,
     required String password,
     this.sessions = const <AuthSession>{},
-    this.emailCodes = const <EmailCode>{},
   }) : emailVerified = false,
        passwordHash = BCrypt.hashpw(password, BCrypt.gensalt()),
        updatedAt = DateTime.now(),
@@ -38,7 +35,6 @@ class User extends Entity with UserMappable {
   final bool emailVerified;
 
   final Set<AuthSession> sessions;
-  final Set<EmailCode> emailCodes;
 
   final DateTime updatedAt;
   final DateTime createdAt;
@@ -77,11 +73,8 @@ class User extends Entity with UserMappable {
     );
   }
 
-  User addEmailCode(EmailCode emailCode) {
-    return copyWith(
-      emailCodes: {emailCode, ...emailCodes.where((e) => e.id != emailCode.id)},
-      updatedAt: DateTime.now(),
-    );
+  User verifyEmail() {
+    return copyWith(emailVerified: true);
   }
 
   Either<AuthSessionError, User> refreshSession({
@@ -108,29 +101,5 @@ class User extends Entity with UserMappable {
             ),
           ),
         );
-  }
-
-  Either<EmailCodeError, User> verifyEmail(String code) {
-    if (emailVerified) {
-      return const Left(EmailCodeError.alreadyVerified);
-    }
-
-    final EmailCode? emailCode = emailCodes.firstWhereOrNull(
-      (e) => e.code == code,
-    );
-
-    if (emailCode == null) {
-      return const Left(EmailCodeError.codeNotFound);
-    }
-
-    return emailCode.verify(code).fold(Left.new, (c) {
-      return Right(
-        copyWith(
-          emailVerified: true,
-          emailCodes: {c, ...emailCodes.where((e) => e.id != c.id)},
-          updatedAt: DateTime.now(),
-        ),
-      );
-    });
   }
 }

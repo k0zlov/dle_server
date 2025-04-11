@@ -12,6 +12,13 @@ abstract class DependencyContainer {
   @Named('apiVersion')
   String get apiVersion => env(DotEnvKey.version);
 
+  @Named('websiteUrl')
+  String get websiteUrl => env(DotEnvKey.websiteUrl);
+
+  @Named('passwordResetUrl')
+  String passwordResetUrl(@Named('websiteUrl') String websiteUrl) =>
+      '$websiteUrl/reset-password?token=';
+
   OpenApiSpec get openapiSpec => OpenApiSpec(
     info: OpenApiInfo(
       version: env(DotEnvKey.version),

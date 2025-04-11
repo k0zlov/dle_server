@@ -21,7 +21,7 @@ ConfirmEmailParams _$ConfirmEmailParamsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ConfirmEmailParams {
   String get code => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
 
   /// Serializes this ConfirmEmailParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $ConfirmEmailParamsCopyWith<$Res> {
           ConfirmEmailParams value, $Res Function(ConfirmEmailParams) then) =
       _$ConfirmEmailParamsCopyWithImpl<$Res, ConfirmEmailParams>;
   @useResult
-  $Res call({String code, String userId});
+  $Res call({String code, String email});
 }
 
 /// @nodoc
@@ -58,16 +58,16 @@ class _$ConfirmEmailParamsCopyWithImpl<$Res, $Val extends ConfirmEmailParams>
   @override
   $Res call({
     Object? code = null,
-    Object? userId = null,
+    Object? email = null,
   }) {
     return _then(_value.copyWith(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -81,7 +81,7 @@ abstract class _$$ConfirmEmailParamsImplCopyWith<$Res>
       __$$ConfirmEmailParamsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String code, String userId});
+  $Res call({String code, String email});
 }
 
 /// @nodoc
@@ -98,16 +98,16 @@ class __$$ConfirmEmailParamsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? code = null,
-    Object? userId = null,
+    Object? email = null,
   }) {
     return _then(_$ConfirmEmailParamsImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -116,7 +116,7 @@ class __$$ConfirmEmailParamsImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ConfirmEmailParamsImpl implements _ConfirmEmailParams {
-  const _$ConfirmEmailParamsImpl({required this.code, required this.userId});
+  const _$ConfirmEmailParamsImpl({required this.code, required this.email});
 
   factory _$ConfirmEmailParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConfirmEmailParamsImplFromJson(json);
@@ -124,11 +124,11 @@ class _$ConfirmEmailParamsImpl implements _ConfirmEmailParams {
   @override
   final String code;
   @override
-  final String userId;
+  final String email;
 
   @override
   String toString() {
-    return 'ConfirmEmailParams(code: $code, userId: $userId)';
+    return 'ConfirmEmailParams(code: $code, email: $email)';
   }
 
   @override
@@ -137,12 +137,12 @@ class _$ConfirmEmailParamsImpl implements _ConfirmEmailParams {
         (other.runtimeType == runtimeType &&
             other is _$ConfirmEmailParamsImpl &&
             (identical(other.code, code) || other.code == code) &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, code, userId);
+  int get hashCode => Object.hash(runtimeType, code, email);
 
   /// Create a copy of ConfirmEmailParams
   /// with the given fields replaced by the non-null parameter values.
@@ -164,7 +164,7 @@ class _$ConfirmEmailParamsImpl implements _ConfirmEmailParams {
 abstract class _ConfirmEmailParams implements ConfirmEmailParams {
   const factory _ConfirmEmailParams(
       {required final String code,
-      required final String userId}) = _$ConfirmEmailParamsImpl;
+      required final String email}) = _$ConfirmEmailParamsImpl;
 
   factory _ConfirmEmailParams.fromJson(Map<String, dynamic> json) =
       _$ConfirmEmailParamsImpl.fromJson;
@@ -172,7 +172,7 @@ abstract class _ConfirmEmailParams implements ConfirmEmailParams {
   @override
   String get code;
   @override
-  String get userId;
+  String get email;
 
   /// Create a copy of ConfirmEmailParams
   /// with the given fields replaced by the non-null parameter values.

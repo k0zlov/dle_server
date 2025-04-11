@@ -36,6 +36,7 @@ enum DotEnvKey {
   /// Username for the production database.
   databaseUsername('DATABASE_USERNAME'),
   emailUrl('EMAIL_URL'),
+  websiteUrl('WEBSITE_URL'),
   smtpHost('SMTP_HOST'),
   smtpPort('SMTP_PORT');
 

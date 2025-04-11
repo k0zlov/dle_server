@@ -14,7 +14,6 @@ class UserMapper extends ClassMapperBase<User> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserMapper._());
       AuthSessionMapper.ensureInitialized();
-      EmailCodeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -41,9 +40,6 @@ class UserMapper extends ClassMapperBase<User> {
   static Set<AuthSession> _$sessions(User v) => v.sessions;
   static const Field<User, Set<AuthSession>> _f$sessions =
       Field('sessions', _$sessions, opt: true, def: const <AuthSession>{});
-  static Set<EmailCode> _$emailCodes(User v) => v.emailCodes;
-  static const Field<User, Set<EmailCode>> _f$emailCodes =
-      Field('emailCodes', _$emailCodes, opt: true, def: const <EmailCode>{});
 
   @override
   final MappableFields<User> fields = const {
@@ -54,7 +50,6 @@ class UserMapper extends ClassMapperBase<User> {
     #createdAt: _f$createdAt,
     #emailVerified: _f$emailVerified,
     #sessions: _f$sessions,
-    #emailCodes: _f$emailCodes,
   };
 
   static User _instantiate(DecodingData data) {
@@ -65,8 +60,7 @@ class UserMapper extends ClassMapperBase<User> {
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt),
         emailVerified: data.dec(_f$emailVerified),
-        sessions: data.dec(_f$sessions),
-        emailCodes: data.dec(_f$emailCodes));
+        sessions: data.dec(_f$sessions));
   }
 
   @override
@@ -122,8 +116,7 @@ abstract class UserCopyWith<$R, $In extends User, $Out>
       DateTime? updatedAt,
       DateTime? createdAt,
       bool? emailVerified,
-      Set<AuthSession>? sessions,
-      Set<EmailCode>? emailCodes});
+      Set<AuthSession>? sessions});
   UserCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -141,8 +134,7 @@ class _UserCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, User, $Out>
           DateTime? updatedAt,
           DateTime? createdAt,
           bool? emailVerified,
-          Set<AuthSession>? sessions,
-          Set<EmailCode>? emailCodes}) =>
+          Set<AuthSession>? sessions}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (email != null) #email: email,
@@ -150,8 +142,7 @@ class _UserCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, User, $Out>
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt,
         if (emailVerified != null) #emailVerified: emailVerified,
-        if (sessions != null) #sessions: sessions,
-        if (emailCodes != null) #emailCodes: emailCodes
+        if (sessions != null) #sessions: sessions
       }));
   @override
   User $make(CopyWithData data) => User(
@@ -161,8 +152,7 @@ class _UserCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, User, $Out>
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt),
       emailVerified: data.get(#emailVerified, or: $value.emailVerified),
-      sessions: data.get(#sessions, or: $value.sessions),
-      emailCodes: data.get(#emailCodes, or: $value.emailCodes));
+      sessions: data.get(#sessions, or: $value.sessions));
 
   @override
   UserCopyWith<$R2, User, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

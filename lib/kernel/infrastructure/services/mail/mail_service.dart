@@ -48,11 +48,7 @@ class MailServiceImpl implements MailService {
   @override
   Future<bool> send({required EmailLetter letter}) async {
     try {
-      final r = await mailer.send(
-        letter.toMessage(emailUrl: emailUrl),
-        smtpServer,
-      );
-      print(r);
+      await mailer.send(letter.toMessage(emailUrl: emailUrl), smtpServer);
       return true;
     } catch (e) {
       print(e);

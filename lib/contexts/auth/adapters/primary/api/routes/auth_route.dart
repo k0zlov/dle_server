@@ -64,12 +64,42 @@ class AuthRoute extends Route {
   Endpoint get confirmEmail {
     return Endpoint.post(
       path: 'confirm-email',
-      authRequired: true,
-      middlewares: [authMiddleware],
       body: [
+        Field<String>('email', validators: [Validators.email()]),
         Field<String>('code', validators: [Validators.minLength(6)]),
       ],
       handler: controller.confirmEmail,
+    );
+  }
+
+  Endpoint get sendEmailVerification {
+    return Endpoint.post(
+      path: 'send-verification',
+      body: [
+        Field<String>('email', validators: [Validators.email()]),
+      ],
+      handler: controller.sendEmailVerification,
+    );
+  }
+
+  Endpoint get forgotPassword {
+    return Endpoint.post(
+      path: 'forgot-password',
+      body: [
+        Field<String>('email', validators: [Validators.email()]),
+      ],
+      handler: controller.forgotPassword,
+    );
+  }
+
+  Endpoint get resetPassword {
+    return Endpoint.post(
+      path: 'reset-password',
+      body: [
+        Field<String>('token'),
+        Field<String>('password', validators: [Validators.password()]),
+      ],
+      handler: controller.resetPassword,
     );
   }
 }
