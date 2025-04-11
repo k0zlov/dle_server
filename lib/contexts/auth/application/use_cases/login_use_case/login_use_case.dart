@@ -13,7 +13,7 @@ part 'login_use_case.freezed.dart';
 
 part 'login_use_case.g.dart';
 
-enum LoginError { noUserWithSuchEmail, wrongPassword }
+enum LoginError { userNotFound, wrongPassword }
 
 @freezed
 class LoginParams with _$LoginParams {
@@ -43,7 +43,7 @@ class LoginUseCase implements UseCase<LoginError, AuthTokens, LoginParams> {
     );
 
     if (foundUser == null) {
-      return const Left(LoginError.noUserWithSuchEmail);
+      return const Left(LoginError.userNotFound);
     }
 
     final bool result = foundUser.checkPassword(params.password);

@@ -39,12 +39,11 @@ class User extends Entity with UserMappable {
   final DateTime updatedAt;
   final DateTime createdAt;
 
-  User update({String? email, String? password}) {
+  User changeEmail({String? email}) {
     return copyWith(
       email: email,
+      emailVerified: false,
       updatedAt: DateTime.now(),
-      passwordHash:
-          password == null ? null : BCrypt.hashpw(password, BCrypt.gensalt()),
     );
   }
 

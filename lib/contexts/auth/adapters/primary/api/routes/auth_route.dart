@@ -4,7 +4,6 @@ import 'package:dle_server/kernel/infrastructure/validators/validators.dart';
 import 'package:ruta/annotations.dart';
 import 'package:ruta/ruta.dart';
 
-Future<Response> handler(Request req) async => Response.json();
 
 @rutaRoute
 class AuthRoute extends Route {

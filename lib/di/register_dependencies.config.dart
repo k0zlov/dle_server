@@ -10,6 +10,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dle_server/contexts/auth/adapters/primary/api/controllers/auth_controller.dart'
     as _i685;
+import 'package:dle_server/contexts/auth/adapters/primary/api/controllers/users_controller.dart'
+    as _i36;
 import 'package:dle_server/contexts/auth/adapters/secondary/persistence/email_codes_repository_drift.dart'
     as _i865;
 import 'package:dle_server/contexts/auth/adapters/secondary/persistence/password_reset_tokens_repository_drift.dart'
@@ -24,10 +26,14 @@ import 'package:dle_server/contexts/auth/application/ports/password_reset_tokens
     as _i482;
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart'
     as _i221;
+import 'package:dle_server/contexts/auth/application/use_cases/change_password_use_case/change_password_use_case.dart'
+    as _i852;
 import 'package:dle_server/contexts/auth/application/use_cases/confirm_email_use_case/confirm_email_use_case.dart'
     as _i792;
 import 'package:dle_server/contexts/auth/application/use_cases/forgot_password_use_case/forgot_password_use_case.dart'
     as _i176;
+import 'package:dle_server/contexts/auth/application/use_cases/get_current_user_use_case/get_current_user_use_case.dart'
+    as _i33;
 import 'package:dle_server/contexts/auth/application/use_cases/login_use_case/login_use_case.dart'
     as _i924;
 import 'package:dle_server/contexts/auth/application/use_cases/refresh_session_use_case/refresh_session_use_case.dart'
@@ -42,6 +48,8 @@ import 'package:dle_server/contexts/auth/application/use_cases/revoke_session_us
     as _i102;
 import 'package:dle_server/contexts/auth/application/use_cases/send_email_code_use_case/send_email_code_use_case.dart'
     as _i546;
+import 'package:dle_server/contexts/auth/application/use_cases/update_user_use_case/update_user_use_case.dart'
+    as _i662;
 import 'package:dle_server/contexts/auth/auth_dependency_container.dart'
     as _i218;
 import 'package:dle_server/di/di_container.dart' as _i432;
@@ -162,6 +170,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingletonAsync<_i102.RevokeSessionUseCase>(() async =>
         _i102.RevokeSessionUseCase(
             repository: await getAsync<_i221.UsersRepositoryPort>()));
+    gh.lazySingletonAsync<_i33.GetCurrentUserUseCase>(() async =>
+        _i33.GetCurrentUserUseCase(
+            repository: await getAsync<_i221.UsersRepositoryPort>()));
+    gh.lazySingletonAsync<_i852.ChangePasswordUseCase>(() async =>
+        _i852.ChangePasswordUseCase(
+            repository: await getAsync<_i221.UsersRepositoryPort>()));
     gh.factoryAsync<_i287.DomainEventBus>(
       () async => authDependencyContainer
           .domainEventBus(await getAsync<_i689.UserRegisteredDomainListener>()),
@@ -172,6 +186,11 @@ extension GetItInjectableX on _i174.GetIt {
           repository: await getAsync<_i221.UsersRepositoryPort>(),
           domainEventBus:
               await getAsync<_i287.DomainEventBus>(instanceName: 'authContext'),
+        ));
+    gh.lazySingletonAsync<_i662.UpdateUserUseCase>(() async =>
+        _i662.UpdateUserUseCase(
+          repository: await getAsync<_i221.UsersRepositoryPort>(),
+          sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
         ));
     gh.lazySingletonAsync<_i685.AuthController>(() async =>
         _i685.AuthController(
@@ -185,6 +204,12 @@ extension GetItInjectableX on _i174.GetIt {
           sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
           forgotPasswordUseCase: await getAsync<_i176.ForgotPasswordUseCase>(),
           resetPasswordUseCase: await getAsync<_i141.ResetPasswordUseCase>(),
+        ));
+    gh.lazySingletonAsync<_i36.UsersRestController>(() async =>
+        _i36.UsersRestController(
+          getCurrentUserUseCase: await getAsync<_i33.GetCurrentUserUseCase>(),
+          updateUserUseCase: await getAsync<_i662.UpdateUserUseCase>(),
+          changePasswordUseCase: await getAsync<_i852.ChangePasswordUseCase>(),
         ));
     return this;
   }

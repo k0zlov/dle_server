@@ -66,7 +66,7 @@ class AuthController {
     return tokensOrError.fold(
       (err) {
         return switch (err) {
-          LoginError.noUserWithSuchEmail || LoginError.wrongPassword =>
+          LoginError.userNotFound || LoginError.wrongPassword =>
             throw const ApiException.badRequest(
               'Credentials are wrong. Try again',
             ),
