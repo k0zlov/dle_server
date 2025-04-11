@@ -6,12 +6,7 @@ import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'email_code.mapper.dart';
 
-enum EmailVerificationError {
-  codeNotFound,
-  alreadyVerified,
-  invalidCode,
-  codeExpired,
-}
+enum EmailCodeError { codeNotFound, alreadyVerified, invalidCode, codeExpired }
 
 @MappableClass()
 class EmailCode extends Entity with EmailCodeMappable {
@@ -41,17 +36,17 @@ class EmailCode extends Entity with EmailCodeMappable {
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 
-  Either<EmailVerificationError, EmailCode> verify(String code) {
+  Either<EmailCodeError, EmailCode> verify(String code) {
     if (isSuccess) {
-      return const Left(EmailVerificationError.alreadyVerified);
+      return const Left(EmailCodeError.alreadyVerified);
     }
 
     if (code != this.code) {
-      return const Left(EmailVerificationError.invalidCode);
+      return const Left(EmailCodeError.invalidCode);
     }
 
     if (isExpired) {
-      return const Left(EmailVerificationError.codeExpired);
+      return const Left(EmailCodeError.codeExpired);
     }
 
     return Right(copyWith(isSuccess: true, updatedAt: DateTime.now()));

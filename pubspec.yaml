@@ -24,6 +24,7 @@ dependencies:
   injectable: ^2.5.0
   ruta: ^0.1.11
   dartz: ^0.10.1
+  mailer: ^6.4.1
 
 dev_dependencies:
   test: ^1.24.0

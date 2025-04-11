@@ -60,4 +60,16 @@ class AuthRoute extends Route {
       handler: controller.revokeAllSessions,
     );
   }
+
+  Endpoint get confirmEmail {
+    return Endpoint.post(
+      path: 'confirm-email',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      body: [
+        Field<String>('code', validators: [Validators.minLength(6)]),
+      ],
+      handler: controller.confirmEmail,
+    );
+  }
 }

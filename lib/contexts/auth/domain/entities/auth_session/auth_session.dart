@@ -5,7 +5,7 @@ import 'package:uuid/v4.dart';
 
 part 'auth_session.mapper.dart';
 
-enum RefreshSessionError { sessionNotFound, invalidToken, sessionExpired }
+enum AuthSessionError { sessionNotFound, invalidToken, sessionExpired }
 
 @MappableClass()
 class AuthSession extends Entity with AuthSessionMappable {
@@ -47,17 +47,17 @@ class AuthSession extends Entity with AuthSessionMappable {
     return DateTime.now().add(const Duration(days: 10));
   }
 
-  Either<RefreshSessionError, AuthSession> refresh({
+  Either<AuthSessionError, AuthSession> refresh({
     required String token,
     required String ip,
     required String deviceInfo,
   }) {
     if (isExpired) {
-      return const Left(RefreshSessionError.sessionExpired);
+      return const Left(AuthSessionError.sessionExpired);
     }
 
     if (refreshToken != token) {
-      return const Left(RefreshSessionError.invalidToken);
+      return const Left(AuthSessionError.invalidToken);
     }
 
     return Right(

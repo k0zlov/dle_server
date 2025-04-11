@@ -1,7 +1,14 @@
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/domain/events/events.dart';
+import 'package:dle_server/kernel/infrastructure/events/event_listener.dart';
 
 class InMemoryEventBus<T extends Event> implements EventBus<T> {
+  InMemoryEventBus({List<EventListener> listeners = const []}) {
+    for (final EventListener listener in listeners) {
+      subscribe(listener.call, eventType: listener.eventType);
+    }
+  }
+
   final Map<Type, List<Function>> _handlersMap = {};
 
   @override

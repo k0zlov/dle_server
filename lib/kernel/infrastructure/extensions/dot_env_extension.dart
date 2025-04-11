@@ -34,7 +34,10 @@ enum DotEnvKey {
   databasePort('DATABASE_PORT'),
 
   /// Username for the production database.
-  databaseUsername('DATABASE_USERNAME');
+  databaseUsername('DATABASE_USERNAME'),
+  emailUrl('EMAIL_URL'),
+  smtpHost('SMTP_HOST'),
+  smtpPort('SMTP_PORT');
 
   /// The name of the environment variable this key corresponds to.
   const DotEnvKey(this.name);

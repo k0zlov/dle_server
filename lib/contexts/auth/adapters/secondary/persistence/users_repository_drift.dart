@@ -151,4 +151,11 @@ class UsersRepositoryDrift implements UsersRepositoryPort {
   Future<void> updateSession(AuthSession session) {
     return db.authSessions.replaceOne(mapSession(session));
   }
+
+  @override
+  Future<void> saveEmailCode(EmailCode emailCode) {
+    return db.emailVerificationCodes.insertOnConflictUpdate(
+      mapEmailCode(emailCode),
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:dle_server/kernel/infrastructure/logger/loggers.dart';
 import 'package:dle_server/kernel/infrastructure/services/token/jwt_client.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:ruta/open_api.dart';
 
 @module
@@ -32,4 +33,13 @@ abstract class DependencyContainer {
       minutes: int.parse(env(DotEnvKey.accessTokenValidityMinutes)),
     ),
   );
+
+  SmtpServer get smtpServer => SmtpServer(
+    env(DotEnvKey.smtpHost),
+    port: int.parse(env(DotEnvKey.smtpPort)),
+    allowInsecure: true,
+  );
+
+  @Named('emailUrl')
+  String get emailUrl => env(DotEnvKey.emailUrl);
 }

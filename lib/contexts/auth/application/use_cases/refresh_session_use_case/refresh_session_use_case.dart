@@ -12,6 +12,8 @@ part 'refresh_session_use_case.freezed.dart';
 
 part 'refresh_session_use_case.g.dart';
 
+enum RefreshSessionError { sessionNotFound, invalidToken, sessionExpired }
+
 @freezed
 class RefreshSessionParams with _$RefreshSessionParams {
   const factory RefreshSessionParams({
@@ -53,16 +55,23 @@ class RefreshSessionUseCase
       deviceInfo: params.deviceInfo,
     );
 
-    return sessionOrError.fold(Left.new, (session) async {
-      await repository.updateSession(session);
-      return Right(
-        AuthTokens(
-          refreshToken: session.refreshToken,
-          accessToken: tokenService.generateAccessToken(
-            TokenPayload(userId: session.userId, sessionId: session.id),
+    return sessionOrError.fold(
+      (err) => Left(switch (err) {
+        AuthSessionError.sessionNotFound => RefreshSessionError.sessionNotFound,
+        AuthSessionError.invalidToken => RefreshSessionError.invalidToken,
+        AuthSessionError.sessionExpired => RefreshSessionError.sessionExpired,
+      }),
+      (session) async {
+        await repository.updateSession(session);
+        return Right(
+          AuthTokens(
+            refreshToken: session.refreshToken,
+            accessToken: tokenService.generateAccessToken(
+              TokenPayload(userId: session.userId, sessionId: session.id),
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

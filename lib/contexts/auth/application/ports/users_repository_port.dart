@@ -1,4 +1,5 @@
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
+import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
 
 abstract interface class UsersRepositoryPort {
@@ -24,4 +25,5 @@ abstract interface class UsersRepositoryPort {
   // Future<void> deleteSession(int id);
 
   /// Email Verification Codes
+  Future<void> saveEmailCode(EmailCode emailCode);
 }
