@@ -1017,6 +1017,235 @@ class PasswordResetTokensCompanion extends UpdateCompanion<PasswordResetToken> {
   }
 }
 
+class $UploadsTable extends Uploads with TableInfo<$UploadsTable, Upload> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UploadsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($UploadsTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, UuidValue> uploaderId =
+      GeneratedColumn<UuidValue>('uploader_id', aliasedName, true,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES users (id) ON DELETE SET NULL'))
+          .withConverter<String?>($UploadsTable.$converteruploaderIdn);
+  static const VerificationMeta _mimeTypeMeta =
+      const VerificationMeta('mimeType');
+  @override
+  late final GeneratedColumn<String> mimeType = GeneratedColumn<String>(
+      'mime_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _sizeMeta = const VerificationMeta('size');
+  @override
+  late final GeneratedColumn<int> size = GeneratedColumn<int>(
+      'size', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($UploadsTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($UploadsTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, uploaderId, mimeType, size, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'uploads';
+  @override
+  VerificationContext validateIntegrity(Insertable<Upload> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('mime_type')) {
+      context.handle(_mimeTypeMeta,
+          mimeType.isAcceptableOrUnknown(data['mime_type']!, _mimeTypeMeta));
+    } else if (isInserting) {
+      context.missing(_mimeTypeMeta);
+    }
+    if (data.containsKey('size')) {
+      context.handle(
+          _sizeMeta, size.isAcceptableOrUnknown(data['size']!, _sizeMeta));
+    } else if (isInserting) {
+      context.missing(_sizeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Upload map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Upload(
+      id: $UploadsTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      uploaderId: $UploadsTable.$converteruploaderIdn.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}uploader_id'])),
+      mimeType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}mime_type'])!,
+      size: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}size'])!,
+      updatedAt: $UploadsTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $UploadsTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $UploadsTable createAlias(String alias) {
+    return $UploadsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converteruploaderId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String?, UuidValue?> $converteruploaderIdn =
+      NullAwareTypeConverter.wrap($converteruploaderId);
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class UploadsCompanion extends UpdateCompanion<Upload> {
+  final Value<String> id;
+  final Value<String?> uploaderId;
+  final Value<String> mimeType;
+  final Value<int> size;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const UploadsCompanion({
+    this.id = const Value.absent(),
+    this.uploaderId = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    this.size = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UploadsCompanion.insert({
+    this.id = const Value.absent(),
+    this.uploaderId = const Value.absent(),
+    required String mimeType,
+    required int size,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : mimeType = Value(mimeType),
+        size = Value(size);
+  static Insertable<Upload> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? uploaderId,
+    Expression<String>? mimeType,
+    Expression<int>? size,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uploaderId != null) 'uploader_id': uploaderId,
+      if (mimeType != null) 'mime_type': mimeType,
+      if (size != null) 'size': size,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UploadsCompanion copyWith(
+      {Value<String>? id,
+      Value<String?>? uploaderId,
+      Value<String>? mimeType,
+      Value<int>? size,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return UploadsCompanion(
+      id: id ?? this.id,
+      uploaderId: uploaderId ?? this.uploaderId,
+      mimeType: mimeType ?? this.mimeType,
+      size: size ?? this.size,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $UploadsTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (uploaderId.present) {
+      map['uploader_id'] = Variable<UuidValue>(
+          $UploadsTable.$converteruploaderIdn.toSql(uploaderId.value),
+          PgTypes.uuid);
+    }
+    if (mimeType.present) {
+      map['mime_type'] = Variable<String>(mimeType.value);
+    }
+    if (size.present) {
+      map['size'] = Variable<int>(size.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $UploadsTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $UploadsTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UploadsCompanion(')
+          ..write('id: $id, ')
+          ..write('uploaderId: $uploaderId, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('size: $size, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -1026,12 +1255,18 @@ abstract class _$Database extends GeneratedDatabase {
       $EmailVerificationCodesTable(this);
   late final $PasswordResetTokensTable passwordResetTokens =
       $PasswordResetTokensTable(this);
+  late final $UploadsTable uploads = $UploadsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [users, authSessions, emailVerificationCodes, passwordResetTokens];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        users,
+        authSessions,
+        emailVerificationCodes,
+        passwordResetTokens,
+        uploads
+      ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -1054,6 +1289,13 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('password_reset_tokens', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('uploads', kind: UpdateKind.update),
             ],
           ),
         ],
@@ -1133,6 +1375,20 @@ final class $$UsersTableReferences
 
     final cache =
         $_typedResult.readTableOrNull(_PasswordResetTokensInUsersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$UploadsTable, List<Upload>> _UploadsInUsersTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.uploads,
+          aliasName: $_aliasNameGenerator(db.users.id, db.uploads.uploaderId));
+
+  $$UploadsTableProcessedTableManager get UploadsInUsers {
+    final manager = $$UploadsTableTableManager($_db, $_db.uploads).filter(
+        (f) => f.uploaderId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_UploadsInUsersTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -1227,6 +1483,27 @@ class $$UsersTableFilterComposer extends Composer<_$Database, $UsersTable> {
             $$PasswordResetTokensTableFilterComposer(
               $db: $db,
               $table: $db.passwordResetTokens,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> UploadsInUsers(
+      Expression<bool> Function($$UploadsTableFilterComposer f) f) {
+    final $$UploadsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.uploaderId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableFilterComposer(
+              $db: $db,
+              $table: $db.uploads,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1357,6 +1634,27 @@ class $$UsersTableAnnotationComposer extends Composer<_$Database, $UsersTable> {
                 ));
     return f(composer);
   }
+
+  Expression<T> UploadsInUsers<T extends Object>(
+      Expression<T> Function($$UploadsTableAnnotationComposer a) f) {
+    final $$UploadsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.uploaderId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -1373,7 +1671,8 @@ class $$UsersTableTableManager extends RootTableManager<
     PrefetchHooks Function(
         {bool SessionsInUsers,
         bool EmailVerificationCodesInUsers,
-        bool PasswordResetTokensInUsers})> {
+        bool PasswordResetTokensInUsers,
+        bool UploadsInUsers})> {
   $$UsersTableTableManager(_$Database db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -1427,13 +1726,15 @@ class $$UsersTableTableManager extends RootTableManager<
           prefetchHooksCallback: (
               {SessionsInUsers = false,
               EmailVerificationCodesInUsers = false,
-              PasswordResetTokensInUsers = false}) {
+              PasswordResetTokensInUsers = false,
+              UploadsInUsers = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (SessionsInUsers) db.authSessions,
                 if (EmailVerificationCodesInUsers) db.emailVerificationCodes,
-                if (PasswordResetTokensInUsers) db.passwordResetTokens
+                if (PasswordResetTokensInUsers) db.passwordResetTokens,
+                if (UploadsInUsers) db.uploads
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -1474,6 +1775,18 @@ class $$UsersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (UploadsInUsers)
+                    await $_getPrefetchedData<User, $UsersTable, Upload>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._UploadsInUsersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .UploadsInUsers,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.uploaderId == item.id),
                         typedResults: items)
                 ];
               },
@@ -1496,7 +1809,8 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function(
         {bool SessionsInUsers,
         bool EmailVerificationCodesInUsers,
-        bool PasswordResetTokensInUsers})>;
+        bool PasswordResetTokensInUsers,
+        bool UploadsInUsers})>;
 typedef $$AuthSessionsTableCreateCompanionBuilder = AuthSessionsCompanion
     Function({
   Value<String> id,
@@ -2446,6 +2760,296 @@ typedef $$PasswordResetTokensTableProcessedTableManager = ProcessedTableManager<
     (PasswordResetToken, $$PasswordResetTokensTableReferences),
     PasswordResetToken,
     PrefetchHooks Function({bool userId})>;
+typedef $$UploadsTableCreateCompanionBuilder = UploadsCompanion Function({
+  Value<String> id,
+  Value<String?> uploaderId,
+  required String mimeType,
+  required int size,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$UploadsTableUpdateCompanionBuilder = UploadsCompanion Function({
+  Value<String> id,
+  Value<String?> uploaderId,
+  Value<String> mimeType,
+  Value<int> size,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$UploadsTableReferences
+    extends BaseReferences<_$Database, $UploadsTable, Upload> {
+  $$UploadsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _uploaderIdTable(_$Database db) => db.users
+      .createAlias($_aliasNameGenerator(db.uploads.uploaderId, db.users.id));
+
+  $$UsersTableProcessedTableManager? get uploaderId {
+    final $_column = $_itemColumn<UuidValue>('uploader_id');
+    if ($_column == null) return null;
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_uploaderIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$UploadsTableFilterComposer extends Composer<_$Database, $UploadsTable> {
+  $$UploadsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get mimeType => $composableBuilder(
+      column: $table.mimeType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get size => $composableBuilder(
+      column: $table.size, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$UsersTableFilterComposer get uploaderId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploaderId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UploadsTableOrderingComposer
+    extends Composer<_$Database, $UploadsTable> {
+  $$UploadsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get mimeType => $composableBuilder(
+      column: $table.mimeType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get size => $composableBuilder(
+      column: $table.size, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get uploaderId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploaderId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UploadsTableAnnotationComposer
+    extends Composer<_$Database, $UploadsTable> {
+  $$UploadsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get mimeType =>
+      $composableBuilder(column: $table.mimeType, builder: (column) => column);
+
+  GeneratedColumn<int> get size =>
+      $composableBuilder(column: $table.size, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get uploaderId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploaderId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UploadsTableTableManager extends RootTableManager<
+    _$Database,
+    $UploadsTable,
+    Upload,
+    $$UploadsTableFilterComposer,
+    $$UploadsTableOrderingComposer,
+    $$UploadsTableAnnotationComposer,
+    $$UploadsTableCreateCompanionBuilder,
+    $$UploadsTableUpdateCompanionBuilder,
+    (Upload, $$UploadsTableReferences),
+    Upload,
+    PrefetchHooks Function({bool uploaderId})> {
+  $$UploadsTableTableManager(_$Database db, $UploadsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UploadsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UploadsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UploadsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> uploaderId = const Value.absent(),
+            Value<String> mimeType = const Value.absent(),
+            Value<int> size = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UploadsCompanion(
+            id: id,
+            uploaderId: uploaderId,
+            mimeType: mimeType,
+            size: size,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> uploaderId = const Value.absent(),
+            required String mimeType,
+            required int size,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UploadsCompanion.insert(
+            id: id,
+            uploaderId: uploaderId,
+            mimeType: mimeType,
+            size: size,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$UploadsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({uploaderId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (uploaderId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.uploaderId,
+                    referencedTable:
+                        $$UploadsTableReferences._uploaderIdTable(db),
+                    referencedColumn:
+                        $$UploadsTableReferences._uploaderIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$UploadsTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $UploadsTable,
+    Upload,
+    $$UploadsTableFilterComposer,
+    $$UploadsTableOrderingComposer,
+    $$UploadsTableAnnotationComposer,
+    $$UploadsTableCreateCompanionBuilder,
+    $$UploadsTableUpdateCompanionBuilder,
+    (Upload, $$UploadsTableReferences),
+    Upload,
+    PrefetchHooks Function({bool uploaderId})>;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -2459,4 +3063,6 @@ class $DatabaseManager {
           _db, _db.emailVerificationCodes);
   $$PasswordResetTokensTableTableManager get passwordResetTokens =>
       $$PasswordResetTokensTableTableManager(_db, _db.passwordResetTokens);
+  $$UploadsTableTableManager get uploads =>
+      $$UploadsTableTableManager(_db, _db.uploads);
 }

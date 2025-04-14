@@ -35,6 +35,7 @@ enum DotEnvKey {
 
   /// Username for the production database.
   databaseUsername('DATABASE_USERNAME'),
+  uploadsBaseDirectory('UPLOADS_BASE_DIRECTORY'),
   emailUrl('EMAIL_URL'),
   websiteUrl('WEBSITE_URL'),
   smtpHost('SMTP_HOST'),

@@ -11,6 +11,7 @@ import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/users
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
 import 'package:dle_server/kernel/infrastructure/database/migration_strategy.dart';
+import 'package:dle_server/kernel/infrastructure/database/tables/uploads.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 import 'package:dle_server/kernel/infrastructure/extensions/dot_env_extension.dart';
 import 'package:drift/drift.dart';
@@ -25,7 +26,13 @@ part 'database.g.dart';
 
 @lazySingleton
 @DriftDatabase(
-  tables: [Users, AuthSessions, EmailVerificationCodes, PasswordResetTokens],
+  tables: [
+    Users,
+    AuthSessions,
+    EmailVerificationCodes,
+    PasswordResetTokens,
+    Uploads,
+  ],
 )
 class Database extends _$Database {
   Database(super.e);

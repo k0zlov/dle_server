@@ -55,9 +55,23 @@ import 'package:dle_server/contexts/auth/auth_dependency_container.dart'
 import 'package:dle_server/di/di_container.dart' as _i432;
 import 'package:dle_server/kernel/adapters/primary/api/middlewares/auth_middleware.dart'
     as _i601;
+import 'package:dle_server/kernel/adapters/secondary/persistence/uploads_repository_drift.dart'
+    as _i60;
+import 'package:dle_server/kernel/adapters/secondary/storage/local_uploads_storage.dart'
+    as _i945;
 import 'package:dle_server/kernel/application/ports/event_bus.dart' as _i287;
+import 'package:dle_server/kernel/application/ports/uploads_repository_port.dart'
+    as _i262;
+import 'package:dle_server/kernel/application/ports/uploads_storage_port.dart'
+    as _i779;
+import 'package:dle_server/kernel/application/use_cases/get_image_use_case/get_image_use_case.dart'
+    as _i344;
+import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart'
+    as _i109;
 import 'package:dle_server/kernel/infrastructure/database/database.dart'
     as _i780;
+import 'package:dle_server/kernel/infrastructure/services/image/image_service.dart'
+    as _i705;
 import 'package:dle_server/kernel/infrastructure/services/mail/mail_service.dart'
     as _i44;
 import 'package:dle_server/kernel/infrastructure/services/token/jwt_client.dart'
@@ -106,6 +120,11 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'websiteUrl',
     );
     gh.factory<String>(
+      () => dependencyContainer.uploadsBaseDirectory,
+      instanceName: 'uploadsBaseDirectory',
+    );
+    gh.lazySingleton<_i705.ImageService>(() => const _i705.ImageServiceImpl());
+    gh.factory<String>(
       () => dependencyContainer
           .passwordResetUrl(gh<String>(instanceName: 'websiteUrl')),
       instanceName: 'passwordResetUrl',
@@ -125,6 +144,8 @@ extension GetItInjectableX on _i174.GetIt {
               passwordResetTokensRepository:
                   await getAsync<_i482.PasswordResetTokensRepositoryPort>(),
             ));
+    gh.lazySingletonAsync<_i262.UploadsRepositoryPort>(() async =>
+        _i60.UploadsRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingletonAsync<_i765.EmailCodesRepositoryPort>(() async =>
         _i865.EmailCodesRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i601.AuthMiddleware>(
@@ -135,6 +156,13 @@ extension GetItInjectableX on _i174.GetIt {
               emailCodesRepository:
                   await getAsync<_i765.EmailCodesRepositoryPort>(),
               mailService: gh<_i44.MailService>(),
+            ));
+    gh.lazySingleton<_i779.UploadsStoragePort>(() => _i945.LocalUploadsStorage(
+        basePath: gh<String>(instanceName: 'uploadsBaseDirectory')));
+    gh.lazySingletonAsync<_i109.SaveUploadUseCase>(
+        () async => _i109.SaveUploadUseCase(
+              storage: gh<_i779.UploadsStoragePort>(),
+              repository: await getAsync<_i262.UploadsRepositoryPort>(),
             ));
     gh.lazySingletonAsync<_i792.ConfirmEmailUseCase>(
         () async => _i792.ConfirmEmailUseCase(
@@ -164,17 +192,17 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i221.UsersRepositoryPort>(),
               tokenService: gh<_i665.TokenService>(),
             ));
+    gh.lazySingletonAsync<_i852.ChangePasswordUseCase>(() async =>
+        _i852.ChangePasswordUseCase(
+            repository: await getAsync<_i221.UsersRepositoryPort>()));
+    gh.lazySingletonAsync<_i33.GetCurrentUserUseCase>(() async =>
+        _i33.GetCurrentUserUseCase(
+            repository: await getAsync<_i221.UsersRepositoryPort>()));
     gh.lazySingletonAsync<_i540.RevokeAllSessionsUseCase>(() async =>
         _i540.RevokeAllSessionsUseCase(
             repository: await getAsync<_i221.UsersRepositoryPort>()));
     gh.lazySingletonAsync<_i102.RevokeSessionUseCase>(() async =>
         _i102.RevokeSessionUseCase(
-            repository: await getAsync<_i221.UsersRepositoryPort>()));
-    gh.lazySingletonAsync<_i33.GetCurrentUserUseCase>(() async =>
-        _i33.GetCurrentUserUseCase(
-            repository: await getAsync<_i221.UsersRepositoryPort>()));
-    gh.lazySingletonAsync<_i852.ChangePasswordUseCase>(() async =>
-        _i852.ChangePasswordUseCase(
             repository: await getAsync<_i221.UsersRepositoryPort>()));
     gh.factoryAsync<_i287.DomainEventBus>(
       () async => authDependencyContainer
@@ -192,6 +220,12 @@ extension GetItInjectableX on _i174.GetIt {
           repository: await getAsync<_i221.UsersRepositoryPort>(),
           sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
         ));
+    gh.lazySingletonAsync<_i344.GetImageUseCase>(
+        () async => _i344.GetImageUseCase(
+              storage: gh<_i779.UploadsStoragePort>(),
+              repository: await getAsync<_i262.UploadsRepositoryPort>(),
+              imageService: gh<_i705.ImageService>(),
+            ));
     gh.lazySingletonAsync<_i685.AuthController>(() async =>
         _i685.AuthController(
           registerUseCase: await getAsync<_i288.RegisterUseCase>(),

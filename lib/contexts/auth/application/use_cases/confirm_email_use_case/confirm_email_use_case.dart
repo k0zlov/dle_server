@@ -11,14 +11,6 @@ part 'confirm_email_use_case.freezed.dart';
 
 part 'confirm_email_use_case.g.dart';
 
-enum ConfirmEmailError {
-  userNotFound,
-  codeNotFound,
-  alreadyVerified,
-  invalidCode,
-  codeExpired,
-}
-
 @freezed
 class ConfirmEmailParams with _$ConfirmEmailParams {
   const factory ConfirmEmailParams({
@@ -31,8 +23,7 @@ class ConfirmEmailParams with _$ConfirmEmailParams {
 }
 
 @lazySingleton
-class ConfirmEmailUseCase
-    implements UseCase<ConfirmEmailError, User, ConfirmEmailParams> {
+class ConfirmEmailUseCase implements UseCase<User, ConfirmEmailParams> {
   const ConfirmEmailUseCase({
     required this.repository,
     required this.emailCodesRepository,

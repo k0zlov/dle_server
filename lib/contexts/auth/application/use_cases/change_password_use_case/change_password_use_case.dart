@@ -9,8 +9,6 @@ part 'change_password_use_case.freezed.dart';
 
 part 'change_password_use_case.g.dart';
 
-enum ChangePasswordError { userNotFound, wrongPassword }
-
 @freezed
 class ChangePasswordParams with _$ChangePasswordParams {
   const factory ChangePasswordParams({
@@ -24,16 +22,13 @@ class ChangePasswordParams with _$ChangePasswordParams {
 }
 
 @lazySingleton
-class ChangePasswordUseCase
-    implements UseCase<ChangePasswordError, void, ChangePasswordParams> {
+class ChangePasswordUseCase implements UseCase<void, ChangePasswordParams> {
   const ChangePasswordUseCase({required this.repository});
 
   final UsersRepositoryPort repository;
 
   @override
-  Future<Either<ChangePasswordError, void>> call(
-    ChangePasswordParams params,
-  ) async {
+  Future<void> call(ChangePasswordParams params) async {
     final User? foundUser = await repository.findUser(id: params.userId);
 
     if (foundUser == null) {
@@ -46,6 +41,5 @@ class ChangePasswordUseCase
 
     final User updatedUser = foundUser.changePassword(params.newPassword);
     await repository.saveUser(updatedUser);
-    return const Right(null);
   }
 }

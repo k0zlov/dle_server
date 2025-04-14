@@ -19,6 +19,9 @@ abstract class DependencyContainer {
   String passwordResetUrl(@Named('websiteUrl') String websiteUrl) =>
       '$websiteUrl/reset-password?token=';
 
+  @Named('uploadsBaseDirectory')
+  String get uploadsBaseDirectory => env(DotEnvKey.uploadsBaseDirectory);
+
   OpenApiSpec get openapiSpec => OpenApiSpec(
     info: OpenApiInfo(
       version: env(DotEnvKey.version),
