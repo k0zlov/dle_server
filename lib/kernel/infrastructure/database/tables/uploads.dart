@@ -5,6 +5,8 @@ import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 
+export 'package:dle_server/kernel/domain/entities/upload/upload.dart';
+
 @UseRowClass(Upload)
 class Uploads extends Table {
   UuidColumn get id =>

@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -32,11 +32,11 @@ class ChangePasswordUseCase implements UseCase<void, ChangePasswordParams> {
     final User? foundUser = await repository.findUser(id: params.userId);
 
     if (foundUser == null) {
-      return const Left(ChangePasswordError.userNotFound);
+      throw UserNotFoundException();
     }
 
     if (!foundUser.checkPassword(params.oldPassword)) {
-      return const Left(ChangePasswordError.wrongPassword);
+      throw WrongCredentialsException();
     }
 
     final User updatedUser = foundUser.changePassword(params.newPassword);

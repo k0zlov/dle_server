@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:dle_server/kernel/application/ports/uploads_repository_port.dart';
 import 'package:dle_server/kernel/application/ports/uploads_storage_port.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -9,15 +8,6 @@ import 'package:injectable/injectable.dart';
 part 'save_upload_use_case.freezed.dart';
 
 part 'save_upload_use_case.g.dart';
-
-// Future<Response> handler(Request req) async {
-//   final formData = await req.formData();
-//
-//   final image = formData.files['image'];
-//
-//   await image?.readAsBytes();
-//   image?.contentType.mimeType;
-// }
 
 @freezed
 class SaveUploadParams with _$SaveUploadParams {
@@ -46,22 +36,13 @@ class SaveUploadUseCase implements UseCase<Upload, SaveUploadParams> {
       size: params.bytes.length,
     );
 
-    final successOrError = upload.validate();
-
-    return successOrError.fold(
-      (err) => Left(switch (err) {
-        UploadError.fileIsTooBig => SaveUploadError.fileIsTooBig,
-        UploadError.invalidMimeType => SaveUploadError.invalidFileExtension,
-      }),
-      (_) async {
-        await repository.save(upload);
-        await storage.save(
-          id: upload.id,
-          mimeType: upload.mimeType,
-          bytes: params.bytes,
-        );
-        return Right(upload);
-      },
+    await repository.save(upload);
+    await storage.save(
+      id: upload.id,
+      mimeType: upload.mimeType,
+      bytes: params.bytes,
     );
+
+    return upload;
   }
 }

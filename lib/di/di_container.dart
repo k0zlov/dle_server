@@ -1,4 +1,9 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:dle_server/contexts/auth/auth_dependency_container.dart';
+import 'package:dle_server/contexts/profiles/profiles_dependency_container.dart';
+import 'package:dle_server/kernel/adapters/secondary/event_bus/in_memory_event_bus.dart';
+import 'package:dle_server/kernel/application/ports/event_bus.dart';
+import 'package:dle_server/kernel/infrastructure/events/event_listener.dart';
 import 'package:dle_server/kernel/infrastructure/extensions/dot_env_extension.dart';
 import 'package:dle_server/kernel/infrastructure/logger/loggers.dart';
 import 'package:dle_server/kernel/infrastructure/services/token/jwt_client.dart';
@@ -52,4 +57,11 @@ abstract class DependencyContainer {
 
   @Named('emailUrl')
   String get emailUrl => env(DotEnvKey.emailUrl);
+
+  IntegrationEventBus integrationEventBus(
+    @authContext List<IntegrationEventListener> auth,
+    @profilesContext List<IntegrationEventListener> profiles,
+  ) {
+    return InMemoryEventBus(listeners: [...auth, ...profiles]);
+  }
 }

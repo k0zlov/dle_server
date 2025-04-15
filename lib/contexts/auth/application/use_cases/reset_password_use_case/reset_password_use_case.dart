@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/password_reset_tokens_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/password_reset_token/password_reset_token.dart';
@@ -10,13 +10,6 @@ import 'package:injectable/injectable.dart';
 part 'reset_password_use_case.freezed.dart';
 
 part 'reset_password_use_case.g.dart';
-
-enum ResetPasswordError {
-  userNotFound,
-  tokenNotFound,
-  tokenExpired,
-  tokenAlreadyUsed,
-}
 
 @freezed
 class ResetPasswordParams with _$ResetPasswordParams {
@@ -30,8 +23,7 @@ class ResetPasswordParams with _$ResetPasswordParams {
 }
 
 @lazySingleton
-class ResetPasswordUseCase
-    implements UseCase<ResetPasswordError, void, ResetPasswordParams> {
+class ResetPasswordUseCase implements UseCase<void, ResetPasswordParams> {
   const ResetPasswordUseCase({
     required this.repository,
     required this.passwordResetTokensRepository,
@@ -41,38 +33,25 @@ class ResetPasswordUseCase
   final PasswordResetTokensRepositoryPort passwordResetTokensRepository;
 
   @override
-  Future<Either<ResetPasswordError, void>> call(
-    ResetPasswordParams params,
-  ) async {
+  Future<void> call(ResetPasswordParams params) async {
     final PasswordResetToken? foundToken = await passwordResetTokensRepository
         .find(id: params.token);
 
     if (foundToken == null) {
-      return const Left(ResetPasswordError.tokenNotFound);
+      throw ResetPasswordTokenNotFound();
     }
 
-    final tokenOrError = foundToken.use();
+    User? user = await repository.findUser(id: foundToken.userId);
 
-    return tokenOrError.fold(
-      (err) => Left(switch (err) {
-        PasswordResetTokenError.tokenExpired => ResetPasswordError.tokenExpired,
-        PasswordResetTokenError.alreadyUsed =>
-          ResetPasswordError.tokenAlreadyUsed,
-      }),
-      (usedToken) async {
-        await passwordResetTokensRepository.save(usedToken);
+    if (user == null) {
+      throw UserNotFoundException();
+    }
 
-        User? user = await repository.findUser(id: foundToken.userId);
+    final PasswordResetToken usedToken = foundToken.use();
 
-        if (user == null) {
-          return const Left(ResetPasswordError.userNotFound);
-        }
+    await passwordResetTokensRepository.save(usedToken);
 
-        user = user.changePassword(params.password);
-        await repository.saveUser(user);
-
-        return const Right(null);
-      },
-    );
+    user = user.changePassword(params.password);
+    await repository.saveUser(user);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/email_codes_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
@@ -33,17 +33,15 @@ class ConfirmEmailUseCase implements UseCase<User, ConfirmEmailParams> {
   final EmailCodesRepositoryPort emailCodesRepository;
 
   @override
-  Future<Either<ConfirmEmailError, User>> call(
-    ConfirmEmailParams params,
-  ) async {
+  Future<User> call(ConfirmEmailParams params) async {
     final User? foundUser = await repository.findUser(email: params.email);
 
     if (foundUser == null) {
-      return const Left(ConfirmEmailError.userNotFound);
+      throw UserNotFoundException();
     }
 
     if (foundUser.emailVerified) {
-      return const Left(ConfirmEmailError.alreadyVerified);
+      throw EmailAlreadyVerifiedException();
     }
 
     final EmailCode? emailCode = await emailCodesRepository.findByCode(
@@ -52,26 +50,14 @@ class ConfirmEmailUseCase implements UseCase<User, ConfirmEmailParams> {
     );
 
     if (emailCode == null) {
-      return const Left(ConfirmEmailError.codeNotFound);
+      throw EmailCodeNotFoundException();
     }
 
-    final codeOrError = emailCode.verify(params.code);
+    final code = emailCode.verify(params.code);
+    await emailCodesRepository.save(code);
 
-    return codeOrError.fold(
-      (err) => Left(switch (err) {
-        EmailCodeError.codeNotFound => ConfirmEmailError.codeNotFound,
-        EmailCodeError.alreadyVerified => ConfirmEmailError.alreadyVerified,
-        EmailCodeError.invalidCode => ConfirmEmailError.invalidCode,
-        EmailCodeError.codeExpired => ConfirmEmailError.codeExpired,
-      }),
-      (code) async {
-        await emailCodesRepository.save(code);
-
-        final user = foundUser.verifyEmail();
-        await repository.saveUser(user);
-
-        return Right(user);
-      },
-    );
+    final user = foundUser.verifyEmail();
+    await repository.saveUser(user);
+    return user;
   }
 }

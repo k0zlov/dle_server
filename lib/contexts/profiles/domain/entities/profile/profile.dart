@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dle_server/contexts/profiles/domain/exceptions/profiles_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 import 'package:uuid/v4.dart';
 
@@ -33,7 +34,7 @@ class Profile extends Entity with ProfileMappable {
 
   Profile setUp({required String username, String? pictureId}) {
     if (isSetUp) {
-      throw Exception('');
+      throw ProfileAlreadySetUpException();
     }
 
     return copyWith(

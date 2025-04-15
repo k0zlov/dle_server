@@ -16,8 +16,8 @@ abstract interface class ImageService {
   Future<List<int>> resize({
     required List<int> bytes,
     required String mimeType,
-    required int width,
-    required int height,
+    int? width,
+    int? height,
   });
 
   /// Gets the dimensions (width and height) of an image.
@@ -51,8 +51,8 @@ class ImageServiceImpl implements ImageService {
   Future<List<int>> resize({
     required List<int> bytes,
     required String mimeType,
-    required int width,
-    required int height,
+    int? width,
+    int? height,
   }) async {
     try {
       // Decode the image from bytes

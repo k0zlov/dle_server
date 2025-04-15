@@ -1,3 +1,1 @@
-abstract class DomainException implements Exception {
-  String get message;
-}
+abstract interface class DomainException implements Exception {}

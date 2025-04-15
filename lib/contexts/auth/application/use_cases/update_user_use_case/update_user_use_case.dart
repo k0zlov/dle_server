@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/use_cases/send_email_code_use_case/send_email_code_use_case.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
@@ -9,13 +9,6 @@ import 'package:injectable/injectable.dart';
 part 'update_user_use_case.freezed.dart';
 
 part 'update_user_use_case.g.dart';
-
-enum UpdateUserError {
-  userNotFound,
-  emailIsNotAvailable,
-  wrongPassword,
-  couldNotSendEmailVerification,
-}
 
 @freezed
 class UpdateUserParams with _$UpdateUserParams {
@@ -30,8 +23,7 @@ class UpdateUserParams with _$UpdateUserParams {
 }
 
 @lazySingleton
-class UpdateUserUseCase
-    implements UseCase<UpdateUserError, User, UpdateUserParams> {
+class UpdateUserUseCase implements UseCase<User, UpdateUserParams> {
   const UpdateUserUseCase({
     required this.repository,
     required this.sendEmailCodeUseCase,
@@ -41,11 +33,11 @@ class UpdateUserUseCase
   final SendEmailCodeUseCase sendEmailCodeUseCase;
 
   @override
-  Future<Either<UpdateUserError, User>> call(UpdateUserParams params) async {
+  Future<User> call(UpdateUserParams params) async {
     final User? foundUser = await repository.findUser(id: params.userId);
 
     if (foundUser == null) {
-      return const Left(UpdateUserError.userNotFound);
+      throw UserNotFoundException();
     }
 
     final User? userWithSuchEmail = await repository.findUser(
@@ -53,31 +45,18 @@ class UpdateUserUseCase
     );
 
     if (userWithSuchEmail != null) {
-      return const Left(UpdateUserError.emailIsNotAvailable);
+      throw EmailIsNotAvailableException();
     }
 
     if (!foundUser.checkPassword(params.password)) {
-      return const Left(UpdateUserError.wrongPassword);
+      throw WrongCredentialsException();
     }
 
     final User updatedUser = foundUser.changeEmail(email: params.email);
     await repository.saveUser(updatedUser);
 
-    final successOrError = await sendEmailCodeUseCase(
-      SendEmailCodeParams(email: updatedUser.email),
-    );
+    await sendEmailCodeUseCase(SendEmailCodeParams(email: updatedUser.email));
 
-    return successOrError.fold(
-      (err) => Left(switch (err) {
-        SendEmailCodeError.userNotFound => UpdateUserError.userNotFound,
-        SendEmailCodeError.alreadyVerified ||
-        SendEmailCodeError.couldNotSendLetter ||
-        SendEmailCodeError
-            .tooManyRequests => UpdateUserError.couldNotSendEmailVerification,
-      }),
-      (_) {
-        return Right(updatedUser);
-      },
-    );
+    return updatedUser;
   }
 }

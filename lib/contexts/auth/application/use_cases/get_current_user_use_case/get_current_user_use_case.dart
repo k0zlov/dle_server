@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -8,8 +8,6 @@ import 'package:injectable/injectable.dart';
 part 'get_current_user_use_case.freezed.dart';
 
 part 'get_current_user_use_case.g.dart';
-
-enum GetCurrentUserError { userNotFound }
 
 @freezed
 class GetCurrentUserParams with _$GetCurrentUserParams {
@@ -21,25 +19,22 @@ class GetCurrentUserParams with _$GetCurrentUserParams {
 }
 
 @lazySingleton
-class GetCurrentUserUseCase
-    implements UseCase<GetCurrentUserError, User, GetCurrentUserParams> {
+class GetCurrentUserUseCase implements UseCase<User, GetCurrentUserParams> {
   const GetCurrentUserUseCase({required this.repository});
 
   final UsersRepositoryPort repository;
 
   @override
-  Future<Either<GetCurrentUserError, User>> call(
-    GetCurrentUserParams params,
-  ) async {
+  Future<User> call(GetCurrentUserParams params) async {
     final User? foundUser = await repository.findUser(
       id: params.userId,
       includeSessions: true,
     );
 
     if (foundUser == null) {
-      return const Left(GetCurrentUserError.userNotFound);
+      throw UserNotFoundException();
     }
 
-    return Right(foundUser);
+    return foundUser;
   }
 }

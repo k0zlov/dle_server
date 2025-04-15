@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/email_codes_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/email_code/email_code.dart';
@@ -13,13 +13,6 @@ part 'send_email_code_use_case.freezed.dart';
 
 part 'send_email_code_use_case.g.dart';
 
-enum SendEmailCodeError {
-  userNotFound,
-  alreadyVerified,
-  couldNotSendLetter,
-  tooManyRequests,
-}
-
 @freezed
 class SendEmailCodeParams with _$SendEmailCodeParams {
   const factory SendEmailCodeParams({required String email}) =
@@ -30,8 +23,7 @@ class SendEmailCodeParams with _$SendEmailCodeParams {
 }
 
 @lazySingleton
-class SendEmailCodeUseCase
-    implements UseCase<SendEmailCodeError, void, SendEmailCodeParams> {
+class SendEmailCodeUseCase implements UseCase<void, SendEmailCodeParams> {
   const SendEmailCodeUseCase({
     required this.repository,
     required this.emailCodesRepository,
@@ -43,17 +35,15 @@ class SendEmailCodeUseCase
   final MailService mailService;
 
   @override
-  Future<Either<SendEmailCodeError, void>> call(
-    SendEmailCodeParams params,
-  ) async {
+  Future<void> call(SendEmailCodeParams params) async {
     final User? foundUser = await repository.findUser(email: params.email);
 
     if (foundUser == null) {
-      return const Left(SendEmailCodeError.userNotFound);
+      throw UserNotFoundException();
     }
 
     if (foundUser.emailVerified) {
-      return const Left(SendEmailCodeError.alreadyVerified);
+      throw EmailAlreadyVerifiedException();
     }
 
     final List<EmailCode> userCodes = await emailCodesRepository.getUserCodes(
@@ -72,7 +62,7 @@ class SendEmailCodeUseCase
             .length;
 
     if (sentTodayCount >= 2) {
-      return const Left(SendEmailCodeError.tooManyRequests);
+      throw TooManyEmailVerificationRequestsException();
     }
 
     final EmailCode emailCode = EmailCode.create(userId: foundUser.id);
@@ -85,11 +75,9 @@ class SendEmailCodeUseCase
     );
 
     if (!isSent) {
-      return const Left(SendEmailCodeError.couldNotSendLetter);
+      throw CouldNotSentEmailLetter();
     }
 
     await emailCodesRepository.save(emailCode);
-
-    return const Right(null);
   }
 }

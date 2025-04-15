@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/password_reset_tokens_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/application/use_cases/send_email_code_use_case/send_email_code_use_case.dart';
@@ -14,14 +14,6 @@ part 'forgot_password_use_case.freezed.dart';
 
 part 'forgot_password_use_case.g.dart';
 
-enum ForgotPasswordError {
-  userNotFound,
-  emailIsNotVerified,
-  couldNotSendEmailVerification,
-  couldNotSendToken,
-  tooManyRequests,
-}
-
 @freezed
 class ForgotPasswordParams with _$ForgotPasswordParams {
   const factory ForgotPasswordParams({required String email}) =
@@ -32,8 +24,7 @@ class ForgotPasswordParams with _$ForgotPasswordParams {
 }
 
 @lazySingleton
-class ForgotPasswordUseCase
-    implements UseCase<ForgotPasswordError, void, ForgotPasswordParams> {
+class ForgotPasswordUseCase implements UseCase<void, ForgotPasswordParams> {
   const ForgotPasswordUseCase({
     required this.repository,
     required this.mailService,
@@ -50,23 +41,16 @@ class ForgotPasswordUseCase
   final String passwordResetUrl;
 
   @override
-  Future<Either<ForgotPasswordError, void>> call(
-    ForgotPasswordParams params,
-  ) async {
+  Future<void> call(ForgotPasswordParams params) async {
     final User? foundUser = await repository.findUser(email: params.email);
 
     if (foundUser == null) {
-      return const Left(ForgotPasswordError.userNotFound);
+      throw UserNotFoundException();
     }
 
     if (!foundUser.emailVerified) {
-      final successOrError = await sendEmailCodeUseCase(
-        SendEmailCodeParams(email: foundUser.email),
-      );
-      return successOrError.fold(
-        (err) => const Left(ForgotPasswordError.couldNotSendEmailVerification),
-        (_) => const Left(ForgotPasswordError.emailIsNotVerified),
-      );
+      await sendEmailCodeUseCase(SendEmailCodeParams(email: foundUser.email));
+      throw EmailIsNotVerifiedException();
     }
 
     final List<PasswordResetToken> userTokens =
@@ -84,7 +68,7 @@ class ForgotPasswordUseCase
             .length;
 
     if (sentTodayCount >= 2) {
-      return const Left(ForgotPasswordError.tooManyRequests);
+      throw TooManyForgotPasswordRequestsException();
     }
 
     final PasswordResetToken token = PasswordResetToken.create(
@@ -99,10 +83,9 @@ class ForgotPasswordUseCase
     );
 
     if (!isSuccess) {
-      return const Left(ForgotPasswordError.couldNotSendToken);
+      throw CouldNotSendTokenException();
     }
 
     await passwordResetTokensRepository.save(token);
-    return const Right(null);
   }
 }

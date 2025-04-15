@@ -14,11 +14,10 @@ class UploadsRoute extends Route {
 
   Endpoint get images {
     return Endpoint.get(
-      path: '/images',
+      path: 'images/<id>',
       query: [
-        Field<String>('uploadId'),
-        Field<int>('width'),
-        Field<int>('height'),
+        Field<int>('width', isRequired: false),
+        Field<int>('height', isRequired: false),
       ],
       handler: controller.getImage,
     );

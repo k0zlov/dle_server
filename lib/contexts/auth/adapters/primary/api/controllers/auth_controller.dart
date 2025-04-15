@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:dle_server/contexts/auth/adapters/primary/api/dto/user_dto/user_dto.dart';
+import 'package:dle_server/contexts/auth/adapters/primary/api/exceptions/auth_exceptions_mapper.dart';
 import 'package:dle_server/contexts/auth/application/use_cases/confirm_email_use_case/confirm_email_use_case.dart';
 import 'package:dle_server/contexts/auth/application/use_cases/forgot_password_use_case/forgot_password_use_case.dart';
 import 'package:dle_server/contexts/auth/application/use_cases/login_use_case/login_use_case.dart';
@@ -28,6 +27,7 @@ class AuthController {
     required this.sendEmailCodeUseCase,
     required this.forgotPasswordUseCase,
     required this.resetPasswordUseCase,
+    required this.mapper,
   });
 
   final RegisterUseCase registerUseCase;
@@ -39,251 +39,124 @@ class AuthController {
   final SendEmailCodeUseCase sendEmailCodeUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
+  final AuthExceptionsMapper mapper;
 
   Future<Response> register(Request req) async {
-    final RegisterParams params = RegisterParams.fromJson(req.data);
+    final params = RegisterParams.fromJson(req.data);
 
-    final userOrError = await registerUseCase(params);
-
-    return userOrError.fold(
-      (err) => switch (err) {
-        RegisterError.emailIsNotAvailable =>
-          throw const ApiException.forbidden('This email is not available.'),
-      },
-      (user) {
-        return Response.json(body: UserDto.fromEntity(user));
-      },
-    );
+    try {
+      final user = await registerUseCase(params);
+      return Response.json(body: UserDto.fromEntity(user));
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> login(Request req) async {
-    final LoginParams params = LoginParams.fromJson(
-      req.data.copyWith({'deviceInfo': req.userAgent, 'ip': req.ip}),
+    final params = LoginParams.fromJson(
+      req.data.copyWith({'ip': req.ip, 'deviceInfo': req.userAgent}),
     );
 
-    final tokensOrError = await loginUseCase(params);
-
-    return tokensOrError.fold(
-      (err) {
-        return switch (err) {
-          LoginError.userNotFound || LoginError.wrongPassword =>
-            throw const ApiException.badRequest(
-              'Credentials are wrong. Try again',
-            ),
-        };
-      },
-      (tokens) {
-        return Response.json(body: tokens.toMap());
-      },
-    );
+    try {
+      final tokens = await loginUseCase(params);
+      return Response.json(body: tokens.toMap());
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> refreshSession(Request req) async {
-    final RefreshSessionParams params = RefreshSessionParams.fromJson(
-      req.data.copyWith({'deviceInfo': req.userAgent, 'ip': req.ip}),
+    final params = RefreshSessionParams.fromJson(
+      req.data.copyWith({'ip': req.ip, 'deviceInfo': req.userAgent}),
     );
 
-    final tokensOrError = await refreshSessionUseCase(params);
-
-    return tokensOrError.fold(
-      (err) {
-        return switch (err) {
-          RefreshSessionError.sessionNotFound ||
-          RefreshSessionError.invalidToken ||
-          RefreshSessionError.sessionExpired =>
-            throw const ApiException.badRequest('Could not refresh session.'),
-        };
-      },
-      (tokens) {
-        return Response.json(body: tokens.toMap());
-      },
-    );
+    try {
+      final tokens = await refreshSessionUseCase(params);
+      return Response.json(body: tokens.toMap());
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> revokeSession(Request req) async {
-    final RevokeSessionParams params = RevokeSessionParams(
+    final params = RevokeSessionParams(
       userId: req.payload.userId,
       sessionId: req.uri.pathSegments.last,
     );
 
-    final userOrError = await revokeSessionUseCase(params);
-
-    return userOrError.fold(
-      (err) {
-        return switch (err) {
-          RevokeSessionError.userNotFound ||
-          RevokeSessionError.sessionNotFound =>
-            throw const ApiException.badRequest('Could not revoke session.'),
-        };
-      },
-      (user) {
-        return Response.json(body: UserDto.fromEntity(user));
-      },
-    );
+    try {
+      final user = await revokeSessionUseCase(params);
+      return Response.json(body: UserDto.fromEntity(user));
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> revokeAllSessions(Request req) async {
-    final RevokeAllSessionsParams params = RevokeAllSessionsParams(
+    final params = RevokeAllSessionsParams(
       userId: req.payload.userId,
       sourceSessionId: req.payload.sessionId,
     );
 
-    final userOrError = await revokeAllSessionsUseCase(params);
-
-    return userOrError.fold(
-      (err) {
-        return switch (err) {
-          RevokeAllSessionsError.userNotFound ||
-          RevokeAllSessionsError.sourceSessionNotFound =>
-            throw const ApiException.badRequest(
-              'Could not revoke all sessions.',
-            ),
-        };
-      },
-      (user) {
-        return Response.json(body: UserDto.fromEntity(user));
-      },
-    );
+    try {
+      final user = await revokeAllSessionsUseCase(params);
+      return Response.json(body: UserDto.fromEntity(user));
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> confirmEmail(Request req) async {
-    final ConfirmEmailParams params = ConfirmEmailParams.fromJson(req.data);
+    final params = ConfirmEmailParams.fromJson(req.data);
 
-    final userOrError = await confirmEmailUseCase(params);
-
-    return userOrError.fold(
-      (err) {
-        return switch (err) {
-          ConfirmEmailError.userNotFound =>
-            throw const ApiException.notFound('User not found.'),
-
-          ConfirmEmailError.alreadyVerified =>
-            throw const ApiException.badRequest(
-              'This email has already been verified.',
-            ),
-
-          ConfirmEmailError.invalidCode ||
-          ConfirmEmailError.codeExpired ||
-          ConfirmEmailError.codeNotFound =>
-            throw const ApiException.badRequest(
-              'Provided verification code is invalid.',
-            ),
-        };
-      },
-      (user) {
-        return Response.json(body: UserDto.fromEntity(user));
-      },
-    );
+    try {
+      final user = await confirmEmailUseCase(params);
+      return Response.json(body: UserDto.fromEntity(user));
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> sendEmailVerification(Request req) async {
-    final SendEmailCodeParams params = SendEmailCodeParams.fromJson(req.data);
+    final params = SendEmailCodeParams.fromJson(req.data);
 
-    final successOrError = await sendEmailCodeUseCase(params);
-
-    return successOrError.fold(
-      (err) {
-        return switch (err) {
-          SendEmailCodeError.alreadyVerified =>
-            throw const ApiException.badRequest(
-              'This email has already been verified.',
-            ),
-
-          SendEmailCodeError.userNotFound =>
-            throw const ApiException.notFound('User not found.'),
-
-          SendEmailCodeError.couldNotSendLetter =>
-            throw const ApiException.badRequest(
-              'Could not send verification email. Please try again later.',
-            ),
-
-          SendEmailCodeError.tooManyRequests =>
-            throw const ApiException(
-              'Too many email verification requests. Try again another day.',
-              statusCode: HttpStatus.tooManyRequests,
-            ),
-        };
-      },
-      (_) {
-        return Response.json(
-          body: const MessageDto(
-            message: 'Email verification code was sent to your email.',
-          ),
-        );
-      },
-    );
+    try {
+      await sendEmailCodeUseCase(params);
+      return Response.json(
+        body: const MessageDto(
+          message: 'Email verification code was sent to your email.',
+        ),
+      );
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> forgotPassword(Request req) async {
-    final ForgotPasswordParams params = ForgotPasswordParams.fromJson(req.data);
+    final params = ForgotPasswordParams.fromJson(req.data);
 
-    final successOrError = await forgotPasswordUseCase(params);
-
-    return successOrError.fold(
-      (err) {
-        return switch (err) {
-          ForgotPasswordError.userNotFound =>
-            throw const ApiException.notFound('User not found.'),
-
-          ForgotPasswordError.emailIsNotVerified =>
-            throw const ApiException.badRequest(
-              'Your email address is not verified. A verification email has been sent.',
-            ),
-
-          ForgotPasswordError.couldNotSendEmailVerification =>
-            throw const ApiException(
-              'Your email address is not verified. Email verification could not be sent. Please try again later.',
-              statusCode: HttpStatus.badRequest,
-            ),
-
-          ForgotPasswordError.couldNotSendToken =>
-            throw const ApiException.internalServerError(
-              'Password reset email could not be sent. Please try again later.',
-            ),
-
-          ForgotPasswordError.tooManyRequests =>
-            throw const ApiException(
-              'Too many password reset requests. Please try again later.',
-              statusCode: HttpStatus.tooManyRequests,
-            ),
-        };
-      },
-      (_) {
-        return Response.json(
-          body: const MessageDto(
-            message: 'Password reset link was sent to your email.',
-          ),
-        );
-      },
-    );
+    try {
+      await forgotPasswordUseCase(params);
+      return Response.json(
+        body: const MessageDto(
+          message: 'Password reset link was sent to your email.',
+        ),
+      );
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 
   Future<Response> resetPassword(Request req) async {
-    final ResetPasswordParams params = ResetPasswordParams.fromJson(req.data);
+    final params = ResetPasswordParams.fromJson(req.data);
 
-    final successOrError = await resetPasswordUseCase(params);
-
-    return successOrError.fold(
-      (err) {
-        return switch (err) {
-          ResetPasswordError.userNotFound =>
-            throw const ApiException.notFound(
-              'User associated with this request was not found.',
-            ),
-
-          ResetPasswordError.tokenNotFound ||
-          ResetPasswordError.tokenExpired ||
-          ResetPasswordError.tokenAlreadyUsed =>
-            throw const ApiException.badRequest(
-              'Invalid or expired password reset request. Please request a new password reset.',
-            ),
-        };
-      },
-      (_) {
-        return Response.json(
-          body: const MessageDto(message: 'Password was successfully reset.'),
-        );
-      },
-    );
+    try {
+      await resetPasswordUseCase(params);
+      return Response.json(
+        body: const MessageDto(message: 'Password was successfully reset.'),
+      );
+    } catch (e) {
+      throw mapper(e);
+    }
   }
 }

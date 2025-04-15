@@ -1,11 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/domain/exceptions/auth_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 import 'package:uuid/v4.dart';
 
 part 'auth_session.mapper.dart';
-
-enum AuthSessionError { sessionNotFound, invalidToken, sessionExpired }
 
 @MappableClass()
 class AuthSession extends Entity with AuthSessionMappable {
@@ -47,27 +45,25 @@ class AuthSession extends Entity with AuthSessionMappable {
     return DateTime.now().add(const Duration(days: 10));
   }
 
-  Either<AuthSessionError, AuthSession> refresh({
+  AuthSession refresh({
     required String token,
     required String ip,
     required String deviceInfo,
   }) {
     if (isExpired) {
-      return const Left(AuthSessionError.sessionExpired);
+      throw SessionExpiredException();
     }
 
     if (refreshToken != token) {
-      return const Left(AuthSessionError.invalidToken);
+      throw SessionExpiredException();
     }
 
-    return Right(
-      copyWith(
-        refreshToken: const UuidV4().generate(),
-        ip: ip,
-        deviceInfo: deviceInfo,
-        expiresAt: _getExpirationDate(),
-        updatedAt: DateTime.now(),
-      ),
+    return copyWith(
+      refreshToken: const UuidV4().generate(),
+      ip: ip,
+      deviceInfo: deviceInfo,
+      expiresAt: _getExpirationDate(),
+      updatedAt: DateTime.now(),
     );
   }
 }

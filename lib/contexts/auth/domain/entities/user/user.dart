@@ -1,8 +1,8 @@
 import 'package:bcrypt/bcrypt.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dartz/dartz.dart';
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
+import 'package:dle_server/contexts/auth/domain/exceptions/auth_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'user.mapper.dart';
@@ -76,7 +76,7 @@ class User extends Entity with UserMappable {
     return copyWith(emailVerified: true);
   }
 
-  Either<AuthSessionError, User> refreshSession({
+  User refreshSession({
     required String token,
     required String ip,
     required String deviceInfo,
@@ -86,19 +86,18 @@ class User extends Entity with UserMappable {
     );
 
     if (session == null) {
-      return const Left(AuthSessionError.sessionNotFound);
+      throw InvalidSessionTokenException();
     }
 
-    return session
-        .refresh(token: token, ip: ip, deviceInfo: deviceInfo)
-        .fold(
-          Left.new,
-          (session) => Right(
-            copyWith(
-              sessions: {session, ...sessions.where((e) => e.id != session.id)},
-              updatedAt: DateTime.now(),
-            ),
-          ),
-        );
+    final AuthSession updatedSession = session.refresh(
+      token: token,
+      ip: ip,
+      deviceInfo: deviceInfo,
+    );
+
+    return copyWith(
+      sessions: {updatedSession, ...sessions.where((e) => e.id != session.id)},
+      updatedAt: DateTime.now(),
+    );
   }
 }

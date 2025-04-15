@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/application/exceptions/auth_exceptions.dart';
 import 'package:dle_server/contexts/auth/application/ports/users_repository_port.dart';
 import 'package:dle_server/contexts/auth/domain/entities/auth_session/auth_session.dart';
 import 'package:dle_server/contexts/auth/domain/entities/user/user.dart';
@@ -12,8 +12,6 @@ import 'package:injectable/injectable.dart';
 part 'login_use_case.freezed.dart';
 
 part 'login_use_case.g.dart';
-
-enum LoginError { userNotFound, wrongPassword }
 
 @freezed
 class LoginParams with _$LoginParams {
@@ -29,27 +27,27 @@ class LoginParams with _$LoginParams {
 }
 
 @lazySingleton
-class LoginUseCase implements UseCase<LoginError, AuthTokens, LoginParams> {
+class LoginUseCase implements UseCase<AuthTokens, LoginParams> {
   const LoginUseCase({required this.repository, required this.tokenService});
 
   final UsersRepositoryPort repository;
   final TokenService tokenService;
 
   @override
-  Future<Either<LoginError, AuthTokens>> call(LoginParams params) async {
+  Future<AuthTokens> call(LoginParams params) async {
     final User? foundUser = await repository.findUser(
       email: params.email,
       includeSessions: true,
     );
 
     if (foundUser == null) {
-      return const Left(LoginError.userNotFound);
+      throw UserNotFoundException();
     }
 
     final bool result = foundUser.checkPassword(params.password);
 
     if (!result) {
-      return const Left(LoginError.wrongPassword);
+      throw WrongCredentialsException();
     }
 
     final AuthSession session = AuthSession.create(
@@ -61,13 +59,11 @@ class LoginUseCase implements UseCase<LoginError, AuthTokens, LoginParams> {
     final User userWithSession = foundUser.addSession(session);
     await repository.saveUser(userWithSession, overrideSessions: true);
 
-    return Right(
-      AuthTokens(
-        accessToken: tokenService.generateAccessToken(
-          TokenPayload(userId: userWithSession.id, sessionId: session.id),
-        ),
-        refreshToken: session.refreshToken,
+    return AuthTokens(
+      accessToken: tokenService.generateAccessToken(
+        TokenPayload(userId: userWithSession.id, sessionId: session.id),
       ),
+      refreshToken: session.refreshToken,
     );
   }
 }

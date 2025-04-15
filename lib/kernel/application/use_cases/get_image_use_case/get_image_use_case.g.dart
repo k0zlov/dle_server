@@ -9,29 +9,14 @@ part of 'get_image_use_case.dart';
 _$GetImageParamsImpl _$$GetImageParamsImplFromJson(Map<String, dynamic> json) =>
     _$GetImageParamsImpl(
       uploadId: json['uploadId'] as String,
-      dimensions: _$recordConvertNullable(
-        json['dimensions'],
-        ($jsonValue) => (
-          height: ($jsonValue['height'] as num).toInt(),
-          width: ($jsonValue['width'] as num).toInt(),
-        ),
-      ),
+      height: (json['height'] as num?)?.toInt(),
+      width: (json['width'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$GetImageParamsImplToJson(
         _$GetImageParamsImpl instance) =>
     <String, dynamic>{
       'uploadId': instance.uploadId,
-      'dimensions': instance.dimensions == null
-          ? null
-          : <String, dynamic>{
-              'height': instance.dimensions!.height,
-              'width': instance.dimensions!.width,
-            },
+      'height': instance.height,
+      'width': instance.width,
     };
-
-$Rec? _$recordConvertNullable<$Rec>(
-  Object? value,
-  $Rec Function(Map) convert,
-) =>
-    value == null ? null : convert(value as Map<String, dynamic>);

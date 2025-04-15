@@ -13,7 +13,7 @@ class UploadsRepositoryDrift implements UploadsRepositoryPort {
   Insertable<Upload> mapUpload(Upload upload) {
     return UploadsCompanion(
       id: Value(upload.id),
-      uploaderId: Value(upload.id),
+      uploaderId: Value(upload.uploaderId),
       mimeType: Value(upload.mimeType),
       size: Value(upload.size),
       updatedAt: Value(upload.updatedAt),

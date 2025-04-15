@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/kernel/application/exceptions/upload_exceptions.dart';
 import 'package:dle_server/kernel/application/ports/uploads_repository_port.dart';
 import 'package:dle_server/kernel/application/ports/uploads_storage_port.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -11,20 +11,12 @@ part 'get_image_use_case.freezed.dart';
 
 part 'get_image_use_case.g.dart';
 
-// Future<Response> handler(Request req) async {
-//   final formData = await req.formData();
-//
-//   final image = formData.files['image'];
-//
-//   await image?.readAsBytes();
-//   image?.contentType.mimeType;
-// }
-
 @freezed
 class GetImageParams with _$GetImageParams {
   const factory GetImageParams({
     required String uploadId,
-    ImageDimensions? dimensions,
+    int? height,
+    int? width,
   }) = _GetImageParams;
 
   factory GetImageParams.fromJson(Map<String, dynamic> json) =>
@@ -49,7 +41,7 @@ class GetImageUseCase
     final Upload? upload = await repository.find(params.uploadId);
 
     if (upload == null) {
-      return const Left(GetImageError.uploadNotFound);
+      throw UploadNotFoundException();
     }
 
     List<int>? bytes = await storage.find(
@@ -58,7 +50,7 @@ class GetImageUseCase
     );
 
     if (bytes == null) {
-      return const Left(GetImageError.fileNotFound);
+      throw FileNotFoundException();
     }
 
     const List<String> imageMimeTypes = [
@@ -68,15 +60,15 @@ class GetImageUseCase
     ];
 
     if (!imageMimeTypes.contains(upload.mimeType)) {
-      return const Left(GetImageError.wrongMimeType);
+      throw InvalidMimeTypeException();
     }
 
-    if (params.dimensions != null) {
+    if (params.width != null || params.height != null) {
       bytes = await imageService.resize(
         bytes: bytes,
         mimeType: upload.mimeType,
-        width: params.dimensions!.width,
-        height: params.dimensions!.height,
+        width: params.width,
+        height: params.height,
       );
     }
 

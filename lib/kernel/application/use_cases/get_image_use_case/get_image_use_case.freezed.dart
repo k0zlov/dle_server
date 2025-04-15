@@ -21,8 +21,8 @@ GetImageParams _$GetImageParamsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$GetImageParams {
   String get uploadId => throw _privateConstructorUsedError;
-  ({int height, int width})? get dimensions =>
-      throw _privateConstructorUsedError;
+  int? get height => throw _privateConstructorUsedError;
+  int? get width => throw _privateConstructorUsedError;
 
   /// Serializes this GetImageParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $GetImageParamsCopyWith<$Res> {
           GetImageParams value, $Res Function(GetImageParams) then) =
       _$GetImageParamsCopyWithImpl<$Res, GetImageParams>;
   @useResult
-  $Res call({String uploadId, ({int height, int width})? dimensions});
+  $Res call({String uploadId, int? height, int? width});
 }
 
 /// @nodoc
@@ -59,17 +59,22 @@ class _$GetImageParamsCopyWithImpl<$Res, $Val extends GetImageParams>
   @override
   $Res call({
     Object? uploadId = null,
-    Object? dimensions = freezed,
+    Object? height = freezed,
+    Object? width = freezed,
   }) {
     return _then(_value.copyWith(
       uploadId: null == uploadId
           ? _value.uploadId
           : uploadId // ignore: cast_nullable_to_non_nullable
               as String,
-      dimensions: freezed == dimensions
-          ? _value.dimensions
-          : dimensions // ignore: cast_nullable_to_non_nullable
-              as ({int height, int width})?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int?,
+      width: freezed == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -82,7 +87,7 @@ abstract class _$$GetImageParamsImplCopyWith<$Res>
       __$$GetImageParamsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uploadId, ({int height, int width})? dimensions});
+  $Res call({String uploadId, int? height, int? width});
 }
 
 /// @nodoc
@@ -99,17 +104,22 @@ class __$$GetImageParamsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? uploadId = null,
-    Object? dimensions = freezed,
+    Object? height = freezed,
+    Object? width = freezed,
   }) {
     return _then(_$GetImageParamsImpl(
       uploadId: null == uploadId
           ? _value.uploadId
           : uploadId // ignore: cast_nullable_to_non_nullable
               as String,
-      dimensions: freezed == dimensions
-          ? _value.dimensions
-          : dimensions // ignore: cast_nullable_to_non_nullable
-              as ({int height, int width})?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int?,
+      width: freezed == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -117,7 +127,7 @@ class __$$GetImageParamsImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$GetImageParamsImpl implements _GetImageParams {
-  const _$GetImageParamsImpl({required this.uploadId, this.dimensions});
+  const _$GetImageParamsImpl({required this.uploadId, this.height, this.width});
 
   factory _$GetImageParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GetImageParamsImplFromJson(json);
@@ -125,11 +135,13 @@ class _$GetImageParamsImpl implements _GetImageParams {
   @override
   final String uploadId;
   @override
-  final ({int height, int width})? dimensions;
+  final int? height;
+  @override
+  final int? width;
 
   @override
   String toString() {
-    return 'GetImageParams(uploadId: $uploadId, dimensions: $dimensions)';
+    return 'GetImageParams(uploadId: $uploadId, height: $height, width: $width)';
   }
 
   @override
@@ -139,13 +151,13 @@ class _$GetImageParamsImpl implements _GetImageParams {
             other is _$GetImageParamsImpl &&
             (identical(other.uploadId, uploadId) ||
                 other.uploadId == uploadId) &&
-            (identical(other.dimensions, dimensions) ||
-                other.dimensions == dimensions));
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.width, width) || other.width == width));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, uploadId, dimensions);
+  int get hashCode => Object.hash(runtimeType, uploadId, height, width);
 
   /// Create a copy of GetImageParams
   /// with the given fields replaced by the non-null parameter values.
@@ -167,7 +179,8 @@ class _$GetImageParamsImpl implements _GetImageParams {
 abstract class _GetImageParams implements GetImageParams {
   const factory _GetImageParams(
       {required final String uploadId,
-      final ({int height, int width})? dimensions}) = _$GetImageParamsImpl;
+      final int? height,
+      final int? width}) = _$GetImageParamsImpl;
 
   factory _GetImageParams.fromJson(Map<String, dynamic> json) =
       _$GetImageParamsImpl.fromJson;
@@ -175,7 +188,9 @@ abstract class _GetImageParams implements GetImageParams {
   @override
   String get uploadId;
   @override
-  ({int height, int width})? get dimensions;
+  int? get height;
+  @override
+  int? get width;
 
   /// Create a copy of GetImageParams
   /// with the given fields replaced by the non-null parameter values.

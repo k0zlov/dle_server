@@ -1,10 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dartz/dartz.dart';
+import 'package:dle_server/contexts/auth/domain/exceptions/auth_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'password_reset_token.mapper.dart';
-
-enum PasswordResetTokenError { tokenExpired, alreadyUsed }
 
 @MappableClass()
 class PasswordResetToken extends Entity with PasswordResetTokenMappable {
@@ -31,15 +29,15 @@ class PasswordResetToken extends Entity with PasswordResetTokenMappable {
 
   bool get isExpired => expiresAt.isBefore(DateTime.now());
 
-  Either<PasswordResetTokenError, PasswordResetToken> use() {
+  PasswordResetToken use() {
     if (isExpired) {
-      return const Left(PasswordResetTokenError.tokenExpired);
+      throw InvalidPasswordResetTokenException();
     }
 
     if (isUsed) {
-      return const Left(PasswordResetTokenError.alreadyUsed);
+      throw InvalidPasswordResetTokenException();
     }
 
-    return Right(copyWith(isUsed: true, updatedAt: DateTime.now()));
+    return copyWith(isUsed: true, updatedAt: DateTime.now());
   }
 }
