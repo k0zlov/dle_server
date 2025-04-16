@@ -64,6 +64,10 @@ import 'package:dle_server/contexts/profiles/application/listeners/integration/u
     as _i658;
 import 'package:dle_server/contexts/profiles/application/ports/profiles_repository_port.dart'
     as _i747;
+import 'package:dle_server/contexts/profiles/application/use_cases/edit_profile_use_case/edit_profile_use_case.dart'
+    as _i274;
+import 'package:dle_server/contexts/profiles/application/use_cases/get_current_profile_use_case/get_current_profile_use_case.dart'
+    as _i871;
 import 'package:dle_server/contexts/profiles/application/use_cases/set_up_profile_use_case/set_up_profile_use_case.dart'
     as _i879;
 import 'package:dle_server/contexts/profiles/profiles_dependency_container.dart'
@@ -84,6 +88,8 @@ import 'package:dle_server/kernel/application/ports/uploads_repository_port.dart
     as _i262;
 import 'package:dle_server/kernel/application/ports/uploads_storage_port.dart'
     as _i779;
+import 'package:dle_server/kernel/application/use_cases/delete_upload_use_case/delete_upload_use_case.dart'
+    as _i16;
 import 'package:dle_server/kernel/application/use_cases/get_image_use_case/get_image_use_case.dart'
     as _i344;
 import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart'
@@ -124,13 +130,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i647.OpenApiSpec>(() => dependencyContainer.openapiSpec);
     gh.factory<_i974.Logger>(() => dependencyContainer.logger);
     gh.factory<_i576.SmtpServer>(() => dependencyContainer.smtpServer);
-    gh.lazySingletonAsync<_i780.Database>(() => _i780.Database.create());
     gh.lazySingleton<_i406.AuthExceptionsMapper>(
         () => _i406.AuthExceptionsMapper());
-    gh.lazySingleton<_i85.UploadsExceptionsMapper>(
-        () => _i85.UploadsExceptionsMapper());
     gh.lazySingleton<_i611.ProfilesExceptionsMapper>(
         () => _i611.ProfilesExceptionsMapper());
+    gh.lazySingleton<_i85.UploadsExceptionsMapper>(
+        () => _i85.UploadsExceptionsMapper());
+    gh.lazySingletonAsync<_i780.Database>(() => _i780.Database.create());
     gh.factory<_i295.JwtClient>(
       () => dependencyContainer.accessJwtClient,
       instanceName: 'accessJwtClient',
@@ -204,11 +210,22 @@ extension GetItInjectableX on _i174.GetIt {
               storage: gh<_i779.UploadsStoragePort>(),
               repository: await getAsync<_i262.UploadsRepositoryPort>(),
             ));
+    gh.lazySingletonAsync<_i16.DeleteUploadUseCase>(
+        () async => _i16.DeleteUploadUseCase(
+              storage: gh<_i779.UploadsStoragePort>(),
+              repository: await getAsync<_i262.UploadsRepositoryPort>(),
+            ));
     gh.lazySingletonAsync<_i792.ConfirmEmailUseCase>(
         () async => _i792.ConfirmEmailUseCase(
               repository: await getAsync<_i221.UsersRepositoryPort>(),
               emailCodesRepository:
                   await getAsync<_i765.EmailCodesRepositoryPort>(),
+            ));
+    gh.lazySingletonAsync<_i274.EditProfileUseCase>(
+        () async => _i274.EditProfileUseCase(
+              repository: await getAsync<_i747.ProfilesRepositoryPort>(),
+              saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
+              deleteUploadUseCase: await getAsync<_i16.DeleteUploadUseCase>(),
             ));
     gh.lazySingletonAsync<_i689.UserRegisteredDomainListener>(() async =>
         _i689.UserRegisteredDomainListener(
@@ -257,6 +274,11 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
               saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
             ));
+    gh.lazySingletonAsync<_i871.GetCurrentProfileUseCase>(
+        () async => _i871.GetCurrentProfileUseCase(
+              repository: await getAsync<_i747.ProfilesRepositoryPort>(),
+              saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
+            ));
     gh.lazySingletonAsync<_i662.UpdateUserUseCase>(() async =>
         _i662.UpdateUserUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
@@ -267,11 +289,6 @@ extension GetItInjectableX on _i174.GetIt {
               storage: gh<_i779.UploadsStoragePort>(),
               repository: await getAsync<_i262.UploadsRepositoryPort>(),
               imageService: gh<_i705.ImageService>(),
-            ));
-    gh.lazySingletonAsync<_i264.ProfilesRestController>(
-        () async => _i264.ProfilesRestController(
-              setUpProfileUseCase: await getAsync<_i879.SetUpProfileUseCase>(),
-              mapper: gh<_i611.ProfilesExceptionsMapper>(),
             ));
     gh.lazySingletonAsync<_i36.UsersRestController>(() async =>
         _i36.UsersRestController(
@@ -286,6 +303,14 @@ extension GetItInjectableX on _i174.GetIt {
           await getAsync<_i658.UserRegisteredProfileListener>()),
       instanceName: 'profilesContext',
     );
+    gh.lazySingletonAsync<_i264.ProfilesRestController>(
+        () async => _i264.ProfilesRestController(
+              mapper: gh<_i611.ProfilesExceptionsMapper>(),
+              setUpProfileUseCase: await getAsync<_i879.SetUpProfileUseCase>(),
+              getCurrentProfileUseCase:
+                  await getAsync<_i871.GetCurrentProfileUseCase>(),
+              editProfileUseCase: await getAsync<_i274.EditProfileUseCase>(),
+            ));
     gh.lazySingletonAsync<_i426.UploadsRestController>(
         () async => _i426.UploadsRestController(
               getImageUseCase: await getAsync<_i344.GetImageUseCase>(),

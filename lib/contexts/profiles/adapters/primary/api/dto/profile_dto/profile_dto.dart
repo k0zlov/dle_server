@@ -10,11 +10,11 @@ class ProfileDto with _$ProfileDto {
   const factory ProfileDto({
     required String id,
     required String userId,
-    required String pictureId,
     required String username,
     required bool isSetUp,
     required DateTime updatedAt,
     required DateTime createdAt,
+    String? pictureId,
   }) = _ProfileDto;
 
   factory ProfileDto.fromEntity(Profile profile) {

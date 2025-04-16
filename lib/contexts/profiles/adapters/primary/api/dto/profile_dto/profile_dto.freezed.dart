@@ -22,11 +22,11 @@ ProfileDto _$ProfileDtoFromJson(Map<String, dynamic> json) {
 mixin _$ProfileDto {
   String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  String get pictureId => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   bool get isSetUp => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+  String? get pictureId => throw _privateConstructorUsedError;
 
   /// Serializes this ProfileDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,11 +47,11 @@ abstract class $ProfileDtoCopyWith<$Res> {
   $Res call(
       {String id,
       String userId,
-      String pictureId,
       String username,
       bool isSetUp,
       DateTime updatedAt,
-      DateTime createdAt});
+      DateTime createdAt,
+      String? pictureId});
 }
 
 /// @nodoc
@@ -71,11 +71,11 @@ class _$ProfileDtoCopyWithImpl<$Res, $Val extends ProfileDto>
   $Res call({
     Object? id = null,
     Object? userId = null,
-    Object? pictureId = null,
     Object? username = null,
     Object? isSetUp = null,
     Object? updatedAt = null,
     Object? createdAt = null,
+    Object? pictureId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -85,10 +85,6 @@ class _$ProfileDtoCopyWithImpl<$Res, $Val extends ProfileDto>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      pictureId: null == pictureId
-          ? _value.pictureId
-          : pictureId // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
@@ -106,6 +102,10 @@ class _$ProfileDtoCopyWithImpl<$Res, $Val extends ProfileDto>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      pictureId: freezed == pictureId
+          ? _value.pictureId
+          : pictureId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -121,11 +121,11 @@ abstract class _$$ProfileDtoImplCopyWith<$Res>
   $Res call(
       {String id,
       String userId,
-      String pictureId,
       String username,
       bool isSetUp,
       DateTime updatedAt,
-      DateTime createdAt});
+      DateTime createdAt,
+      String? pictureId});
 }
 
 /// @nodoc
@@ -143,11 +143,11 @@ class __$$ProfileDtoImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? userId = null,
-    Object? pictureId = null,
     Object? username = null,
     Object? isSetUp = null,
     Object? updatedAt = null,
     Object? createdAt = null,
+    Object? pictureId = freezed,
   }) {
     return _then(_$ProfileDtoImpl(
       id: null == id
@@ -157,10 +157,6 @@ class __$$ProfileDtoImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      pictureId: null == pictureId
-          ? _value.pictureId
-          : pictureId // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
@@ -178,6 +174,10 @@ class __$$ProfileDtoImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      pictureId: freezed == pictureId
+          ? _value.pictureId
+          : pictureId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -188,11 +188,11 @@ class _$ProfileDtoImpl implements _ProfileDto {
   const _$ProfileDtoImpl(
       {required this.id,
       required this.userId,
-      required this.pictureId,
       required this.username,
       required this.isSetUp,
       required this.updatedAt,
-      required this.createdAt});
+      required this.createdAt,
+      this.pictureId});
 
   factory _$ProfileDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProfileDtoImplFromJson(json);
@@ -202,8 +202,6 @@ class _$ProfileDtoImpl implements _ProfileDto {
   @override
   final String userId;
   @override
-  final String pictureId;
-  @override
   final String username;
   @override
   final bool isSetUp;
@@ -211,10 +209,12 @@ class _$ProfileDtoImpl implements _ProfileDto {
   final DateTime updatedAt;
   @override
   final DateTime createdAt;
+  @override
+  final String? pictureId;
 
   @override
   String toString() {
-    return 'ProfileDto(id: $id, userId: $userId, pictureId: $pictureId, username: $username, isSetUp: $isSetUp, updatedAt: $updatedAt, createdAt: $createdAt)';
+    return 'ProfileDto(id: $id, userId: $userId, username: $username, isSetUp: $isSetUp, updatedAt: $updatedAt, createdAt: $createdAt, pictureId: $pictureId)';
   }
 
   @override
@@ -224,21 +224,21 @@ class _$ProfileDtoImpl implements _ProfileDto {
             other is _$ProfileDtoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.pictureId, pictureId) ||
-                other.pictureId == pictureId) &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.isSetUp, isSetUp) || other.isSetUp == isSetUp) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.pictureId, pictureId) ||
+                other.pictureId == pictureId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, pictureId, username,
-      isSetUp, updatedAt, createdAt);
+  int get hashCode => Object.hash(runtimeType, id, userId, username, isSetUp,
+      updatedAt, createdAt, pictureId);
 
   /// Create a copy of ProfileDto
   /// with the given fields replaced by the non-null parameter values.
@@ -260,11 +260,11 @@ abstract class _ProfileDto implements ProfileDto {
   const factory _ProfileDto(
       {required final String id,
       required final String userId,
-      required final String pictureId,
       required final String username,
       required final bool isSetUp,
       required final DateTime updatedAt,
-      required final DateTime createdAt}) = _$ProfileDtoImpl;
+      required final DateTime createdAt,
+      final String? pictureId}) = _$ProfileDtoImpl;
 
   factory _ProfileDto.fromJson(Map<String, dynamic> json) =
       _$ProfileDtoImpl.fromJson;
@@ -274,8 +274,6 @@ abstract class _ProfileDto implements ProfileDto {
   @override
   String get userId;
   @override
-  String get pictureId;
-  @override
   String get username;
   @override
   bool get isSetUp;
@@ -283,6 +281,8 @@ abstract class _ProfileDto implements ProfileDto {
   DateTime get updatedAt;
   @override
   DateTime get createdAt;
+  @override
+  String? get pictureId;
 
   /// Create a copy of ProfileDto
   /// with the given fields replaced by the non-null parameter values.

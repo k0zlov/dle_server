@@ -22,4 +22,22 @@ class ProfilesRoute extends Route {
       handler: controller.setUp,
     );
   }
+
+  Endpoint get getCurrent {
+    return Endpoint.get(
+      path: 'me',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: controller.getCurrentProfile,
+    );
+  }
+
+  Endpoint get edit {
+    return Endpoint.put(
+      path: 'me/edit',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: controller.editProfile,
+    );
+  }
 }

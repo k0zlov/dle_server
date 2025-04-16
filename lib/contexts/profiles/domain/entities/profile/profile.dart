@@ -44,4 +44,12 @@ class Profile extends Entity with ProfileMappable {
       updatedAt: DateTime.now(),
     );
   }
+
+  Profile edit({String? username, String? pictureId}) {
+    return copyWith(
+      username: username,
+      pictureId: pictureId,
+      updatedAt: DateTime.now(),
+    );
+  }
 }

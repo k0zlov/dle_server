@@ -15,8 +15,6 @@ class UploadsRestController {
   final UploadsExceptionsMapper mapper;
 
   Future<Response> getImage(Request req) async {
-    print(req.uri.pathSegments);
-
     final GetImageParams params = GetImageParams.fromJson(
       req.data.copyWith({'uploadId': req.uri.pathSegments.last}),
     );
@@ -30,7 +28,6 @@ class UploadsRestController {
       );
     } catch (e) {
       throw mapper(e);
-
     }
   }
 }
