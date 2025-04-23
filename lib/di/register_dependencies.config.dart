@@ -22,6 +22,8 @@ import 'package:dle_server/contexts/auth/adapters/secondary/persistence/users_re
     as _i558;
 import 'package:dle_server/contexts/auth/application/listeners/domain/user_registered_listener.dart'
     as _i689;
+import 'package:dle_server/contexts/auth/application/listeners/integration/dle_invitation_sent_listener.dart'
+    as _i681;
 import 'package:dle_server/contexts/auth/application/ports/email_codes_repository_port.dart'
     as _i765;
 import 'package:dle_server/contexts/auth/application/ports/password_reset_tokens_repository_port.dart'
@@ -54,6 +56,30 @@ import 'package:dle_server/contexts/auth/application/use_cases/update_user_use_c
     as _i662;
 import 'package:dle_server/contexts/auth/auth_dependency_container.dart'
     as _i218;
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_rest_controller.dart'
+    as _i46;
+import 'package:dle_server/contexts/dle/adapters/primary/api/exceptions/dle_exceptions_mapper.dart'
+    as _i862;
+import 'package:dle_server/contexts/dle/adapters/secondary/persistence/dle_invitations_repository.dart'
+    as _i1031;
+import 'package:dle_server/contexts/dle/adapters/secondary/persistence/dle_repository_drift.dart'
+    as _i588;
+import 'package:dle_server/contexts/dle/application/ports/dle_invitations_repository_port.dart'
+    as _i891;
+import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart'
+    as _i452;
+import 'package:dle_server/contexts/dle/application/use_cases/accept_invitation_use_case/accept_invitation_use_case.dart'
+    as _i292;
+import 'package:dle_server/contexts/dle/application/use_cases/create_dle_use_case/create_dle_use_case.dart'
+    as _i746;
+import 'package:dle_server/contexts/dle/application/use_cases/edit_asset_use_case/edit_asset_use_case.dart'
+    as _i1039;
+import 'package:dle_server/contexts/dle/application/use_cases/edit_dle_use_case/edit_dle_use_case.dart'
+    as _i9;
+import 'package:dle_server/contexts/dle/application/use_cases/get_user_dle_use_case/get_user_dle_use_case.dart'
+    as _i571;
+import 'package:dle_server/contexts/dle/application/use_cases/invite_editor_use_case/invite_editor_use_case.dart'
+    as _i402;
 import 'package:dle_server/contexts/profiles/adapters/primary/api/controllers/profiles_rest_controller.dart'
     as _i264;
 import 'package:dle_server/contexts/profiles/adapters/primary/api/exceptions/profiles_exceptions_mapper.dart'
@@ -66,8 +92,8 @@ import 'package:dle_server/contexts/profiles/application/ports/profiles_reposito
     as _i747;
 import 'package:dle_server/contexts/profiles/application/use_cases/edit_profile_use_case/edit_profile_use_case.dart'
     as _i274;
-import 'package:dle_server/contexts/profiles/application/use_cases/get_current_profile_use_case/get_current_profile_use_case.dart'
-    as _i871;
+import 'package:dle_server/contexts/profiles/application/use_cases/get_current_profile_use_case/get_profile_use_case.dart'
+    as _i879;
 import 'package:dle_server/contexts/profiles/application/use_cases/set_up_profile_use_case/set_up_profile_use_case.dart'
     as _i879;
 import 'package:dle_server/contexts/profiles/profiles_dependency_container.dart'
@@ -125,8 +151,8 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final dependencyContainer = _$DependencyContainer();
-    final authDependencyContainer = _$AuthDependencyContainer();
     final profilesDependencyContainer = _$ProfilesDependencyContainer();
+    final authDependencyContainer = _$AuthDependencyContainer();
     gh.factory<_i647.OpenApiSpec>(() => dependencyContainer.openapiSpec);
     gh.factory<_i974.Logger>(() => dependencyContainer.logger);
     gh.factory<_i576.SmtpServer>(() => dependencyContainer.smtpServer);
@@ -137,13 +163,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i85.UploadsExceptionsMapper>(
         () => _i85.UploadsExceptionsMapper());
     gh.lazySingletonAsync<_i780.Database>(() => _i780.Database.create());
+    gh.lazySingleton<_i862.DleExceptionsMapper>(
+        () => _i862.DleExceptionsMapper());
     gh.factory<_i295.JwtClient>(
       () => dependencyContainer.accessJwtClient,
       instanceName: 'accessJwtClient',
-    );
-    gh.factory<List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
-      () => authDependencyContainer.integrationListeners(),
-      instanceName: 'authContext',
     );
     gh.lazySingleton<_i665.TokenService>(() => _i665.TokenServiceImpl(
         accessClient: gh<_i295.JwtClient>(instanceName: 'accessJwtClient')));
@@ -164,6 +188,11 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'websiteUrl',
     );
     gh.factory<String>(
+      () => dependencyContainer
+          .acceptInvitationUrl(gh<String>(instanceName: 'websiteUrl')),
+      instanceName: 'acceptInvitationUrl',
+    );
+    gh.factory<String>(
       () => dependencyContainer.uploadsBaseDirectory,
       instanceName: 'uploadsBaseDirectory',
     );
@@ -173,6 +202,8 @@ extension GetItInjectableX on _i174.GetIt {
           .passwordResetUrl(gh<String>(instanceName: 'websiteUrl')),
       instanceName: 'passwordResetUrl',
     );
+    gh.lazySingletonAsync<_i452.DleRepositoryPort>(() async =>
+        _i588.DleRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i44.MailService>(() => _i44.MailServiceImpl(
           smtpServer: gh<_i576.SmtpServer>(),
           emailUrl: gh<String>(instanceName: 'emailUrl'),
@@ -190,12 +221,29 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.lazySingletonAsync<_i262.UploadsRepositoryPort>(() async =>
         _i60.UploadsRepositoryDrift(db: await getAsync<_i780.Database>()));
+    gh.lazySingletonAsync<_i571.GetUserDleUseCase>(() async =>
+        _i571.GetUserDleUseCase(
+            repository: await getAsync<_i452.DleRepositoryPort>()));
+    gh.lazySingletonAsync<_i746.CreateDleUseCase>(() async =>
+        _i746.CreateDleUseCase(
+            repository: await getAsync<_i452.DleRepositoryPort>()));
+    gh.lazySingletonAsync<_i9.EditDleUseCase>(() async => _i9.EditDleUseCase(
+        repository: await getAsync<_i452.DleRepositoryPort>()));
     gh.lazySingletonAsync<_i765.EmailCodesRepositoryPort>(() async =>
         _i865.EmailCodesRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingletonAsync<_i747.ProfilesRepositoryPort>(() async =>
         _i564.ProfilesRepositoryDrift(db: await getAsync<_i780.Database>()));
+    gh.lazySingletonAsync<_i891.DleInvitationsRepositoryPort>(() async =>
+        _i1031.DleInvitationsRepositoryDrift(
+            db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i601.AuthMiddleware>(
         () => _i601.AuthMiddleware(tokenService: gh<_i665.TokenService>()));
+    gh.lazySingletonAsync<_i681.DleInvitationSentListener>(() async =>
+        _i681.DleInvitationSentListener(
+          repository: await getAsync<_i221.UsersRepositoryPort>(),
+          mailService: gh<_i44.MailService>(),
+          acceptInvitationUrl: gh<String>(instanceName: 'acceptInvitationUrl'),
+        ));
     gh.lazySingletonAsync<_i546.SendEmailCodeUseCase>(
         () async => _i546.SendEmailCodeUseCase(
               repository: await getAsync<_i221.UsersRepositoryPort>(),
@@ -240,6 +288,12 @@ extension GetItInjectableX on _i174.GetIt {
           sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
           passwordResetUrl: gh<String>(instanceName: 'passwordResetUrl'),
         ));
+    gh.lazySingletonAsync<_i292.AcceptInvitationUseCase>(
+        () async => _i292.AcceptInvitationUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              invitationsRepository:
+                  await getAsync<_i891.DleInvitationsRepositoryPort>(),
+            ));
     gh.lazySingletonAsync<_i924.LoginUseCase>(() async => _i924.LoginUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
           tokenService: gh<_i665.TokenService>(),
@@ -274,11 +328,24 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
               saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
             ));
-    gh.lazySingletonAsync<_i871.GetCurrentProfileUseCase>(
-        () async => _i871.GetCurrentProfileUseCase(
+    gh.lazySingletonAsync<_i879.GetProfileUseCase>(
+        () async => _i879.GetProfileUseCase(
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
               saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
             ));
+    gh.lazySingletonAsync<_i264.ProfilesRestController>(
+        () async => _i264.ProfilesRestController(
+              mapper: gh<_i611.ProfilesExceptionsMapper>(),
+              setUpProfileUseCase: await getAsync<_i879.SetUpProfileUseCase>(),
+              getProfileUseCase: await getAsync<_i879.GetProfileUseCase>(),
+              editProfileUseCase: await getAsync<_i274.EditProfileUseCase>(),
+            ));
+    gh.factoryAsync<
+        List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
+      () async => authDependencyContainer.integrationListeners(
+          await getAsync<_i681.DleInvitationSentListener>()),
+      instanceName: 'authContext',
+    );
     gh.lazySingletonAsync<_i662.UpdateUserUseCase>(() async =>
         _i662.UpdateUserUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
@@ -297,20 +364,18 @@ extension GetItInjectableX on _i174.GetIt {
           changePasswordUseCase: await getAsync<_i852.ChangePasswordUseCase>(),
           mapper: gh<_i406.AuthExceptionsMapper>(),
         ));
+    gh.lazySingletonAsync<_i1039.EditAssetUseCase>(
+        () async => _i1039.EditAssetUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
+              deleteUploadUseCase: await getAsync<_i16.DeleteUploadUseCase>(),
+            ));
     gh.factoryAsync<
         List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
       () async => profilesDependencyContainer.integrationListeners(
           await getAsync<_i658.UserRegisteredProfileListener>()),
       instanceName: 'profilesContext',
     );
-    gh.lazySingletonAsync<_i264.ProfilesRestController>(
-        () async => _i264.ProfilesRestController(
-              mapper: gh<_i611.ProfilesExceptionsMapper>(),
-              setUpProfileUseCase: await getAsync<_i879.SetUpProfileUseCase>(),
-              getCurrentProfileUseCase:
-                  await getAsync<_i871.GetCurrentProfileUseCase>(),
-              editProfileUseCase: await getAsync<_i274.EditProfileUseCase>(),
-            ));
     gh.lazySingletonAsync<_i426.UploadsRestController>(
         () async => _i426.UploadsRestController(
               getImageUseCase: await getAsync<_i344.GetImageUseCase>(),
@@ -318,13 +383,33 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.factoryAsync<_i287.IntegrationEventBus>(() async =>
         dependencyContainer.integrationEventBus(
-          gh<List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
+          await getAsync<
+                  List<
+                      _i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
               instanceName: 'authContext'),
           await getAsync<
                   List<
                       _i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
               instanceName: 'profilesContext'),
         ));
+    gh.lazySingletonAsync<_i402.InviteEditorUseCase>(
+        () async => _i402.InviteEditorUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              invitationsRepository:
+                  await getAsync<_i891.DleInvitationsRepositoryPort>(),
+              integrationEventBus: await getAsync<_i287.IntegrationEventBus>(),
+            ));
+    gh.lazySingletonAsync<_i46.DleManageRestController>(
+        () async => _i46.DleManageRestController(
+              mapper: gh<_i862.DleExceptionsMapper>(),
+              createDleUseCase: await getAsync<_i746.CreateDleUseCase>(),
+              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
+              editDleUseCase: await getAsync<_i9.EditDleUseCase>(),
+              editAssetUseCase: await getAsync<_i1039.EditAssetUseCase>(),
+              inviteEditorUseCase: await getAsync<_i402.InviteEditorUseCase>(),
+              acceptInvitationUseCase:
+                  await getAsync<_i292.AcceptInvitationUseCase>(),
+            ));
     gh.lazySingletonAsync<_i288.RegisterUseCase>(() async =>
         _i288.RegisterUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
@@ -352,6 +437,6 @@ extension GetItInjectableX on _i174.GetIt {
 
 class _$DependencyContainer extends _i432.DependencyContainer {}
 
-class _$AuthDependencyContainer extends _i218.AuthDependencyContainer {}
-
 class _$ProfilesDependencyContainer extends _i118.ProfilesDependencyContainer {}
+
+class _$AuthDependencyContainer extends _i218.AuthDependencyContainer {}

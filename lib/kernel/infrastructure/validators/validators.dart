@@ -37,6 +37,17 @@ class Validators {
     };
   }
 
+  static Validator<String> maxLength(int length, {String? message}) {
+    return (String value) {
+      if (value.length <= length) {
+        return ValidationResult.valid();
+      }
+      return ValidationResult.invalid([
+        message ?? 'Must be at least $length characters',
+      ]);
+    };
+  }
+
   static Validator<num> range(num min, num max, {String? message}) {
     return (num value) {
       if (value >= min && value <= max) {
@@ -46,6 +57,10 @@ class Validators {
         message ?? 'Value must be between $min and $max',
       ]);
     };
+  }
+
+  static Validator<String> lengthRange(int min, int max, {String? message}) {
+    return combine([minLength(min), maxLength(max)]);
   }
 
   static Validator<T> combine<T>(List<Validator<T>> validators) {

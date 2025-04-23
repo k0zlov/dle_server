@@ -6,23 +6,21 @@ import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
-part 'get_current_profile_use_case.freezed.dart';
+part 'get_profile_use_case.freezed.dart';
 
-part 'get_current_profile_use_case.g.dart';
+part 'get_profile_use_case.g.dart';
 
 @freezed
-class GetCurrentProfileParams with _$GetCurrentProfileParams {
-  const factory GetCurrentProfileParams({required String userId}) =
-      _GetCurrentProfileParams;
+class GetProfileParams with _$GetProfileParams {
+  const factory GetProfileParams({required String userId}) = _GetProfileParams;
 
-  factory GetCurrentProfileParams.fromJson(Map<String, dynamic> json) =>
-      _$GetCurrentProfileParamsFromJson(json);
+  factory GetProfileParams.fromJson(Map<String, dynamic> json) =>
+      _$GetProfileParamsFromJson(json);
 }
 
 @lazySingleton
-class GetCurrentProfileUseCase
-    implements UseCase<Profile, GetCurrentProfileParams> {
-  const GetCurrentProfileUseCase({
+class GetProfileUseCase implements UseCase<Profile, GetProfileParams> {
+  const GetProfileUseCase({
     required this.repository,
     required this.saveUploadUseCase,
   });
@@ -31,7 +29,7 @@ class GetCurrentProfileUseCase
   final SaveUploadUseCase saveUploadUseCase;
 
   @override
-  Future<Profile> call(GetCurrentProfileParams params) async {
+  Future<Profile> call(GetProfileParams params) async {
     final Profile? profile = await repository.find(userId: params.userId);
 
     if (profile == null) {

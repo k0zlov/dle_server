@@ -8,6 +8,10 @@ import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/auth_
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/email_verification_codes.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/password_reset_tokens.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/users.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_assets.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_editors.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_invitations.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dles.dart';
 import 'package:dle_server/contexts/profiles/infrastructure/persistence/tables/profiles.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
@@ -34,6 +38,10 @@ part 'database.g.dart';
     PasswordResetTokens,
     Uploads,
     Profiles,
+    Dles,
+    DleEditors,
+    DleAssets,
+    DleInvitations,
   ],
 )
 class Database extends _$Database {
@@ -54,7 +62,7 @@ class Database extends _$Database {
           // please use SslMode.verifyFull instead.
           sslMode: SslMode.disable,
         ),
-        logStatements: true,
+        logStatements: false,
         endpoint: Endpoint(
           host: env(DotEnvKey.databaseHost),
           port: int.tryParse(env(DotEnvKey.databasePort)) ?? 5432,

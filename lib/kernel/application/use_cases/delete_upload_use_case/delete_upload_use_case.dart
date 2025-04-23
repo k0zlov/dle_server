@@ -32,5 +32,6 @@ class DeleteUploadUseCase implements UseCase<void, DeleteUploadParams> {
     if (upload == null) return;
 
     await storage.delete(id: upload.id, mimeType: upload.mimeType);
+    await repository.delete(upload.id);
   }
 }

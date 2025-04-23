@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:dle_server/contexts/profiles/adapters/primary/api/controllers/profiles_rest_controller.dart';
 import 'package:dle_server/kernel/adapters/primary/api/middlewares/auth_middleware.dart';
 import 'package:ruta/annotations.dart';
 import 'package:ruta/ruta.dart';
-
-FutureOr<Response> handler(Request req) => Response.json();
 
 @rutaRoute
 class ProfilesRoute extends Route {
@@ -30,6 +26,10 @@ class ProfilesRoute extends Route {
       middlewares: [authMiddleware],
       handler: controller.getCurrentProfile,
     );
+  }
+
+  Endpoint get getProfile {
+    return Endpoint.get(path: '<userId>', handler: controller.getProfile);
   }
 
   Endpoint get edit {

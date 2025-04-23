@@ -6,7 +6,9 @@ extension RequestExtension on Request {
     final TokenPayload? userId = context['payload'] as TokenPayload?;
 
     if (userId == null) {
-      throw const ApiException.unauthorized();
+      throw const ApiException.unauthorized(
+        'Tried to get userId from request without authentication middleware.',
+      );
     }
 
     return userId;

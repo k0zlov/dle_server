@@ -24,6 +24,10 @@ abstract class DependencyContainer {
   String passwordResetUrl(@Named('websiteUrl') String websiteUrl) =>
       '$websiteUrl/reset-password?token=';
 
+  @Named('acceptInvitationUrl')
+  String acceptInvitationUrl(@Named('websiteUrl') String websiteUrl) =>
+      '$websiteUrl/accept-invitation?token=';
+
   @Named('uploadsBaseDirectory')
   String get uploadsBaseDirectory => env(DotEnvKey.uploadsBaseDirectory);
 
