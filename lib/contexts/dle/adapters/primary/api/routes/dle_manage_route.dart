@@ -94,4 +94,32 @@ class DleManageRoute extends Route {
       handler: controller.acceptInvitation,
     );
   }
+
+  Endpoint get kickEditor {
+    return Endpoint.delete(
+      path: '<id>/editors/<editorId>/kick',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: controller.kickEditor,
+    );
+  }
+
+  Endpoint get editEditor {
+    return Endpoint.put(
+      path: '<id>/editors/<editorId>/edit',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      body: [Field<String>('role')],
+      handler: controller.editEditor,
+    );
+  }
+
+  Endpoint get leaveDle {
+    return Endpoint.delete(
+      path: '<id>/editors/leave',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: controller.leaveDle,
+    );
+  }
 }

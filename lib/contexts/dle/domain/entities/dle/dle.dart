@@ -74,4 +74,10 @@ class Dle extends Entity with DleMappable {
   Dle kickEditor(String userId) {
     return copyWith(editors: [...editors.where((e) => e.userId != userId)]);
   }
+
+  Dle updateEditor(DleEditor editor) {
+    return copyWith(
+      editors: [editor, ...editors.where((e) => e.id != editor.id)],
+    );
+  }
 }

@@ -14,6 +14,11 @@ enum DleEditorRole {
   bool get isAdmin => this == admin;
 
   bool get isEditor => this == editor;
+
+  bool operator >=(Object other) {
+    if (other is! DleEditorRole) return false;
+    return index >= other.index;
+  }
 }
 
 @MappableClass()

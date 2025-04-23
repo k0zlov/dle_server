@@ -76,10 +76,16 @@ import 'package:dle_server/contexts/dle/application/use_cases/edit_asset_use_cas
     as _i1039;
 import 'package:dle_server/contexts/dle/application/use_cases/edit_dle_use_case/edit_dle_use_case.dart'
     as _i9;
+import 'package:dle_server/contexts/dle/application/use_cases/edit_editor_use_case/edit_editor_use_case.dart'
+    as _i568;
 import 'package:dle_server/contexts/dle/application/use_cases/get_user_dle_use_case/get_user_dle_use_case.dart'
     as _i571;
 import 'package:dle_server/contexts/dle/application/use_cases/invite_editor_use_case/invite_editor_use_case.dart'
     as _i402;
+import 'package:dle_server/contexts/dle/application/use_cases/kick_editor_use_case/kick_editor_use_case.dart'
+    as _i678;
+import 'package:dle_server/contexts/dle/application/use_cases/leave_dle_use_case/leave_dle_use_case.dart'
+    as _i543;
 import 'package:dle_server/contexts/profiles/adapters/primary/api/controllers/profiles_rest_controller.dart'
     as _i264;
 import 'package:dle_server/contexts/profiles/adapters/primary/api/exceptions/profiles_exceptions_mapper.dart'
@@ -229,6 +235,15 @@ extension GetItInjectableX on _i174.GetIt {
             repository: await getAsync<_i452.DleRepositoryPort>()));
     gh.lazySingletonAsync<_i9.EditDleUseCase>(() async => _i9.EditDleUseCase(
         repository: await getAsync<_i452.DleRepositoryPort>()));
+    gh.lazySingletonAsync<_i678.KickEditorUseCase>(() async =>
+        _i678.KickEditorUseCase(
+            repository: await getAsync<_i452.DleRepositoryPort>()));
+    gh.lazySingletonAsync<_i568.EditEditorUseCase>(() async =>
+        _i568.EditEditorUseCase(
+            repository: await getAsync<_i452.DleRepositoryPort>()));
+    gh.lazySingletonAsync<_i543.LeaveDleUseCase>(() async =>
+        _i543.LeaveDleUseCase(
+            repository: await getAsync<_i452.DleRepositoryPort>()));
     gh.lazySingletonAsync<_i765.EmailCodesRepositoryPort>(() async =>
         _i865.EmailCodesRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingletonAsync<_i747.ProfilesRepositoryPort>(() async =>
@@ -399,6 +414,13 @@ extension GetItInjectableX on _i174.GetIt {
                   await getAsync<_i891.DleInvitationsRepositoryPort>(),
               integrationEventBus: await getAsync<_i287.IntegrationEventBus>(),
             ));
+    gh.lazySingletonAsync<_i288.RegisterUseCase>(() async =>
+        _i288.RegisterUseCase(
+          repository: await getAsync<_i221.UsersRepositoryPort>(),
+          integrationEventBus: await getAsync<_i287.IntegrationEventBus>(),
+          domainEventBus:
+              await getAsync<_i287.DomainEventBus>(instanceName: 'authContext'),
+        ));
     gh.lazySingletonAsync<_i46.DleManageRestController>(
         () async => _i46.DleManageRestController(
               mapper: gh<_i862.DleExceptionsMapper>(),
@@ -409,14 +431,10 @@ extension GetItInjectableX on _i174.GetIt {
               inviteEditorUseCase: await getAsync<_i402.InviteEditorUseCase>(),
               acceptInvitationUseCase:
                   await getAsync<_i292.AcceptInvitationUseCase>(),
+              kickEditorUseCase: await getAsync<_i678.KickEditorUseCase>(),
+              editEditorUseCase: await getAsync<_i568.EditEditorUseCase>(),
+              leaveDleUseCase: await getAsync<_i543.LeaveDleUseCase>(),
             ));
-    gh.lazySingletonAsync<_i288.RegisterUseCase>(() async =>
-        _i288.RegisterUseCase(
-          repository: await getAsync<_i221.UsersRepositoryPort>(),
-          integrationEventBus: await getAsync<_i287.IntegrationEventBus>(),
-          domainEventBus:
-              await getAsync<_i287.DomainEventBus>(instanceName: 'authContext'),
-        ));
     gh.lazySingletonAsync<_i685.AuthController>(() async =>
         _i685.AuthController(
           registerUseCase: await getAsync<_i288.RegisterUseCase>(),

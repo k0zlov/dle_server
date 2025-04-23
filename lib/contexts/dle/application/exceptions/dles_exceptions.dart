@@ -19,3 +19,7 @@ class InvitationNotFoundException implements AppException {}
 class InvalidInvitationUserException implements AppException {}
 
 class InvitationCanceledException implements AppException {}
+
+class RoleUpgradeNotAllowedException implements AppException {}
+
+class OwnerCannotLeaveDleException implements AppException {}
