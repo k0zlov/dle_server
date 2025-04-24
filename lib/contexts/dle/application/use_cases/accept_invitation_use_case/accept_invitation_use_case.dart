@@ -4,9 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_invitations_repository_port.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
+import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_invitation/dle_invitation.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -31,10 +34,12 @@ class AcceptInvitationUseCase implements UseCase<Dle, AcceptInvitationParams> {
   const AcceptInvitationUseCase({
     required this.repository,
     required this.invitationsRepository,
+    @dleContext required this.eventBus,
   });
 
   final DleRepositoryPort repository;
   final DleInvitationsRepositoryPort invitationsRepository;
+  final DomainEventBus eventBus;
 
   @override
   Future<Dle> call(AcceptInvitationParams params) async {
@@ -78,6 +83,8 @@ class AcceptInvitationUseCase implements UseCase<Dle, AcceptInvitationParams> {
 
     final DleInvitation acceptedInvitation = invitation.accept();
     await invitationsRepository.save(acceptedInvitation);
+
+    eventBus.publish(DleUpdatedEvent(dle: dleWithEditor));
 
     return dleWithEditor;
   }

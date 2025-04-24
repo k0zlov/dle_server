@@ -1,9 +1,9 @@
 class ItemsDto<T> {
   const ItemsDto(this.items);
 
-  final List<T> items;
+  final Iterable<T> items;
 
   Map<String, dynamic> toJson() {
-    return {'items': items};
+    return {'items': items.toList()};
   }
 }

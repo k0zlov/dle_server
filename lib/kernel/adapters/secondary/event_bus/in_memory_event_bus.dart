@@ -12,25 +12,25 @@ class InMemoryEventBus<T extends Event> implements EventBus<T> {
   final Map<Type, List<Function>> _handlersMap = {};
 
   @override
-  void publish(T event) {
-    final handlers = _handlersMap[event.runtimeType];
+  void publish<B extends T>(B event) {
+    final handlers = _handlersMap[B];
     if (handlers == null) return;
 
     for (final handler in handlers) {
-      (handler as EventHandler<T>)(event);
+      (handler as EventHandler<B>)(event);
     }
   }
 
   @override
-  void subscribe(EventHandler<T> handler, {required Type eventType}) {
-    if (eventType == Event ||
-        eventType == DomainEvent ||
-        eventType == IntegrationEvent) {
+  void subscribe<B extends T>(EventHandler<B> handler, {Type? eventType}) {
+    final Type type = eventType ?? B;
+
+    if (type == Event || type == DomainEvent || type == IntegrationEvent) {
       throw Exception(
         'Subscribing to abstract event types (Event, DomainEvent, IntegrationEvent) is not allowed.',
       );
     }
 
-    _handlersMap[eventType] = (_handlersMap[eventType] ?? [])..add(handler);
+    _handlersMap[type] = (_handlersMap[type] ?? [])..add(handler);
   }
 }

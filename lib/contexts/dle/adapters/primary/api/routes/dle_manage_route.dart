@@ -1,22 +1,21 @@
-import 'dart:async';
-
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_rest_controller.dart';
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_socket_controller.dart';
 import 'package:dle_server/kernel/adapters/primary/api/middlewares/auth_middleware.dart';
 import 'package:dle_server/kernel/infrastructure/validators/validators.dart';
 import 'package:ruta/annotations.dart';
 import 'package:ruta/ruta.dart';
 
-FutureOr<Response> handler(Request req) {
-  print(req.url.pathSegments);
-  return Response.json();
-}
-
 @rutaRoute
 class DleManageRoute extends Route {
-  DleManageRoute({required this.controller, required this.authMiddleware});
+  DleManageRoute({
+    required this.controller,
+    required this.authMiddleware,
+    required this.socketController,
+  });
 
   final DleManageRestController controller;
   final AuthMiddleware authMiddleware;
+  final DleManageSocketController socketController;
 
   @override
   String get name => 'dle/manage';
@@ -120,6 +119,16 @@ class DleManageRoute extends Route {
       authRequired: true,
       middlewares: [authMiddleware],
       handler: controller.leaveDle,
+    );
+  }
+
+  Endpoint get listenDleUpdates {
+    return Endpoint.get(
+      path: 'listen',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      query: [Field<String>('token')],
+      handler: socketController.listenDleUpdates,
     );
   }
 }

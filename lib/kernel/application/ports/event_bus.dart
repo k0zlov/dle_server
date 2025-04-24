@@ -3,9 +3,9 @@ import 'package:dle_server/kernel/domain/events/events.dart';
 typedef EventHandler<T extends Event> = void Function(T event);
 
 abstract interface class EventBus<T extends Event> {
-  void publish(T event);
+  void publish<B extends T>(B event);
 
-  void subscribe(EventHandler<T> handler, {required Type eventType});
+  void subscribe<B extends T>(EventHandler<B> handler);
 }
 
 typedef DomainEventBus = EventBus<DomainEvent>;

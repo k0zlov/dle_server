@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
+import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
+import 'package:dle_server/contexts/dle/domain/events/editor_left.dart';
+import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -27,9 +30,13 @@ class KickEditorParams with _$KickEditorParams {
 
 @lazySingleton
 class KickEditorUseCase implements UseCase<Dle, KickEditorParams> {
-  const KickEditorUseCase({required this.repository});
+  const KickEditorUseCase({
+    required this.repository,
+    @dleContext required this.eventBus,
+  });
 
   final DleRepositoryPort repository;
+  final DomainEventBus eventBus;
 
   @override
   Future<Dle> call(KickEditorParams params) async {
@@ -65,6 +72,9 @@ class KickEditorUseCase implements UseCase<Dle, KickEditorParams> {
 
     final Dle updatedDle = dle.kickEditor(targetEditor.userId);
     await repository.save(updatedDle);
+    eventBus.publish(
+      EditorLeftEvent(dle: updatedDle, editorUserId: targetEditor.userId),
+    );
 
     return updatedDle;
   }

@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
+import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -29,9 +32,13 @@ class EditDleParams with _$EditDleParams {
 
 @lazySingleton
 class EditDleUseCase implements UseCase<Dle, EditDleParams> {
-  const EditDleUseCase({required this.repository});
+  const EditDleUseCase({
+    required this.repository,
+    @dleContext required this.eventBus,
+  });
 
   final DleRepositoryPort repository;
+  final DomainEventBus eventBus;
 
   @override
   Future<Dle> call(EditDleParams params) async {
@@ -60,6 +67,7 @@ class EditDleUseCase implements UseCase<Dle, EditDleParams> {
     );
 
     await repository.save(dle, overrideAssets: false, overrideEditors: false);
+    eventBus.publish(DleUpdatedEvent(dle: dle));
     return dle;
   }
 }

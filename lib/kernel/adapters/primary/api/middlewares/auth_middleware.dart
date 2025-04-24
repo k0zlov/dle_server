@@ -1,3 +1,4 @@
+import 'package:dle_server/kernel/infrastructure/extensions/request_extension.dart';
 import 'package:dle_server/kernel/infrastructure/services/token/jwt_client.dart';
 import 'package:dle_server/kernel/infrastructure/services/token/token_service.dart';
 import 'package:injectable/injectable.dart';
@@ -12,19 +13,20 @@ class AuthMiddleware extends Middleware {
   @override
   Handler call(Handler handler) {
     return (Request request) async {
-      final authorizationHeader = request.headers['Authorization'];
+      final bool isSocketConnection = request.isSocketConnection;
 
-      if (authorizationHeader == null) {
+      final String? token;
+
+      if (isSocketConnection) {
+        token = request.url.queryParameters['token'];
+      } else {
+        token = request.headers['Authorization']?.split(' ')[1];
+      }
+
+      if (token == null) {
         throw const ApiException.unauthorized();
       }
 
-      final parts = authorizationHeader.split(' ');
-
-      if (parts.length != 2 || parts.first != 'Bearer') {
-        throw const ApiException.unauthorized();
-      }
-
-      final String token = parts.last;
       final TokenPayload? payload = tokenService.getPayloadFromAccessToken(
         token,
       );

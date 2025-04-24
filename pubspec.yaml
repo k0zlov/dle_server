@@ -22,11 +22,12 @@ dependencies:
   collection: ^1.19.1
   logger: ^2.5.0
   injectable: ^2.5.0
-  ruta: ^0.1.16
+  ruta: ^0.1.17
   mailer: ^6.4.1
   image: ^4.5.4
   mime: ^1.0.6
   path: ^1.9.1
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   test: ^1.24.0

@@ -1,3 +1,4 @@
+import 'package:dle_server/kernel/infrastructure/extensions/request_extension.dart';
 import 'package:drift/drift.dart';
 import 'package:ruta/ruta.dart';
 
@@ -6,7 +7,7 @@ class ErrorMiddleware extends Middleware {
   @override
   Handler call(Handler handler) {
     return (Request request) async {
-      if (request.headers['Upgrade'] == 'websocket') {
+      if (request.isSocketConnection) {
         return await handler(request);
       }
       try {

@@ -26,4 +26,8 @@ extension RequestExtension on Request {
     }
     return null;
   }
+
+  bool get isSocketConnection {
+    return headers['Upgrade'] == 'websocket';
+  }
 }
