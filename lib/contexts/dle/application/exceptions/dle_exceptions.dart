@@ -8,7 +8,7 @@ class EditorPermissionsException implements AppException {}
 
 class DleNotFoundException implements AppException {}
 
-class CouldNotUploadAssetException implements AppException {}
+class CouldNotUploadFileException implements AppException {}
 
 class TooManyInvitesException implements AppException {}
 
@@ -23,3 +23,9 @@ class InvitationCanceledException implements AppException {}
 class RoleUpgradeNotAllowedException implements AppException {}
 
 class OwnerCannotLeaveDleException implements AppException {}
+
+class CharacterNotFoundException implements AppException {}
+
+class HintsQuantityException implements AppException {}
+
+class HintNotFoundException implements AppException {}

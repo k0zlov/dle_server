@@ -28,6 +28,8 @@ mixin _$ManageDleDto {
   DateTime get createdAt => throw _privateConstructorUsedError;
   List<DleEditorDto> get editors => throw _privateConstructorUsedError;
   List<DleAssetDto> get assets => throw _privateConstructorUsedError;
+  List<ManageCharacterDto> get characters => throw _privateConstructorUsedError;
+  List<ManageHintDto> get hints => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
   /// Serializes this ManageDleDto to a JSON map.
@@ -55,6 +57,8 @@ abstract class $ManageDleDtoCopyWith<$Res> {
       DateTime createdAt,
       List<DleEditorDto> editors,
       List<DleAssetDto> assets,
+      List<ManageCharacterDto> characters,
+      List<ManageHintDto> hints,
       String? description});
 }
 
@@ -81,6 +85,8 @@ class _$ManageDleDtoCopyWithImpl<$Res, $Val extends ManageDleDto>
     Object? createdAt = null,
     Object? editors = null,
     Object? assets = null,
+    Object? characters = null,
+    Object? hints = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
@@ -116,6 +122,14 @@ class _$ManageDleDtoCopyWithImpl<$Res, $Val extends ManageDleDto>
           ? _value.assets
           : assets // ignore: cast_nullable_to_non_nullable
               as List<DleAssetDto>,
+      characters: null == characters
+          ? _value.characters
+          : characters // ignore: cast_nullable_to_non_nullable
+              as List<ManageCharacterDto>,
+      hints: null == hints
+          ? _value.hints
+          : hints // ignore: cast_nullable_to_non_nullable
+              as List<ManageHintDto>,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -141,6 +155,8 @@ abstract class _$$ManageDleDtoImplCopyWith<$Res>
       DateTime createdAt,
       List<DleEditorDto> editors,
       List<DleAssetDto> assets,
+      List<ManageCharacterDto> characters,
+      List<ManageHintDto> hints,
       String? description});
 }
 
@@ -165,6 +181,8 @@ class __$$ManageDleDtoImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? editors = null,
     Object? assets = null,
+    Object? characters = null,
+    Object? hints = null,
     Object? description = freezed,
   }) {
     return _then(_$ManageDleDtoImpl(
@@ -200,6 +218,14 @@ class __$$ManageDleDtoImplCopyWithImpl<$Res>
           ? _value._assets
           : assets // ignore: cast_nullable_to_non_nullable
               as List<DleAssetDto>,
+      characters: null == characters
+          ? _value._characters
+          : characters // ignore: cast_nullable_to_non_nullable
+              as List<ManageCharacterDto>,
+      hints: null == hints
+          ? _value._hints
+          : hints // ignore: cast_nullable_to_non_nullable
+              as List<ManageHintDto>,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -220,9 +246,13 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
       required this.createdAt,
       required final List<DleEditorDto> editors,
       required final List<DleAssetDto> assets,
+      required final List<ManageCharacterDto> characters,
+      required final List<ManageHintDto> hints,
       this.description})
       : _editors = editors,
-        _assets = assets;
+        _assets = assets,
+        _characters = characters,
+        _hints = hints;
 
   factory _$ManageDleDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ManageDleDtoImplFromJson(json);
@@ -255,12 +285,28 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
     return EqualUnmodifiableListView(_assets);
   }
 
+  final List<ManageCharacterDto> _characters;
+  @override
+  List<ManageCharacterDto> get characters {
+    if (_characters is EqualUnmodifiableListView) return _characters;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_characters);
+  }
+
+  final List<ManageHintDto> _hints;
+  @override
+  List<ManageHintDto> get hints {
+    if (_hints is EqualUnmodifiableListView) return _hints;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_hints);
+  }
+
   @override
   final String? description;
 
   @override
   String toString() {
-    return 'ManageDleDto(id: $id, title: $title, type: $type, isPrivate: $isPrivate, updatedAt: $updatedAt, createdAt: $createdAt, editors: $editors, assets: $assets, description: $description)';
+    return 'ManageDleDto(id: $id, title: $title, type: $type, isPrivate: $isPrivate, updatedAt: $updatedAt, createdAt: $createdAt, editors: $editors, assets: $assets, characters: $characters, hints: $hints, description: $description)';
   }
 
   @override
@@ -279,6 +325,9 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
                 other.createdAt == createdAt) &&
             const DeepCollectionEquality().equals(other._editors, _editors) &&
             const DeepCollectionEquality().equals(other._assets, _assets) &&
+            const DeepCollectionEquality()
+                .equals(other._characters, _characters) &&
+            const DeepCollectionEquality().equals(other._hints, _hints) &&
             (identical(other.description, description) ||
                 other.description == description));
   }
@@ -295,6 +344,8 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
       createdAt,
       const DeepCollectionEquality().hash(_editors),
       const DeepCollectionEquality().hash(_assets),
+      const DeepCollectionEquality().hash(_characters),
+      const DeepCollectionEquality().hash(_hints),
       description);
 
   /// Create a copy of ManageDleDto
@@ -323,6 +374,8 @@ abstract class _ManageDleDto implements ManageDleDto {
       required final DateTime createdAt,
       required final List<DleEditorDto> editors,
       required final List<DleAssetDto> assets,
+      required final List<ManageCharacterDto> characters,
+      required final List<ManageHintDto> hints,
       final String? description}) = _$ManageDleDtoImpl;
 
   factory _ManageDleDto.fromJson(Map<String, dynamic> json) =
@@ -344,6 +397,10 @@ abstract class _ManageDleDto implements ManageDleDto {
   List<DleEditorDto> get editors;
   @override
   List<DleAssetDto> get assets;
+  @override
+  List<ManageCharacterDto> get characters;
+  @override
+  List<ManageHintDto> get hints;
   @override
   String? get description;
 

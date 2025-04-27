@@ -8,12 +8,16 @@ import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/auth_
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/email_verification_codes.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/password_reset_tokens.dart';
 import 'package:dle_server/contexts/auth/infrastructure/persistence/tables/users.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/character_hints.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/characters.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_assets.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_editors.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_invitations.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dles.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/hints.dart';
 import 'package:dle_server/contexts/profiles/infrastructure/persistence/tables/profiles.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
+import 'package:dle_server/kernel/infrastructure/database/converters/string_list_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
 import 'package:dle_server/kernel/infrastructure/database/migration_strategy.dart';
 import 'package:dle_server/kernel/infrastructure/database/tables/uploads.dart';
@@ -39,9 +43,12 @@ part 'database.g.dart';
     Uploads,
     Profiles,
     Dles,
+    Characters,
     DleEditors,
     DleAssets,
     DleInvitations,
+    Hints,
+    CharacterHints,
   ],
 )
 class Database extends _$Database {

@@ -20,6 +20,12 @@ _$ManageDleDtoImpl _$$ManageDleDtoImplFromJson(Map<String, dynamic> json) =>
       assets: (json['assets'] as List<dynamic>)
           .map((e) => DleAssetDto.fromJson(e as Map<String, dynamic>))
           .toList(),
+      characters: (json['characters'] as List<dynamic>)
+          .map((e) => ManageCharacterDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      hints: (json['hints'] as List<dynamic>)
+          .map((e) => ManageHintDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
       description: json['description'] as String?,
     );
 
@@ -33,5 +39,7 @@ Map<String, dynamic> _$$ManageDleDtoImplToJson(_$ManageDleDtoImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'editors': instance.editors,
       'assets': instance.assets,
+      'characters': instance.characters,
+      'hints': instance.hints,
       'description': instance.description,
     };

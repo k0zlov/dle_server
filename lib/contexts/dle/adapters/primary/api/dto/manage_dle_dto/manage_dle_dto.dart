@@ -1,5 +1,7 @@
 import 'package:dle_server/contexts/dle/adapters/primary/api/dto/dle_asset_dto/dle_asset_dto.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/dto/dle_editor_dto/dle_editor_dto.dart';
+import 'package:dle_server/contexts/dle/adapters/primary/api/dto/manage_character_dto/manage_character_dto.dart';
+import 'package:dle_server/contexts/dle/adapters/primary/api/dto/manage_hint_dto/manage_hint_dto.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -18,6 +20,8 @@ class ManageDleDto with _$ManageDleDto {
     required DateTime createdAt,
     required List<DleEditorDto> editors,
     required List<DleAssetDto> assets,
+    required List<ManageCharacterDto> characters,
+    required List<ManageHintDto> hints,
     String? description,
   }) = _ManageDleDto;
 

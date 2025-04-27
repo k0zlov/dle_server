@@ -8,7 +8,6 @@ import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/contexts/dle/domain/events/editor_left.dart';
-import 'package:dle_server/kernel/adapters/primary/api/dto/items_dto.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/infrastructure/extensions/request_extension.dart';
 import 'package:dle_server/kernel/infrastructure/web_socket_manager/web_socket_manager.dart';
@@ -16,9 +15,10 @@ import 'package:injectable/injectable.dart';
 import 'package:ruta/ruta.dart';
 
 @lazySingleton
-class DleManageSocketController with WebSocketManager {
+class DleManageSocketController {
   DleManageSocketController({
     required this.mapper,
+    @dleManage required this.wsManager,
     @dleContext required this.eventBus,
     required this.getUserDleUseCase,
   });
@@ -26,6 +26,9 @@ class DleManageSocketController with WebSocketManager {
   final DleExceptionsMapper mapper;
   final GetUserDleUseCase getUserDleUseCase;
   final DomainEventBus eventBus;
+  final WebSocketManager wsManager;
+
+  static const String dleManageId = 'dle_manage';
 
   @PostConstruct()
   void init() {
@@ -35,7 +38,8 @@ class DleManageSocketController with WebSocketManager {
           ManageDleDto.fromEntity(event.dle),
         ];
 
-        send(
+        wsManager.send(
+          id: dleManageId,
           userId: event.editorUserId,
           data: ManageDleSocketDto(
             type: ManageDleSocketEventType.delete,
@@ -56,7 +60,8 @@ class DleManageSocketController with WebSocketManager {
     final List<ManageDleDto> dleDtoList = [ManageDleDto.fromEntity(dle)];
 
     for (final String userId in userIds) {
-      send(
+      wsManager.send(
+        id: dleManageId,
         userId: userId,
         data: ManageDleSocketDto(
           type: ManageDleSocketEventType.update,
@@ -74,13 +79,17 @@ class DleManageSocketController with WebSocketManager {
 
         final GetUserDleParams params = GetUserDleParams(userId: userId);
 
-        addChannel(userId, channel);
+        wsManager.addChannel(userId, channel);
 
         try {
           final List<Dle> dleList = await getUserDleUseCase(params);
-          send(
+          wsManager.send(
+            id: dleManageId,
             userId: userId,
-            data: ItemsDto(dleList.map(ManageDleDto.fromEntity)),
+            data: ManageDleSocketDto(
+              type: ManageDleSocketEventType.update,
+              dtoList: dleList.map(ManageDleDto.fromEntity).toList(),
+            ),
           );
         } catch (e) {
           channel.sink.addError(jsonEncode(mapper(e).toMap()));

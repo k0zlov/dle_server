@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dle_server/contexts/dle/domain/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/domain/exceptions/dle_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'dle_invitation.mapper.dart';

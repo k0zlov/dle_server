@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
 import 'package:dle_server/contexts/profiles/domain/exceptions/profiles_exceptions.dart';
 import 'package:dle_server/kernel/adapters/primary/api/exceptions/exceptions_mapper.dart';
 import 'package:injectable/injectable.dart';
@@ -23,8 +23,8 @@ class DleExceptionsMapper extends ExceptionsMapper {
     DleNotFoundException: const ApiException.notFound(
       'The requested DLE was not found.',
     ),
-    CouldNotUploadAssetException: const ApiException.internalServerError(
-      'Failed to upload the asset. Please try again later.',
+    CouldNotUploadFileException: const ApiException.internalServerError(
+      'Failed to upload the file. Please try again later.',
     ),
     TooManyInvitesException: const ApiException.badRequest(
       'The maximum number of invites has been reached.',

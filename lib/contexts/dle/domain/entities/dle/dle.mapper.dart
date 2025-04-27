@@ -58,6 +58,9 @@ class DleMapper extends ClassMapperBase<Dle> {
       DleTypeMapper.ensureInitialized();
       DleAssetMapper.ensureInitialized();
       DleEditorMapper.ensureInitialized();
+      CharacterMapper.ensureInitialized();
+      HintMapper.ensureInitialized();
+      CharacterHintMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -88,6 +91,16 @@ class DleMapper extends ClassMapperBase<Dle> {
   static List<DleEditor> _$editors(Dle v) => v.editors;
   static const Field<Dle, List<DleEditor>> _f$editors =
       Field('editors', _$editors, opt: true, def: const <DleEditor>[]);
+  static List<Character> _$characters(Dle v) => v.characters;
+  static const Field<Dle, List<Character>> _f$characters =
+      Field('characters', _$characters, opt: true, def: const <Character>[]);
+  static List<Hint> _$hints(Dle v) => v.hints;
+  static const Field<Dle, List<Hint>> _f$hints =
+      Field('hints', _$hints, opt: true, def: const <Hint>[]);
+  static List<CharacterHint> _$characterHints(Dle v) => v.characterHints;
+  static const Field<Dle, List<CharacterHint>> _f$characterHints = Field(
+      'characterHints', _$characterHints,
+      opt: true, def: const <CharacterHint>[]);
 
   @override
   final MappableFields<Dle> fields = const {
@@ -100,6 +113,9 @@ class DleMapper extends ClassMapperBase<Dle> {
     #isPrivate: _f$isPrivate,
     #assets: _f$assets,
     #editors: _f$editors,
+    #characters: _f$characters,
+    #hints: _f$hints,
+    #characterHints: _f$characterHints,
   };
 
   static Dle _instantiate(DecodingData data) {
@@ -112,7 +128,10 @@ class DleMapper extends ClassMapperBase<Dle> {
         createdAt: data.dec(_f$createdAt),
         isPrivate: data.dec(_f$isPrivate),
         assets: data.dec(_f$assets),
-        editors: data.dec(_f$editors));
+        editors: data.dec(_f$editors),
+        characters: data.dec(_f$characters),
+        hints: data.dec(_f$hints),
+        characterHints: data.dec(_f$characterHints));
   }
 
   @override
@@ -165,6 +184,12 @@ abstract class DleCopyWith<$R, $In extends Dle, $Out>
       get assets;
   ListCopyWith<$R, DleEditor, DleEditorCopyWith<$R, DleEditor, DleEditor>>
       get editors;
+  ListCopyWith<$R, Character, CharacterCopyWith<$R, Character, Character>>
+      get characters;
+  ListCopyWith<$R, Hint, HintCopyWith<$R, Hint, Hint>> get hints;
+  ListCopyWith<$R, CharacterHint,
+          CharacterHintCopyWith<$R, CharacterHint, CharacterHint>>
+      get characterHints;
   $R call(
       {String? id,
       String? title,
@@ -174,7 +199,10 @@ abstract class DleCopyWith<$R, $In extends Dle, $Out>
       DateTime? createdAt,
       bool? isPrivate,
       List<DleAsset>? assets,
-      List<DleEditor>? editors});
+      List<DleEditor>? editors,
+      List<Character>? characters,
+      List<Hint>? hints,
+      List<CharacterHint>? characterHints});
   DleCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -193,6 +221,19 @@ class _DleCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dle, $Out>
       get editors => ListCopyWith($value.editors,
           (v, t) => v.copyWith.$chain(t), (v) => call(editors: v));
   @override
+  ListCopyWith<$R, Character, CharacterCopyWith<$R, Character, Character>>
+      get characters => ListCopyWith($value.characters,
+          (v, t) => v.copyWith.$chain(t), (v) => call(characters: v));
+  @override
+  ListCopyWith<$R, Hint, HintCopyWith<$R, Hint, Hint>> get hints =>
+      ListCopyWith(
+          $value.hints, (v, t) => v.copyWith.$chain(t), (v) => call(hints: v));
+  @override
+  ListCopyWith<$R, CharacterHint,
+          CharacterHintCopyWith<$R, CharacterHint, CharacterHint>>
+      get characterHints => ListCopyWith($value.characterHints,
+          (v, t) => v.copyWith.$chain(t), (v) => call(characterHints: v));
+  @override
   $R call(
           {Object? id = $none,
           String? title,
@@ -202,7 +243,10 @@ class _DleCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dle, $Out>
           DateTime? createdAt,
           bool? isPrivate,
           List<DleAsset>? assets,
-          List<DleEditor>? editors}) =>
+          List<DleEditor>? editors,
+          List<Character>? characters,
+          List<Hint>? hints,
+          List<CharacterHint>? characterHints}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (title != null) #title: title,
@@ -212,7 +256,10 @@ class _DleCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dle, $Out>
         if (createdAt != null) #createdAt: createdAt,
         if (isPrivate != null) #isPrivate: isPrivate,
         if (assets != null) #assets: assets,
-        if (editors != null) #editors: editors
+        if (editors != null) #editors: editors,
+        if (characters != null) #characters: characters,
+        if (hints != null) #hints: hints,
+        if (characterHints != null) #characterHints: characterHints
       }));
   @override
   Dle $make(CopyWithData data) => Dle(
@@ -224,7 +271,10 @@ class _DleCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dle, $Out>
       createdAt: data.get(#createdAt, or: $value.createdAt),
       isPrivate: data.get(#isPrivate, or: $value.isPrivate),
       assets: data.get(#assets, or: $value.assets),
-      editors: data.get(#editors, or: $value.editors));
+      editors: data.get(#editors, or: $value.editors),
+      characters: data.get(#characters, or: $value.characters),
+      hints: data.get(#hints, or: $value.hints),
+      characterHints: data.get(#characterHints, or: $value.characterHints));
 
   @override
   DleCopyWith<$R2, Dle, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

@@ -1754,6 +1754,284 @@ class DlesCompanion extends UpdateCompanion<Dle> {
   }
 }
 
+class $CharactersTable extends Characters
+    with TableInfo<$CharactersTable, Character> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CharactersTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($CharactersTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
+      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($CharactersTable.$converterdleId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, UuidValue> imageId =
+      GeneratedColumn<UuidValue>('image_id', aliasedName, true,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES uploads (id) ON DELETE SET NULL'))
+          .withConverter<String?>($CharactersTable.$converterimageIdn);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isHiddenMeta =
+      const VerificationMeta('isHidden');
+  @override
+  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
+      'is_hidden', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(false));
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String> aliases =
+      GeneratedColumn<String>('aliases', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($CharactersTable.$converteraliases);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharactersTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharactersTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, dleId, imageId, name, isHidden, aliases, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'characters';
+  @override
+  VerificationContext validateIntegrity(Insertable<Character> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('is_hidden')) {
+      context.handle(_isHiddenMeta,
+          isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Character map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Character(
+      id: $CharactersTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      dleId: $CharactersTable.$converterdleId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      aliases: $CharactersTable.$converteraliases.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}aliases'])!),
+      imageId: $CharactersTable.$converterimageIdn.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}image_id'])),
+      isHidden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_hidden'])!,
+      updatedAt: $CharactersTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $CharactersTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $CharactersTable createAlias(String alias) {
+    return $CharactersTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterdleId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterimageId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String?, UuidValue?> $converterimageIdn =
+      NullAwareTypeConverter.wrap($converterimageId);
+  static TypeConverter<List<String>, String> $converteraliases =
+      const StringListConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class CharactersCompanion extends UpdateCompanion<Character> {
+  final Value<String> id;
+  final Value<String> dleId;
+  final Value<String?> imageId;
+  final Value<String> name;
+  final Value<bool> isHidden;
+  final Value<List<String>> aliases;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CharactersCompanion({
+    this.id = const Value.absent(),
+    this.dleId = const Value.absent(),
+    this.imageId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.isHidden = const Value.absent(),
+    this.aliases = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CharactersCompanion.insert({
+    this.id = const Value.absent(),
+    required String dleId,
+    this.imageId = const Value.absent(),
+    required String name,
+    this.isHidden = const Value.absent(),
+    required List<String> aliases,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : dleId = Value(dleId),
+        name = Value(name),
+        aliases = Value(aliases);
+  static Insertable<Character> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? dleId,
+    Expression<UuidValue>? imageId,
+    Expression<String>? name,
+    Expression<bool>? isHidden,
+    Expression<String>? aliases,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dleId != null) 'dle_id': dleId,
+      if (imageId != null) 'image_id': imageId,
+      if (name != null) 'name': name,
+      if (isHidden != null) 'is_hidden': isHidden,
+      if (aliases != null) 'aliases': aliases,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CharactersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? dleId,
+      Value<String?>? imageId,
+      Value<String>? name,
+      Value<bool>? isHidden,
+      Value<List<String>>? aliases,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return CharactersCompanion(
+      id: id ?? this.id,
+      dleId: dleId ?? this.dleId,
+      imageId: imageId ?? this.imageId,
+      name: name ?? this.name,
+      isHidden: isHidden ?? this.isHidden,
+      aliases: aliases ?? this.aliases,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $CharactersTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (dleId.present) {
+      map['dle_id'] = Variable<UuidValue>(
+          $CharactersTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
+    }
+    if (imageId.present) {
+      map['image_id'] = Variable<UuidValue>(
+          $CharactersTable.$converterimageIdn.toSql(imageId.value),
+          PgTypes.uuid);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (isHidden.present) {
+      map['is_hidden'] = Variable<bool>(isHidden.value);
+    }
+    if (aliases.present) {
+      map['aliases'] = Variable<String>(
+          $CharactersTable.$converteraliases.toSql(aliases.value));
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $CharactersTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $CharactersTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CharactersCompanion(')
+          ..write('id: $id, ')
+          ..write('dleId: $dleId, ')
+          ..write('imageId: $imageId, ')
+          ..write('name: $name, ')
+          ..write('isHidden: $isHidden, ')
+          ..write('aliases: $aliases, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $DleEditorsTable extends DleEditors
     with TableInfo<$DleEditorsTable, DleEditor> {
   @override
@@ -2464,6 +2742,540 @@ class DleInvitationsCompanion extends UpdateCompanion<DleInvitation> {
   }
 }
 
+class $HintsTable extends Hints with TableInfo<$HintsTable, Hint> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HintsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($HintsTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
+      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($HintsTable.$converterdleId);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _requiredTriesMeta =
+      const VerificationMeta('requiredTries');
+  @override
+  late final GeneratedColumn<int> requiredTries = GeneratedColumn<int>(
+      'required_tries', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<HintType, String> type =
+      GeneratedColumn<String>('type', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<HintType>($HintsTable.$convertertype);
+  static const VerificationMeta _isHiddenMeta =
+      const VerificationMeta('isHidden');
+  @override
+  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
+      'is_hidden', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(false));
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($HintsTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($HintsTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        dleId,
+        title,
+        description,
+        requiredTries,
+        type,
+        isHidden,
+        updatedAt,
+        createdAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hints';
+  @override
+  VerificationContext validateIntegrity(Insertable<Hint> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('required_tries')) {
+      context.handle(
+          _requiredTriesMeta,
+          requiredTries.isAcceptableOrUnknown(
+              data['required_tries']!, _requiredTriesMeta));
+    } else if (isInserting) {
+      context.missing(_requiredTriesMeta);
+    }
+    if (data.containsKey('is_hidden')) {
+      context.handle(_isHiddenMeta,
+          isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Hint map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Hint(
+      id: $HintsTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      dleId: $HintsTable.$converterdleId.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      type: $HintsTable.$convertertype.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
+      requiredTries: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}required_tries'])!,
+      isHidden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_hidden'])!,
+      updatedAt: $HintsTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $HintsTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $HintsTable createAlias(String alias) {
+    return $HintsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterdleId =
+      const UuidValueToStringConverter();
+  static JsonTypeConverter2<HintType, String, String> $convertertype =
+      const EnumNameConverter<HintType>(HintType.values);
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class HintsCompanion extends UpdateCompanion<Hint> {
+  final Value<String> id;
+  final Value<String> dleId;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<int> requiredTries;
+  final Value<HintType> type;
+  final Value<bool> isHidden;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const HintsCompanion({
+    this.id = const Value.absent(),
+    this.dleId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.requiredTries = const Value.absent(),
+    this.type = const Value.absent(),
+    this.isHidden = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HintsCompanion.insert({
+    this.id = const Value.absent(),
+    required String dleId,
+    required String title,
+    required String description,
+    required int requiredTries,
+    required HintType type,
+    this.isHidden = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : dleId = Value(dleId),
+        title = Value(title),
+        description = Value(description),
+        requiredTries = Value(requiredTries),
+        type = Value(type);
+  static Insertable<Hint> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? dleId,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<int>? requiredTries,
+    Expression<String>? type,
+    Expression<bool>? isHidden,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dleId != null) 'dle_id': dleId,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (requiredTries != null) 'required_tries': requiredTries,
+      if (type != null) 'type': type,
+      if (isHidden != null) 'is_hidden': isHidden,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HintsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? dleId,
+      Value<String>? title,
+      Value<String>? description,
+      Value<int>? requiredTries,
+      Value<HintType>? type,
+      Value<bool>? isHidden,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return HintsCompanion(
+      id: id ?? this.id,
+      dleId: dleId ?? this.dleId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      requiredTries: requiredTries ?? this.requiredTries,
+      type: type ?? this.type,
+      isHidden: isHidden ?? this.isHidden,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $HintsTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (dleId.present) {
+      map['dle_id'] = Variable<UuidValue>(
+          $HintsTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (requiredTries.present) {
+      map['required_tries'] = Variable<int>(requiredTries.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<String>($HintsTable.$convertertype.toSql(type.value));
+    }
+    if (isHidden.present) {
+      map['is_hidden'] = Variable<bool>(isHidden.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $HintsTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $HintsTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HintsCompanion(')
+          ..write('id: $id, ')
+          ..write('dleId: $dleId, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('requiredTries: $requiredTries, ')
+          ..write('type: $type, ')
+          ..write('isHidden: $isHidden, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CharacterHintsTable extends CharacterHints
+    with TableInfo<$CharacterHintsTable, CharacterHint> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CharacterHintsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($CharacterHintsTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> hintId =
+      GeneratedColumn<UuidValue>('hint_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES hints (id) ON DELETE CASCADE'))
+          .withConverter<String>($CharacterHintsTable.$converterhintId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> characterId =
+      GeneratedColumn<UuidValue>('character_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES characters (id) ON DELETE CASCADE'))
+          .withConverter<String>($CharacterHintsTable.$convertercharacterId);
+  @override
+  late final GeneratedColumnWithTypeConverter<HintValue?, Object> value =
+      GeneratedColumn<Object>('value', aliasedName, true,
+              type: PgTypes.jsonb, requiredDuringInsert: false)
+          .withConverter<HintValue?>($CharacterHintsTable.$convertervaluen);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharacterHintsTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharacterHintsTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, hintId, characterId, value, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'character_hints';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CharacterHint map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CharacterHint(
+      id: $CharacterHintsTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      hintId: $CharacterHintsTable.$converterhintId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}hint_id'])!),
+      characterId: $CharacterHintsTable.$convertercharacterId.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}character_id'])!),
+      value: $CharacterHintsTable.$convertervaluen.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.jsonb, data['${effectivePrefix}value'])),
+      updatedAt: $CharacterHintsTable.$converterupdatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $CharacterHintsTable.$convertercreatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $CharacterHintsTable createAlias(String alias) {
+    return $CharacterHintsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterhintId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $convertercharacterId =
+      const UuidValueToStringConverter();
+  static TypeConverter<HintValue, Object> $convertervalue =
+      const HintValueConverter();
+  static TypeConverter<HintValue?, Object?> $convertervaluen =
+      NullAwareTypeConverter.wrap($convertervalue);
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
+  final Value<String> id;
+  final Value<String> hintId;
+  final Value<String> characterId;
+  final Value<HintValue?> value;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CharacterHintsCompanion({
+    this.id = const Value.absent(),
+    this.hintId = const Value.absent(),
+    this.characterId = const Value.absent(),
+    this.value = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CharacterHintsCompanion.insert({
+    this.id = const Value.absent(),
+    required String hintId,
+    required String characterId,
+    this.value = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : hintId = Value(hintId),
+        characterId = Value(characterId);
+  static Insertable<CharacterHint> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? hintId,
+    Expression<UuidValue>? characterId,
+    Expression<Object>? value,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (hintId != null) 'hint_id': hintId,
+      if (characterId != null) 'character_id': characterId,
+      if (value != null) 'value': value,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CharacterHintsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? hintId,
+      Value<String>? characterId,
+      Value<HintValue?>? value,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return CharacterHintsCompanion(
+      id: id ?? this.id,
+      hintId: hintId ?? this.hintId,
+      characterId: characterId ?? this.characterId,
+      value: value ?? this.value,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $CharacterHintsTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (hintId.present) {
+      map['hint_id'] = Variable<UuidValue>(
+          $CharacterHintsTable.$converterhintId.toSql(hintId.value),
+          PgTypes.uuid);
+    }
+    if (characterId.present) {
+      map['character_id'] = Variable<UuidValue>(
+          $CharacterHintsTable.$convertercharacterId.toSql(characterId.value),
+          PgTypes.uuid);
+    }
+    if (value.present) {
+      map['value'] = Variable<Object>(
+          $CharacterHintsTable.$convertervaluen.toSql(value.value),
+          PgTypes.jsonb);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $CharacterHintsTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $CharacterHintsTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CharacterHintsCompanion(')
+          ..write('id: $id, ')
+          ..write('hintId: $hintId, ')
+          ..write('characterId: $characterId, ')
+          ..write('value: $value, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -2476,9 +3288,20 @@ abstract class _$Database extends GeneratedDatabase {
   late final $UploadsTable uploads = $UploadsTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $DlesTable dles = $DlesTable(this);
+  late final $CharactersTable characters = $CharactersTable(this);
   late final $DleEditorsTable dleEditors = $DleEditorsTable(this);
   late final $DleAssetsTable dleAssets = $DleAssetsTable(this);
   late final $DleInvitationsTable dleInvitations = $DleInvitationsTable(this);
+  late final $HintsTable hints = $HintsTable(this);
+  late final $CharacterHintsTable characterHints = $CharacterHintsTable(this);
+  late final Index hintsDleId = Index.byDialect('hints_dleId', {
+    SqlDialect.postgres: 'CREATE INDEX hints_dleId ON hints (dle_id)',
+  });
+  late final Index characterHintsCharacterId =
+      Index.byDialect('character_hints_characterId', {
+    SqlDialect.postgres:
+        'CREATE INDEX character_hints_characterId ON character_hints (character_id)',
+  });
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2491,9 +3314,14 @@ abstract class _$Database extends GeneratedDatabase {
         uploads,
         profiles,
         dles,
+        characters,
         dleEditors,
         dleAssets,
-        dleInvitations
+        dleInvitations,
+        hints,
+        characterHints,
+        hintsDleId,
+        characterHintsCharacterId
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -2544,6 +3372,20 @@ abstract class _$Database extends GeneratedDatabase {
             on: TableUpdateQuery.onTableName('dles',
                 limitUpdateKind: UpdateKind.delete),
             result: [
+              TableUpdate('characters', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('uploads',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('characters', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('dles',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
               TableUpdate('dle_editors', kind: UpdateKind.delete),
             ],
           ),
@@ -2594,6 +3436,27 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('dle_invitations', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('dles',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('hints', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('hints',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('character_hints', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('characters',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('character_hints', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -4477,6 +5340,21 @@ final class $$UploadsTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
+  static MultiTypedResultKey<$CharactersTable, List<Character>>
+      _CharactersInDleTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.characters,
+              aliasName:
+                  $_aliasNameGenerator(db.uploads.id, db.characters.imageId));
+
+  $$CharactersTableProcessedTableManager get CharactersInDle {
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.imageId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_CharactersInDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
   static MultiTypedResultKey<$DleAssetsTable, List<DleAsset>>
       _DleAssetInUploadTable(_$Database db) =>
           MultiTypedResultKey.fromTable(db.dleAssets,
@@ -4555,6 +5433,27 @@ class $$UploadsTableFilterComposer extends Composer<_$Database, $UploadsTable> {
             $$ProfilesTableFilterComposer(
               $db: $db,
               $table: $db.profiles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> CharactersInDle(
+      Expression<bool> Function($$CharactersTableFilterComposer f) f) {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.imageId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4695,6 +5594,27 @@ class $$UploadsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> CharactersInDle<T extends Object>(
+      Expression<T> Function($$CharactersTableAnnotationComposer a) f) {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.imageId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
   Expression<T> DleAssetInUpload<T extends Object>(
       Expression<T> Function($$DleAssetsTableAnnotationComposer a) f) {
     final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
@@ -4729,7 +5649,10 @@ class $$UploadsTableTableManager extends RootTableManager<
     (Upload, $$UploadsTableReferences),
     Upload,
     PrefetchHooks Function(
-        {bool uploaderId, bool profilesRefs, bool DleAssetInUpload})> {
+        {bool uploaderId,
+        bool profilesRefs,
+        bool CharactersInDle,
+        bool DleAssetInUpload})> {
   $$UploadsTableTableManager(_$Database db, $UploadsTable table)
       : super(TableManagerState(
           db: db,
@@ -4783,11 +5706,13 @@ class $$UploadsTableTableManager extends RootTableManager<
           prefetchHooksCallback: (
               {uploaderId = false,
               profilesRefs = false,
+              CharactersInDle = false,
               DleAssetInUpload = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (profilesRefs) db.profiles,
+                if (CharactersInDle) db.characters,
                 if (DleAssetInUpload) db.dleAssets
               ],
               addJoins: <
@@ -4830,6 +5755,18 @@ class $$UploadsTableTableManager extends RootTableManager<
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.pictureId == item.id),
                         typedResults: items),
+                  if (CharactersInDle)
+                    await $_getPrefetchedData<Upload, $UploadsTable, Character>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UploadsTableReferences._CharactersInDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UploadsTableReferences(db, table, p0)
+                                .CharactersInDle,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.imageId == item.id),
+                        typedResults: items),
                   if (DleAssetInUpload)
                     await $_getPrefetchedData<Upload, $UploadsTable, DleAsset>(
                         currentTable: table,
@@ -4861,7 +5798,10 @@ typedef $$UploadsTableProcessedTableManager = ProcessedTableManager<
     (Upload, $$UploadsTableReferences),
     Upload,
     PrefetchHooks Function(
-        {bool uploaderId, bool profilesRefs, bool DleAssetInUpload})>;
+        {bool uploaderId,
+        bool profilesRefs,
+        bool CharactersInDle,
+        bool DleAssetInUpload})>;
 typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   Value<String> id,
   required String userId,
@@ -5267,6 +6207,20 @@ final class $$DlesTableReferences
     extends BaseReferences<_$Database, $DlesTable, Dle> {
   $$DlesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
+  static MultiTypedResultKey<$CharactersTable, List<Character>>
+      _CharactersInDleTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.characters,
+              aliasName: $_aliasNameGenerator(db.dles.id, db.characters.dleId));
+
+  $$CharactersTableProcessedTableManager get CharactersInDle {
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_CharactersInDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
   static MultiTypedResultKey<$DleEditorsTable, List<DleEditor>>
       _DleEditorsInDleTable(_$Database db) =>
           MultiTypedResultKey.fromTable(db.dleEditors,
@@ -5309,6 +6263,20 @@ final class $$DlesTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$HintsTable, List<Hint>> _HintsInDleTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.hints,
+          aliasName: $_aliasNameGenerator(db.dles.id, db.hints.dleId));
+
+  $$HintsTableProcessedTableManager get HintsInDle {
+    final manager = $$HintsTableTableManager($_db, $_db.hints)
+        .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_HintsInDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
@@ -5347,6 +6315,27 @@ class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
       get createdAt => $composableBuilder(
           column: $table.createdAt,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  Expression<bool> CharactersInDle(
+      Expression<bool> Function($$CharactersTableFilterComposer f) f) {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 
   Expression<bool> DleEditorsInDle(
       Expression<bool> Function($$DleEditorsTableFilterComposer f) f) {
@@ -5403,6 +6392,27 @@ class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
             $$DleInvitationsTableFilterComposer(
               $db: $db,
               $table: $db.dleInvitations,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> HintsInDle(
+      Expression<bool> Function($$HintsTableFilterComposer f) f) {
+    final $$HintsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.hints,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HintsTableFilterComposer(
+              $db: $db,
+              $table: $db.hints,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5471,6 +6481,27 @@ class $$DlesTableAnnotationComposer extends Composer<_$Database, $DlesTable> {
   GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
+  Expression<T> CharactersInDle<T extends Object>(
+      Expression<T> Function($$CharactersTableAnnotationComposer a) f) {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
   Expression<T> DleEditorsInDle<T extends Object>(
       Expression<T> Function($$DleEditorsTableAnnotationComposer a) f) {
     final $$DleEditorsTableAnnotationComposer composer = $composerBuilder(
@@ -5533,6 +6564,27 @@ class $$DlesTableAnnotationComposer extends Composer<_$Database, $DlesTable> {
             ));
     return f(composer);
   }
+
+  Expression<T> HintsInDle<T extends Object>(
+      Expression<T> Function($$HintsTableAnnotationComposer a) f) {
+    final $$HintsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.hints,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HintsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.hints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$DlesTableTableManager extends RootTableManager<
@@ -5547,9 +6599,11 @@ class $$DlesTableTableManager extends RootTableManager<
     (Dle, $$DlesTableReferences),
     Dle,
     PrefetchHooks Function(
-        {bool DleEditorsInDle,
+        {bool CharactersInDle,
+        bool DleEditorsInDle,
         bool DleAssetsInDle,
-        bool DleInvitationsInDle})> {
+        bool DleInvitationsInDle,
+        bool HintsInDle})> {
   $$DlesTableTableManager(_$Database db, $DlesTable table)
       : super(TableManagerState(
           db: db,
@@ -5605,19 +6659,35 @@ class $$DlesTableTableManager extends RootTableManager<
                   (e.readTable(table), $$DlesTableReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {DleEditorsInDle = false,
+              {CharactersInDle = false,
+              DleEditorsInDle = false,
               DleAssetsInDle = false,
-              DleInvitationsInDle = false}) {
+              DleInvitationsInDle = false,
+              HintsInDle = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
+                if (CharactersInDle) db.characters,
                 if (DleEditorsInDle) db.dleEditors,
                 if (DleAssetsInDle) db.dleAssets,
-                if (DleInvitationsInDle) db.dleInvitations
+                if (DleInvitationsInDle) db.dleInvitations,
+                if (HintsInDle) db.hints
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
+                  if (CharactersInDle)
+                    await $_getPrefetchedData<Dle, $DlesTable, Character>(
+                        currentTable: table,
+                        referencedTable:
+                            $$DlesTableReferences._CharactersInDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$DlesTableReferences(db, table, p0)
+                                .CharactersInDle,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.dleId == item.id),
+                        typedResults: items),
                   if (DleEditorsInDle)
                     await $_getPrefetchedData<Dle, $DlesTable, DleEditor>(
                         currentTable: table,
@@ -5652,6 +6722,17 @@ class $$DlesTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.dleId == item.id),
+                        typedResults: items),
+                  if (HintsInDle)
+                    await $_getPrefetchedData<Dle, $DlesTable, Hint>(
+                        currentTable: table,
+                        referencedTable:
+                            $$DlesTableReferences._HintsInDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$DlesTableReferences(db, table, p0).HintsInDle,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.dleId == item.id),
                         typedResults: items)
                 ];
               },
@@ -5672,7 +6753,491 @@ typedef $$DlesTableProcessedTableManager = ProcessedTableManager<
     (Dle, $$DlesTableReferences),
     Dle,
     PrefetchHooks Function(
-        {bool DleEditorsInDle, bool DleAssetsInDle, bool DleInvitationsInDle})>;
+        {bool CharactersInDle,
+        bool DleEditorsInDle,
+        bool DleAssetsInDle,
+        bool DleInvitationsInDle,
+        bool HintsInDle})>;
+typedef $$CharactersTableCreateCompanionBuilder = CharactersCompanion Function({
+  Value<String> id,
+  required String dleId,
+  Value<String?> imageId,
+  required String name,
+  Value<bool> isHidden,
+  required List<String> aliases,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$CharactersTableUpdateCompanionBuilder = CharactersCompanion Function({
+  Value<String> id,
+  Value<String> dleId,
+  Value<String?> imageId,
+  Value<String> name,
+  Value<bool> isHidden,
+  Value<List<String>> aliases,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$CharactersTableReferences
+    extends BaseReferences<_$Database, $CharactersTable, Character> {
+  $$CharactersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DlesTable _dleIdTable(_$Database db) => db.dles
+      .createAlias($_aliasNameGenerator(db.characters.dleId, db.dles.id));
+
+  $$DlesTableProcessedTableManager get dleId {
+    final $_column = $_itemColumn<UuidValue>('dle_id')!;
+
+    final manager = $$DlesTableTableManager($_db, $_db.dles)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_dleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $UploadsTable _imageIdTable(_$Database db) => db.uploads
+      .createAlias($_aliasNameGenerator(db.characters.imageId, db.uploads.id));
+
+  $$UploadsTableProcessedTableManager? get imageId {
+    final $_column = $_itemColumn<UuidValue>('image_id');
+    if ($_column == null) return null;
+    final manager = $$UploadsTableTableManager($_db, $_db.uploads)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_imageIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$CharacterHintsTable, List<CharacterHint>>
+      _CharacterHintsInCharactersTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.characterHints,
+              aliasName: $_aliasNameGenerator(
+                  db.characters.id, db.characterHints.characterId));
+
+  $$CharacterHintsTableProcessedTableManager get CharacterHintsInCharacters {
+    final manager = $$CharacterHintsTableTableManager($_db, $_db.characterHints)
+        .filter(
+            (f) => f.characterId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_CharacterHintsInCharactersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$CharactersTableFilterComposer
+    extends Composer<_$Database, $CharactersTable> {
+  $$CharactersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get aliases => $composableBuilder(
+          column: $table.aliases,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$DlesTableFilterComposer get dleId {
+    final $$DlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableFilterComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableFilterComposer get imageId {
+    final $$UploadsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.imageId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableFilterComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> CharacterHintsInCharacters(
+      Expression<bool> Function($$CharacterHintsTableFilterComposer f) f) {
+    final $$CharacterHintsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterHints,
+        getReferencedColumn: (t) => t.characterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterHintsTableFilterComposer(
+              $db: $db,
+              $table: $db.characterHints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$CharactersTableOrderingComposer
+    extends Composer<_$Database, $CharactersTable> {
+  $$CharactersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get aliases => $composableBuilder(
+      column: $table.aliases, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$DlesTableOrderingComposer get dleId {
+    final $$DlesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableOrderingComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableOrderingComposer get imageId {
+    final $$UploadsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.imageId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableOrderingComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharactersTableAnnotationComposer
+    extends Composer<_$Database, $CharactersTable> {
+  $$CharactersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<bool> get isHidden =>
+      $composableBuilder(column: $table.isHidden, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get aliases =>
+      $composableBuilder(column: $table.aliases, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$DlesTableAnnotationComposer get dleId {
+    final $$DlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableAnnotationComposer get imageId {
+    final $$UploadsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.imageId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> CharacterHintsInCharacters<T extends Object>(
+      Expression<T> Function($$CharacterHintsTableAnnotationComposer a) f) {
+    final $$CharacterHintsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterHints,
+        getReferencedColumn: (t) => t.characterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterHintsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characterHints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$CharactersTableTableManager extends RootTableManager<
+    _$Database,
+    $CharactersTable,
+    Character,
+    $$CharactersTableFilterComposer,
+    $$CharactersTableOrderingComposer,
+    $$CharactersTableAnnotationComposer,
+    $$CharactersTableCreateCompanionBuilder,
+    $$CharactersTableUpdateCompanionBuilder,
+    (Character, $$CharactersTableReferences),
+    Character,
+    PrefetchHooks Function(
+        {bool dleId, bool imageId, bool CharacterHintsInCharacters})> {
+  $$CharactersTableTableManager(_$Database db, $CharactersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CharactersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CharactersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CharactersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> dleId = const Value.absent(),
+            Value<String?> imageId = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<bool> isHidden = const Value.absent(),
+            Value<List<String>> aliases = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharactersCompanion(
+            id: id,
+            dleId: dleId,
+            imageId: imageId,
+            name: name,
+            isHidden: isHidden,
+            aliases: aliases,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String dleId,
+            Value<String?> imageId = const Value.absent(),
+            required String name,
+            Value<bool> isHidden = const Value.absent(),
+            required List<String> aliases,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharactersCompanion.insert(
+            id: id,
+            dleId: dleId,
+            imageId: imageId,
+            name: name,
+            isHidden: isHidden,
+            aliases: aliases,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$CharactersTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {dleId = false,
+              imageId = false,
+              CharacterHintsInCharacters = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (CharacterHintsInCharacters) db.characterHints
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (dleId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.dleId,
+                    referencedTable:
+                        $$CharactersTableReferences._dleIdTable(db),
+                    referencedColumn:
+                        $$CharactersTableReferences._dleIdTable(db).id,
+                  ) as T;
+                }
+                if (imageId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.imageId,
+                    referencedTable:
+                        $$CharactersTableReferences._imageIdTable(db),
+                    referencedColumn:
+                        $$CharactersTableReferences._imageIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (CharacterHintsInCharacters)
+                    await $_getPrefetchedData<Character, $CharactersTable,
+                            CharacterHint>(
+                        currentTable: table,
+                        referencedTable: $$CharactersTableReferences
+                            ._CharacterHintsInCharactersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CharactersTableReferences(db, table, p0)
+                                .CharacterHintsInCharacters,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.characterId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CharactersTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $CharactersTable,
+    Character,
+    $$CharactersTableFilterComposer,
+    $$CharactersTableOrderingComposer,
+    $$CharactersTableAnnotationComposer,
+    $$CharactersTableCreateCompanionBuilder,
+    $$CharactersTableUpdateCompanionBuilder,
+    (Character, $$CharactersTableReferences),
+    Character,
+    PrefetchHooks Function(
+        {bool dleId, bool imageId, bool CharacterHintsInCharacters})>;
 typedef $$DleEditorsTableCreateCompanionBuilder = DleEditorsCompanion Function({
   Value<String> id,
   required String dleId,
@@ -6968,6 +8533,790 @@ typedef $$DleInvitationsTableProcessedTableManager = ProcessedTableManager<
     (DleInvitation, $$DleInvitationsTableReferences),
     DleInvitation,
     PrefetchHooks Function({bool dleId, bool inviterId, bool inviteeId})>;
+typedef $$HintsTableCreateCompanionBuilder = HintsCompanion Function({
+  Value<String> id,
+  required String dleId,
+  required String title,
+  required String description,
+  required int requiredTries,
+  required HintType type,
+  Value<bool> isHidden,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$HintsTableUpdateCompanionBuilder = HintsCompanion Function({
+  Value<String> id,
+  Value<String> dleId,
+  Value<String> title,
+  Value<String> description,
+  Value<int> requiredTries,
+  Value<HintType> type,
+  Value<bool> isHidden,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$HintsTableReferences
+    extends BaseReferences<_$Database, $HintsTable, Hint> {
+  $$HintsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DlesTable _dleIdTable(_$Database db) =>
+      db.dles.createAlias($_aliasNameGenerator(db.hints.dleId, db.dles.id));
+
+  $$DlesTableProcessedTableManager get dleId {
+    final $_column = $_itemColumn<UuidValue>('dle_id')!;
+
+    final manager = $$DlesTableTableManager($_db, $_db.dles)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_dleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$CharacterHintsTable, List<CharacterHint>>
+      _CharacterHintsInHintsTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.characterHints,
+              aliasName:
+                  $_aliasNameGenerator(db.hints.id, db.characterHints.hintId));
+
+  $$CharacterHintsTableProcessedTableManager get CharacterHintsInHints {
+    final manager = $$CharacterHintsTableTableManager($_db, $_db.characterHints)
+        .filter((f) => f.hintId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_CharacterHintsInHintsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$HintsTableFilterComposer extends Composer<_$Database, $HintsTable> {
+  $$HintsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get requiredTries => $composableBuilder(
+      column: $table.requiredTries, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<HintType, HintType, String> get type =>
+      $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$DlesTableFilterComposer get dleId {
+    final $$DlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableFilterComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> CharacterHintsInHints(
+      Expression<bool> Function($$CharacterHintsTableFilterComposer f) f) {
+    final $$CharacterHintsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterHints,
+        getReferencedColumn: (t) => t.hintId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterHintsTableFilterComposer(
+              $db: $db,
+              $table: $db.characterHints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$HintsTableOrderingComposer extends Composer<_$Database, $HintsTable> {
+  $$HintsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get requiredTries => $composableBuilder(
+      column: $table.requiredTries,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$DlesTableOrderingComposer get dleId {
+    final $$DlesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableOrderingComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$HintsTableAnnotationComposer extends Composer<_$Database, $HintsTable> {
+  $$HintsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<int> get requiredTries => $composableBuilder(
+      column: $table.requiredTries, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<HintType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<bool> get isHidden =>
+      $composableBuilder(column: $table.isHidden, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$DlesTableAnnotationComposer get dleId {
+    final $$DlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> CharacterHintsInHints<T extends Object>(
+      Expression<T> Function($$CharacterHintsTableAnnotationComposer a) f) {
+    final $$CharacterHintsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterHints,
+        getReferencedColumn: (t) => t.hintId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterHintsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characterHints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$HintsTableTableManager extends RootTableManager<
+    _$Database,
+    $HintsTable,
+    Hint,
+    $$HintsTableFilterComposer,
+    $$HintsTableOrderingComposer,
+    $$HintsTableAnnotationComposer,
+    $$HintsTableCreateCompanionBuilder,
+    $$HintsTableUpdateCompanionBuilder,
+    (Hint, $$HintsTableReferences),
+    Hint,
+    PrefetchHooks Function({bool dleId, bool CharacterHintsInHints})> {
+  $$HintsTableTableManager(_$Database db, $HintsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HintsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HintsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HintsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> dleId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<int> requiredTries = const Value.absent(),
+            Value<HintType> type = const Value.absent(),
+            Value<bool> isHidden = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HintsCompanion(
+            id: id,
+            dleId: dleId,
+            title: title,
+            description: description,
+            requiredTries: requiredTries,
+            type: type,
+            isHidden: isHidden,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String dleId,
+            required String title,
+            required String description,
+            required int requiredTries,
+            required HintType type,
+            Value<bool> isHidden = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HintsCompanion.insert(
+            id: id,
+            dleId: dleId,
+            title: title,
+            description: description,
+            requiredTries: requiredTries,
+            type: type,
+            isHidden: isHidden,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$HintsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: (
+              {dleId = false, CharacterHintsInHints = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (CharacterHintsInHints) db.characterHints
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (dleId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.dleId,
+                    referencedTable: $$HintsTableReferences._dleIdTable(db),
+                    referencedColumn: $$HintsTableReferences._dleIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (CharacterHintsInHints)
+                    await $_getPrefetchedData<Hint, $HintsTable, CharacterHint>(
+                        currentTable: table,
+                        referencedTable:
+                            $$HintsTableReferences._CharacterHintsInHintsTable(
+                                db),
+                        managerFromTypedResult: (p0) =>
+                            $$HintsTableReferences(db, table, p0)
+                                .CharacterHintsInHints,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.hintId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$HintsTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $HintsTable,
+    Hint,
+    $$HintsTableFilterComposer,
+    $$HintsTableOrderingComposer,
+    $$HintsTableAnnotationComposer,
+    $$HintsTableCreateCompanionBuilder,
+    $$HintsTableUpdateCompanionBuilder,
+    (Hint, $$HintsTableReferences),
+    Hint,
+    PrefetchHooks Function({bool dleId, bool CharacterHintsInHints})>;
+typedef $$CharacterHintsTableCreateCompanionBuilder = CharacterHintsCompanion
+    Function({
+  Value<String> id,
+  required String hintId,
+  required String characterId,
+  Value<HintValue?> value,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$CharacterHintsTableUpdateCompanionBuilder = CharacterHintsCompanion
+    Function({
+  Value<String> id,
+  Value<String> hintId,
+  Value<String> characterId,
+  Value<HintValue?> value,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$CharacterHintsTableReferences
+    extends BaseReferences<_$Database, $CharacterHintsTable, CharacterHint> {
+  $$CharacterHintsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $HintsTable _hintIdTable(_$Database db) => db.hints
+      .createAlias($_aliasNameGenerator(db.characterHints.hintId, db.hints.id));
+
+  $$HintsTableProcessedTableManager get hintId {
+    final $_column = $_itemColumn<UuidValue>('hint_id')!;
+
+    final manager = $$HintsTableTableManager($_db, $_db.hints)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_hintIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CharactersTable _characterIdTable(_$Database db) =>
+      db.characters.createAlias($_aliasNameGenerator(
+          db.characterHints.characterId, db.characters.id));
+
+  $$CharactersTableProcessedTableManager get characterId {
+    final $_column = $_itemColumn<UuidValue>('character_id')!;
+
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_characterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$CharacterHintsTableFilterComposer
+    extends Composer<_$Database, $CharacterHintsTable> {
+  $$CharacterHintsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<HintValue?, HintValue, Object> get value =>
+      $composableBuilder(
+          column: $table.value,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$HintsTableFilterComposer get hintId {
+    final $$HintsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.hintId,
+        referencedTable: $db.hints,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HintsTableFilterComposer(
+              $db: $db,
+              $table: $db.hints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableFilterComposer get characterId {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterHintsTableOrderingComposer
+    extends Composer<_$Database, $CharacterHintsTable> {
+  $$CharacterHintsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Object> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$HintsTableOrderingComposer get hintId {
+    final $$HintsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.hintId,
+        referencedTable: $db.hints,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HintsTableOrderingComposer(
+              $db: $db,
+              $table: $db.hints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableOrderingComposer get characterId {
+    final $$CharactersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableOrderingComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterHintsTableAnnotationComposer
+    extends Composer<_$Database, $CharacterHintsTable> {
+  $$CharacterHintsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<HintValue?, Object> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$HintsTableAnnotationComposer get hintId {
+    final $$HintsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.hintId,
+        referencedTable: $db.hints,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HintsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.hints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableAnnotationComposer get characterId {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterHintsTableTableManager extends RootTableManager<
+    _$Database,
+    $CharacterHintsTable,
+    CharacterHint,
+    $$CharacterHintsTableFilterComposer,
+    $$CharacterHintsTableOrderingComposer,
+    $$CharacterHintsTableAnnotationComposer,
+    $$CharacterHintsTableCreateCompanionBuilder,
+    $$CharacterHintsTableUpdateCompanionBuilder,
+    (CharacterHint, $$CharacterHintsTableReferences),
+    CharacterHint,
+    PrefetchHooks Function({bool hintId, bool characterId})> {
+  $$CharacterHintsTableTableManager(_$Database db, $CharacterHintsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CharacterHintsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CharacterHintsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CharacterHintsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> hintId = const Value.absent(),
+            Value<String> characterId = const Value.absent(),
+            Value<HintValue?> value = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharacterHintsCompanion(
+            id: id,
+            hintId: hintId,
+            characterId: characterId,
+            value: value,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String hintId,
+            required String characterId,
+            Value<HintValue?> value = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharacterHintsCompanion.insert(
+            id: id,
+            hintId: hintId,
+            characterId: characterId,
+            value: value,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$CharacterHintsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({hintId = false, characterId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (hintId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.hintId,
+                    referencedTable:
+                        $$CharacterHintsTableReferences._hintIdTable(db),
+                    referencedColumn:
+                        $$CharacterHintsTableReferences._hintIdTable(db).id,
+                  ) as T;
+                }
+                if (characterId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.characterId,
+                    referencedTable:
+                        $$CharacterHintsTableReferences._characterIdTable(db),
+                    referencedColumn: $$CharacterHintsTableReferences
+                        ._characterIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CharacterHintsTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $CharacterHintsTable,
+    CharacterHint,
+    $$CharacterHintsTableFilterComposer,
+    $$CharacterHintsTableOrderingComposer,
+    $$CharacterHintsTableAnnotationComposer,
+    $$CharacterHintsTableCreateCompanionBuilder,
+    $$CharacterHintsTableUpdateCompanionBuilder,
+    (CharacterHint, $$CharacterHintsTableReferences),
+    CharacterHint,
+    PrefetchHooks Function({bool hintId, bool characterId})>;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -6986,10 +9335,16 @@ class $DatabaseManager {
   $$ProfilesTableTableManager get profiles =>
       $$ProfilesTableTableManager(_db, _db.profiles);
   $$DlesTableTableManager get dles => $$DlesTableTableManager(_db, _db.dles);
+  $$CharactersTableTableManager get characters =>
+      $$CharactersTableTableManager(_db, _db.characters);
   $$DleEditorsTableTableManager get dleEditors =>
       $$DleEditorsTableTableManager(_db, _db.dleEditors);
   $$DleAssetsTableTableManager get dleAssets =>
       $$DleAssetsTableTableManager(_db, _db.dleAssets);
   $$DleInvitationsTableTableManager get dleInvitations =>
       $$DleInvitationsTableTableManager(_db, _db.dleInvitations);
+  $$HintsTableTableManager get hints =>
+      $$HintsTableTableManager(_db, _db.hints);
+  $$CharacterHintsTableTableManager get characterHints =>
+      $$CharacterHintsTableTableManager(_db, _db.characterHints);
 }

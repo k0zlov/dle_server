@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_invitations_repository_port.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';

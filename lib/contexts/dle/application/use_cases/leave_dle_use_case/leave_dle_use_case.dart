@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
@@ -58,7 +58,12 @@ class LeaveDleUseCase implements UseCase<void, LeaveDleParams> {
     }
 
     final Dle updatedDle = dle.kickEditor(params.userId);
-    await repository.save(updatedDle);
+    await repository.save(
+      updatedDle,
+      overrideCharacters: false,
+      overrideAssets: false,
+      overrideHints: false,
+    );
     eventBus.publish(
       EditorLeftEvent(dle: updatedDle, editorUserId: editor.userId),
     );

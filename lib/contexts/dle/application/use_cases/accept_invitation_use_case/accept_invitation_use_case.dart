@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_invitations_repository_port.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
@@ -79,7 +79,12 @@ class AcceptInvitationUseCase implements UseCase<Dle, AcceptInvitationParams> {
     );
 
     final Dle dleWithEditor = dle.addEditor(editor);
-    await repository.save(dleWithEditor);
+    await repository.save(
+      dleWithEditor,
+      overrideAssets: false,
+      overrideCharacters: false,
+      overrideHints: false,
+    );
 
     final DleInvitation acceptedInvitation = invitation.accept();
     await invitationsRepository.save(acceptedInvitation);

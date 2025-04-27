@@ -1,8 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:injectable/injectable.dart';
 import 'package:ruta/ruta.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+FutureOr<Response> wsHandler(
+  Request req, {
+  required void Function(WebSocketChannel, String?) onConnection,
+}) {
+  return webSocketHandler(onConnection)(req);
+}
 
 /// Manages multiple WebSocket channels for users. This includes adding, removing, sending data,
 /// broadcasting messages, and ensuring connections close when errors or disconnections occur.
@@ -11,112 +19,125 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 /// - Tracks WebSocket channels for each user (`userId`).
 /// - Automatically removes channels when connections close or experience errors.
 /// - Supports adding user-specific logic for handling messages via the `onMessage` parameter.
-mixin WebSocketManager {
-  /// The map storing WebSocket channels, accessible publicly.
-  final Map<String, WebSocketChannel> channels = {};
+@lazySingleton
+class WebSocketManager {
+  WebSocketManager();
 
-  FutureOr<Response> wsHandler(
-    Request req, {
-    required void Function(WebSocketChannel, String?) onConnection,
-  }) {
-    return webSocketHandler(onConnection)(req);
-  }
+  /// A map storing a list of WebSocket channels for each user.
+  final Map<String, List<WebSocketChannel>> userChannels = {};
 
-  /// Adds a new WebSocketChannel for a particular user and sets up default behavior for `onError` and `onDone`.
+  /// Adds a WebSocketChannel for a particular [userId].
+  /// Supports multiple channels for a single user.
   ///
-  /// If the channel already exists, it checks whether the existing one is closed:
-  /// - If **closed**, replaces the existing channel with the provided one.
-  /// - If **active**, skips replacing the channel.
-  ///
-  /// [userId] - The identifier of the user for whom the channel is being added.
-  /// [channel] - The WebSocketChannel instance to be added.
-  /// [onData] - (Optional) A custom handler for incoming messages on the channel.
+  /// Automatically sets default behavior for `onError` and `onDone`.
+  /// If `onData` is provided, it processes incoming events for this channel.
   void addChannel(
     String userId,
     WebSocketChannel channel, {
     void Function(dynamic data)? onData,
   }) {
-    if (channels.containsKey(userId)) {
-      // If the channel already exists, check if it is closed
-      final existingChannel = channels[userId];
-      if (existingChannel == null || existingChannel.closeCode != null) {
-        // Current channel is closed; override it with the new one
-        channels[userId] = channel;
-      }
-    } else {
-      // Add the channel if it does not exist
-      channels[userId] = channel;
+    // Add to the existing list or create a new one
+    if (!userChannels.containsKey(userId)) {
+      userChannels[userId] = [];
     }
 
-    // Automatically handle cleanup for onError and onDone
+    userChannels[userId]!.add(channel);
+
+    // Handle cleanup on error or stream completion
     channel.stream.listen(
       (event) {
-        // Delegate message handling to the provided `onData` callback, if any
+        // Call the provided `onData` function for message handling
         if (onData != null) {
           onData(event);
         }
       },
       onError: (error) {
-        // Remove the channel when an error occurs
-        removeChannel(userId);
+        // Remove the specific channel on error
+        removeChannel(userId, channel);
       },
       onDone: () {
-        // Remove the channel when the connection is closed
-        removeChannel(userId);
+        // Cleanup on disconnection
+        removeChannel(userId, channel);
       },
       cancelOnError: true,
     );
   }
 
-  /// Removes a WebSocketChannel for a particular user.
-  ///
-  /// This closes the WebSocket connection and removes it from the manager.
-  void removeChannel(String userId) {
-    if (channels.containsKey(userId)) {
-      channels[userId]?.sink.close(); // Close the connection
-      channels.remove(userId); // Remove the channel from the map
+  /// Removes a specific WebSocketChannel for a particular [userId].
+  /// Closes the channel and removes it from the user's list of channels.
+  void removeChannel(String userId, WebSocketChannel channel) {
+    if (userChannels.containsKey(userId)) {
+      userChannels[userId]?.remove(channel); // Remove the specific channel
+      channel.sink.close(); // Close the WebSocket connection
+
+      // If no more channels are left for this user, remove the user entry from the map
+      if (userChannels[userId]?.isEmpty ?? true) {
+        userChannels.remove(userId);
+      }
     }
   }
 
-  /// Sends a message to a specific user's WebSocket channel.
-  ///
-  /// [userId] - The identifier of the user to whom the message should be sent.
-  /// [data] - The message to be sent.
-  void send({required String userId, required dynamic data}) {
-    if (channels.containsKey(userId)) {
-      channels[userId]!.sink.add(jsonEncode(data));
+  /// Removes all WebSocket channels for a particular [userId].
+  /// Closes all connections and removes the user entirely.
+  void removeAllChannels(String userId) {
+    if (userChannels.containsKey(userId)) {
+      userChannels[userId]?.forEach((channel) {
+        channel.sink.close(); // Close all WebSocket connections
+      });
+      userChannels.remove(userId); // Remove the user from the map
     }
   }
 
-  /// Broadcasts a message to all connected WebSocket channels.
+  /// Sends a message to **all channels** for a specific [userId].
   ///
-  /// [data] - The message to be sent to all active channels.
+  /// If the user has multiple channels, the message is sent to all of them.
+  void send({
+    required String userId,
+    required dynamic data,
+    required String id,
+  }) {
+    if (userChannels.containsKey(userId)) {
+      final encodedData = jsonEncode({'id': id, 'data': data});
+      for (final channel in userChannels[userId]!) {
+        channel.sink.add(encodedData);
+      }
+    }
+  }
+
+  /// Broadcasts a message to **all users across all channels**.
+  ///
+  /// Sends the message to every active WebSocketChannel across all users.
   void broadcastMessage(dynamic data) {
-    channels.forEach((userId, channel) {
-      channel.sink.add(jsonEncode(data));
+    final encodedData = jsonEncode(data);
+    userChannels.forEach((userId, channels) {
+      for (final channel in channels) {
+        channel.sink.add(encodedData);
+      }
     });
   }
 
-  /// Closes all WebSocket channels and clears the manager.
+  /// Closes all WebSocket channels for all users and clears the manager.
   void closeAllChannels() {
-    channels
-      ..forEach((userId, channel) {
-        channel.sink.close();
+    userChannels
+      ..forEach((userId, channels) {
+        for (final channel in channels) {
+          channel.sink.close();
+        }
       })
       ..clear();
   }
 
-  /// Gets the current number of active WebSocket channels.
-  ///
-  /// Returns the count of active channels.
-  int get activeConnectionCount => channels.length;
+  /// Returns the count of all active WebSocket channels (across all users).
+  int get totalActiveConnections =>
+      userChannels.values.fold(0, (count, list) => count + list.length);
 
-  /// Checks if a WebSocketChannel exists for a specific user.
-  ///
-  /// [userId] - The identifier of the user.
-  ///
-  /// Returns `true` if a channel exists for the given user, otherwise `false`.
-  bool hasChannel(String userId) {
-    return channels.containsKey(userId);
+  /// Returns the count of active channels for a specific [userId].
+  int activeConnectionsFor(String userId) {
+    return userChannels[userId]?.length ?? 0;
+  }
+
+  /// Checks if the given [userId] has any active WebSocket channels.
+  bool hasChannels(String userId) {
+    return userChannels[userId]?.isNotEmpty ?? false;
   }
 }

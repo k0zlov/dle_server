@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dle_server/contexts/dle/application/exceptions/dles_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
@@ -40,7 +40,12 @@ class CreateDleUseCase implements UseCase<Dle, CreateDleParams> {
 
   @override
   Future<Dle> call(CreateDleParams params) async {
-    final List<Dle> dleList = await repository.findUserDle(params.userId);
+    final List<Dle> dleList = await repository.findUserDle(
+      params.userId,
+      includeAssets: false,
+      includeCharacters: false,
+      includeEditors: false,
+    );
 
     final int userDleCount =
         dleList

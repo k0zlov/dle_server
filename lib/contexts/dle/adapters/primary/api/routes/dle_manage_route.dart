@@ -1,5 +1,7 @@
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/characters_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_socket_controller.dart';
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/hints_rest_controller.dart';
 import 'package:dle_server/kernel/adapters/primary/api/middlewares/auth_middleware.dart';
 import 'package:dle_server/kernel/infrastructure/validators/validators.dart';
 import 'package:ruta/annotations.dart';
@@ -11,11 +13,15 @@ class DleManageRoute extends Route {
     required this.controller,
     required this.authMiddleware,
     required this.socketController,
+    required this.charactersController,
+    required this.hintsController,
   });
 
   final DleManageRestController controller;
   final AuthMiddleware authMiddleware;
   final DleManageSocketController socketController;
+  final CharactersRestController charactersController;
+  final HintsRestController hintsController;
 
   @override
   String get name => 'dle/manage';
@@ -129,6 +135,78 @@ class DleManageRoute extends Route {
       middlewares: [authMiddleware],
       query: [Field<String>('token')],
       handler: socketController.listenDleUpdates,
+    );
+  }
+
+  Endpoint get createCharacter {
+    return Endpoint.post(
+      path: '<id>/characters',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: charactersController.create,
+    );
+  }
+
+  Endpoint get editCharacter {
+    return Endpoint.put(
+      path: '<id>/characters/<characterId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: charactersController.edit,
+    );
+  }
+
+  Endpoint get removeCharacter {
+    return Endpoint.delete(
+      path: '<id>/characters/<characterId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: charactersController.remove,
+    );
+  }
+
+  Endpoint get createHint {
+    return Endpoint.post(
+      path: '<id>/hints',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      body: [
+        Field<String>('title'),
+        Field<String>('type'),
+        Field<int>('requiredTries', validators: [Validators.range(0, 100)]),
+        Field<String>('description', isRequired: false),
+        Field<bool>('isHidden', isRequired: false),
+      ],
+      handler: hintsController.create,
+    );
+  }
+
+  Endpoint get editHint {
+    return Endpoint.put(
+      path: '<id>/hints/<hintId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      body: [
+        Field<String>('title', isRequired: false),
+        Field<String>('type', isRequired: false),
+        Field<int>(
+          'requiredTries',
+          validators: [Validators.range(0, 100)],
+          isRequired: false,
+        ),
+        Field<String>('description', isRequired: false),
+        Field<bool>('isHidden', isRequired: false),
+      ],
+      handler: hintsController.edit,
+    );
+  }
+
+  Endpoint get removeHint {
+    return Endpoint.delete(
+      path: '<id>/hints/<hintId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: hintsController.remove,
     );
   }
 }
