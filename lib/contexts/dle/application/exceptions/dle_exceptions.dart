@@ -29,3 +29,5 @@ class CharacterNotFoundException implements AppException {}
 class HintsQuantityException implements AppException {}
 
 class HintNotFoundException implements AppException {}
+
+class CharacterHintNotFoundException implements AppException {}

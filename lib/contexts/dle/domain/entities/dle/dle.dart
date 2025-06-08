@@ -83,27 +83,36 @@ class Dle extends Entity with DleMappable {
   Dle addAsset(DleAsset asset) {
     return copyWith(
       assets: [asset, ...assets.where((e) => e.type != asset.type)],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle deleteAsset(DleAssetType assetType) {
-    return copyWith(assets: [...assets.where((e) => e.type != assetType)]);
+    return copyWith(
+      assets: [...assets.where((e) => e.type != assetType)],
+      updatedAt: DateTime.now(),
+    );
   }
 
   // --- Editor management ---
   Dle addEditor(DleEditor editor) {
     return copyWith(
       editors: [editor, ...editors.where((e) => e.userId != editor.userId)],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle kickEditor(String userId) {
-    return copyWith(editors: [...editors.where((e) => e.userId != userId)]);
+    return copyWith(
+      editors: [...editors.where((e) => e.userId != userId)],
+      updatedAt: DateTime.now(),
+    );
   }
 
   Dle updateEditor(DleEditor editor) {
     return copyWith(
       editors: [editor, ...editors.where((e) => e.id != editor.id)],
+      updatedAt: DateTime.now(),
     );
   }
 
@@ -111,30 +120,40 @@ class Dle extends Entity with DleMappable {
   Dle addCharacter(Character character) {
     return copyWith(
       characters: [character, ...characters.where((e) => e.id != character.id)],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle removeCharacter(String characterId) {
     return copyWith(
       characters: [...characters.where((e) => e.id != characterId)],
+      characterHints: [
+        ...characterHints.where((e) => e.characterId != characterId),
+      ],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle editCharacter(Character character) {
     return copyWith(
       characters: [character, ...characters.where((e) => e.id != character.id)],
+      updatedAt: DateTime.now(),
     );
   }
 
   // --- Hint management ---
   Dle addHint(Hint hint) {
-    return copyWith(hints: [hint, ...hints.where((e) => e.id != hint.id)]);
+    return copyWith(
+      hints: [hint, ...hints.where((e) => e.id != hint.id)],
+      updatedAt: DateTime.now(),
+    );
   }
 
   Dle removeHint(String hintId) {
     return copyWith(
       hints: [...hints.where((e) => e.id != hintId)],
       characterHints: [...characterHints.where((e) => e.hintId != hintId)],
+      updatedAt: DateTime.now(),
     );
   }
 
@@ -145,11 +164,13 @@ class Dle extends Entity with DleMappable {
 
     Dle updatedDle = copyWith(
       hints: [hint, ...hints.where((e) => e.id != hint.id)],
+      updatedAt: DateTime.now(),
     );
 
     if (foundHint.type != hint.type) {
       updatedDle = updatedDle.copyWith(
-        characterHints: characterHints.map((e) => e.clearValue()).toList(),
+        characterHints:
+            characterHints.where((e) => e.hintId != hint.id).toList(),
       );
     }
 
@@ -163,17 +184,20 @@ class Dle extends Entity with DleMappable {
         characterHint,
         ...characterHints.where((e) => e.id != characterHint.id),
       ],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle removeCharacterHint(String characterHintId) {
     return copyWith(
       characterHints: [...characterHints.where((e) => e.id != characterHintId)],
+      updatedAt: DateTime.now(),
     );
   }
 
   Dle editCharacterHint(CharacterHint characterHint) {
     return copyWith(
+      updatedAt: DateTime.now(),
       characterHints: [
         characterHint,
         ...characterHints.where((e) => e.id != characterHint.id),

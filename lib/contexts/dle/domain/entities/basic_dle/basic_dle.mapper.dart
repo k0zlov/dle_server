@@ -13,6 +13,7 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
   static BasicDleMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BasicDleMapper._());
+      ParameterMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -22,25 +23,34 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
 
   static String _$id(BasicDle v) => v.id;
   static const Field<BasicDle, String> _f$id = Field('id', _$id, opt: true);
+  static String _$dleId(BasicDle v) => v.dleId;
+  static const Field<BasicDle, String> _f$dleId = Field('dleId', _$dleId);
   static DateTime _$updatedAt(BasicDle v) => v.updatedAt;
   static const Field<BasicDle, DateTime> _f$updatedAt =
       Field('updatedAt', _$updatedAt);
   static DateTime _$createdAt(BasicDle v) => v.createdAt;
   static const Field<BasicDle, DateTime> _f$createdAt =
       Field('createdAt', _$createdAt);
+  static List<Parameter> _$parameters(BasicDle v) => v.parameters;
+  static const Field<BasicDle, List<Parameter>> _f$parameters =
+      Field('parameters', _$parameters, opt: true, def: const <Parameter>[]);
 
   @override
   final MappableFields<BasicDle> fields = const {
     #id: _f$id,
+    #dleId: _f$dleId,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
+    #parameters: _f$parameters,
   };
 
   static BasicDle _instantiate(DecodingData data) {
     return BasicDle(
         id: data.dec(_f$id),
+        dleId: data.dec(_f$dleId),
         updatedAt: data.dec(_f$updatedAt),
-        createdAt: data.dec(_f$createdAt));
+        createdAt: data.dec(_f$createdAt),
+        parameters: data.dec(_f$parameters));
   }
 
   @override
@@ -92,7 +102,14 @@ extension BasicDleValueCopy<$R, $Out> on ObjectCopyWith<$R, BasicDle, $Out> {
 
 abstract class BasicDleCopyWith<$R, $In extends BasicDle, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, DateTime? updatedAt, DateTime? createdAt});
+  ListCopyWith<$R, Parameter, ParameterCopyWith<$R, Parameter, Parameter>>
+      get parameters;
+  $R call(
+      {String? id,
+      String? dleId,
+      DateTime? updatedAt,
+      DateTime? createdAt,
+      List<Parameter>? parameters});
   BasicDleCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -105,17 +122,30 @@ class _BasicDleCopyWithImpl<$R, $Out>
   late final ClassMapperBase<BasicDle> $mapper =
       BasicDleMapper.ensureInitialized();
   @override
-  $R call({Object? id = $none, DateTime? updatedAt, DateTime? createdAt}) =>
+  ListCopyWith<$R, Parameter, ParameterCopyWith<$R, Parameter, Parameter>>
+      get parameters => ListCopyWith($value.parameters,
+          (v, t) => v.copyWith.$chain(t), (v) => call(parameters: v));
+  @override
+  $R call(
+          {Object? id = $none,
+          String? dleId,
+          DateTime? updatedAt,
+          DateTime? createdAt,
+          List<Parameter>? parameters}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (dleId != null) #dleId: dleId,
         if (updatedAt != null) #updatedAt: updatedAt,
-        if (createdAt != null) #createdAt: createdAt
+        if (createdAt != null) #createdAt: createdAt,
+        if (parameters != null) #parameters: parameters
       }));
   @override
   BasicDle $make(CopyWithData data) => BasicDle(
       id: data.get(#id, or: $value.id),
+      dleId: data.get(#dleId, or: $value.dleId),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
-      createdAt: data.get(#createdAt, or: $value.createdAt));
+      createdAt: data.get(#createdAt, or: $value.createdAt),
+      parameters: data.get(#parameters, or: $value.parameters));
 
   @override
   BasicDleCopyWith<$R2, BasicDle, $Out2> $chain<$R2, $Out2>(

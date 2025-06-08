@@ -1,38 +1,49 @@
-import 'package:dle_server/contexts/dle/domain/entities/character_hint/character_hint.dart';
-import 'package:dle_server/contexts/dle/infrastructure/persistence/converters/hint_value_converter.dart';
+import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/characters.dart';
-import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/hints.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/parameters.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 
-export 'package:dle_server/contexts/dle/domain/entities/character_hint/character_hint.dart';
-export 'package:dle_server/contexts/dle/domain/value_objects/hint_value/hint_value.dart';
-export 'package:dle_server/contexts/dle/infrastructure/persistence/converters/hint_value_converter.dart';
+export 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
+export 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 
-@UseRowClass(CharacterHint)
-@TableIndex(name: 'character_hints_characterId', columns: {#characterId})
-class CharacterHints extends Table {
+@UseRowClass(CharacterParameter)
+@TableIndex(
+  name: 'character_parameters_ids',
+  columns: {#parameterId, #characterId},
+)
+class CharacterParameters extends Table {
   UuidColumn get id =>
       customType(
         PgTypes.uuid,
       ).withDefault(genRandomUuid()).map(const UuidValueToStringConverter())();
 
-  @ReferenceName('CharacterHintsInHints')
-  UuidColumn get hintId =>
+  @ReferenceName('CharacterParametersInParameters')
+  UuidColumn get parameterId =>
       customType(PgTypes.uuid)
-          .references(Hints, #id, onDelete: KeyAction.cascade)
+          .references(Parameters, #id, onDelete: KeyAction.cascade)
           .map(const UuidValueToStringConverter())();
 
-  @ReferenceName('CharacterHintsInCharacters')
+  @ReferenceName('CharacterParametersInCharacters')
   UuidColumn get characterId =>
       customType(PgTypes.uuid)
           .references(Characters, #id, onDelete: KeyAction.cascade)
           .map(const UuidValueToStringConverter())();
 
+  @ReferenceName('CharacterParametersInSelectables')
+  UuidColumn get selectableId =>
+      customType(PgTypes.uuid)
+          .references(Characters, #id, onDelete: KeyAction.setNull)
+          .map(const UuidValueToStringConverter())
+          .nullable()();
+
   Column<Object> get value =>
-      customType(PgTypes.jsonb).map(const HintValueConverter())();
+      customType(PgTypes.jsonb).map(const ParameterValueConverter())();
+
+  IntColumn get index => integer()();
 
   TimestampColumn get updatedAt =>
       customType(dialectAwareTimestamp)

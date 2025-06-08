@@ -33,6 +33,7 @@ class HintValueMapper extends ClassMapperBase<HintValue> {
   };
 
   static HintValue _instantiate(DecodingData data) {
+    // ignore: inference_failure_on_function_invocation
     return HintValue(type: data.dec(_f$type), data: data.dec(_f$data));
   }
 
@@ -104,6 +105,7 @@ class _HintValueCopyWithImpl<$R, $Out>
   @override
   HintValue $make(CopyWithData data) => HintValue(
       type: data.get(#type, or: $value.type),
+      // ignore: inference_failure_on_function_invocation
       data: data.get(#data, or: $value.data));
 
   @override

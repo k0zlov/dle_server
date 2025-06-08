@@ -24,20 +24,10 @@ class CharacterHint extends Entity with CharacterHintMappable {
 
   final String hintId;
   final String characterId;
-  final HintValue? value;
+  final HintValue value;
 
   final DateTime updatedAt;
   final DateTime createdAt;
-
-  CharacterHint clearValue() {
-    return CharacterHint(
-      hintId: hintId,
-      characterId: characterId,
-      value: null,
-      updatedAt: DateTime.now(),
-      createdAt: createdAt,
-    );
-  }
 
   CharacterHint edit({HintValue? value}) {
     return copyWith(value: value, updatedAt: DateTime.now());

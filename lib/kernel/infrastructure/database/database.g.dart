@@ -3084,10 +3084,10 @@ class $CharacterHintsTable extends CharacterHints
                   'REFERENCES characters (id) ON DELETE CASCADE'))
           .withConverter<String>($CharacterHintsTable.$convertercharacterId);
   @override
-  late final GeneratedColumnWithTypeConverter<HintValue?, Object> value =
-      GeneratedColumn<Object>('value', aliasedName, true,
-              type: PgTypes.jsonb, requiredDuringInsert: false)
-          .withConverter<HintValue?>($CharacterHintsTable.$convertervaluen);
+  late final GeneratedColumnWithTypeConverter<HintValue, Object> value =
+      GeneratedColumn<Object>('value', aliasedName, false,
+              type: PgTypes.jsonb, requiredDuringInsert: true)
+          .withConverter<HintValue>($CharacterHintsTable.$convertervalue);
   @override
   late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
       GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
@@ -3124,9 +3124,9 @@ class $CharacterHintsTable extends CharacterHints
       characterId: $CharacterHintsTable.$convertercharacterId.fromSql(
           attachedDatabase.typeMapping
               .read(PgTypes.uuid, data['${effectivePrefix}character_id'])!),
-      value: $CharacterHintsTable.$convertervaluen.fromSql(attachedDatabase
+      value: $CharacterHintsTable.$convertervalue.fromSql(attachedDatabase
           .typeMapping
-          .read(PgTypes.jsonb, data['${effectivePrefix}value'])),
+          .read(PgTypes.jsonb, data['${effectivePrefix}value'])!),
       updatedAt: $CharacterHintsTable.$converterupdatedAt.fromSql(
           attachedDatabase.typeMapping.read(
               dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
@@ -3149,8 +3149,6 @@ class $CharacterHintsTable extends CharacterHints
       const UuidValueToStringConverter();
   static TypeConverter<HintValue, Object> $convertervalue =
       const HintValueConverter();
-  static TypeConverter<HintValue?, Object?> $convertervaluen =
-      NullAwareTypeConverter.wrap($convertervalue);
   static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
       const PgDateTimeConverter();
   static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
@@ -3161,7 +3159,7 @@ class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
   final Value<String> id;
   final Value<String> hintId;
   final Value<String> characterId;
-  final Value<HintValue?> value;
+  final Value<HintValue> value;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
@@ -3178,12 +3176,13 @@ class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
     this.id = const Value.absent(),
     required String hintId,
     required String characterId,
-    this.value = const Value.absent(),
+    required HintValue value,
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : hintId = Value(hintId),
-        characterId = Value(characterId);
+        characterId = Value(characterId),
+        value = Value(value);
   static Insertable<CharacterHint> custom({
     Expression<UuidValue>? id,
     Expression<UuidValue>? hintId,
@@ -3208,7 +3207,7 @@ class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
       {Value<String>? id,
       Value<String>? hintId,
       Value<String>? characterId,
-      Value<HintValue?>? value,
+      Value<HintValue>? value,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
       Value<int>? rowid}) {
@@ -3242,7 +3241,7 @@ class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
     }
     if (value.present) {
       map['value'] = Variable<Object>(
-          $CharacterHintsTable.$convertervaluen.toSql(value.value),
+          $CharacterHintsTable.$convertervalue.toSql(value.value),
           PgTypes.jsonb);
     }
     if (updatedAt.present) {
@@ -3276,6 +3275,1106 @@ class CharacterHintsCompanion extends UpdateCompanion<CharacterHint> {
   }
 }
 
+class $BasicDlesTable extends BasicDles
+    with TableInfo<$BasicDlesTable, BasicDle> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BasicDlesTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($BasicDlesTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
+      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($BasicDlesTable.$converterdleId);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($BasicDlesTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($BasicDlesTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [id, dleId, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'basic_dles';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BasicDle map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BasicDle(
+      id: $BasicDlesTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      dleId: $BasicDlesTable.$converterdleId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
+      updatedAt: $BasicDlesTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $BasicDlesTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $BasicDlesTable createAlias(String alias) {
+    return $BasicDlesTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterdleId =
+      const UuidValueToStringConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class BasicDlesCompanion extends UpdateCompanion<BasicDle> {
+  final Value<String> id;
+  final Value<String> dleId;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const BasicDlesCompanion({
+    this.id = const Value.absent(),
+    this.dleId = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BasicDlesCompanion.insert({
+    this.id = const Value.absent(),
+    required String dleId,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : dleId = Value(dleId);
+  static Insertable<BasicDle> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? dleId,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dleId != null) 'dle_id': dleId,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BasicDlesCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? dleId,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return BasicDlesCompanion(
+      id: id ?? this.id,
+      dleId: dleId ?? this.dleId,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $BasicDlesTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (dleId.present) {
+      map['dle_id'] = Variable<UuidValue>(
+          $BasicDlesTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $BasicDlesTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $BasicDlesTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BasicDlesCompanion(')
+          ..write('id: $id, ')
+          ..write('dleId: $dleId, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ParametersTable extends Parameters
+    with TableInfo<$ParametersTable, Parameter> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ParametersTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($ParametersTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> basicDleId =
+      GeneratedColumn<UuidValue>('basic_dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES basic_dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($ParametersTable.$converterbasicDleId);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<ParameterType, String> type =
+      GeneratedColumn<String>('type', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<ParameterType>($ParametersTable.$convertertype);
+  @override
+  late final GeneratedColumnWithTypeConverter<CompareMode, String> compareMode =
+      GeneratedColumn<String>('compare_mode', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<CompareMode>($ParametersTable.$convertercompareMode);
+  static const VerificationMeta _isReverseComparedMeta =
+      const VerificationMeta('isReverseCompared');
+  @override
+  late final GeneratedColumn<bool> isReverseCompared = GeneratedColumn<bool>(
+      'is_reverse_compared', aliasedName, false,
+      type: DriftSqlType.bool, requiredDuringInsert: true);
+  static const VerificationMeta _allowsMultipleValuesMeta =
+      const VerificationMeta('allowsMultipleValues');
+  @override
+  late final GeneratedColumn<bool> allowsMultipleValues = GeneratedColumn<bool>(
+      'allows_multiple_values', aliasedName, false,
+      type: DriftSqlType.bool, requiredDuringInsert: true);
+  static const VerificationMeta _isSelectableMeta =
+      const VerificationMeta('isSelectable');
+  @override
+  late final GeneratedColumn<bool> isSelectable = GeneratedColumn<bool>(
+      'is_selectable', aliasedName, false,
+      type: DriftSqlType.bool, requiredDuringInsert: true);
+  static const VerificationMeta _isHiddenMeta =
+      const VerificationMeta('isHidden');
+  @override
+  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
+      'is_hidden', aliasedName, false,
+      type: DriftSqlType.bool, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($ParametersTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($ParametersTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        basicDleId,
+        title,
+        description,
+        type,
+        compareMode,
+        isReverseCompared,
+        allowsMultipleValues,
+        isSelectable,
+        isHidden,
+        updatedAt,
+        createdAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'parameters';
+  @override
+  VerificationContext validateIntegrity(Insertable<Parameter> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('is_reverse_compared')) {
+      context.handle(
+          _isReverseComparedMeta,
+          isReverseCompared.isAcceptableOrUnknown(
+              data['is_reverse_compared']!, _isReverseComparedMeta));
+    } else if (isInserting) {
+      context.missing(_isReverseComparedMeta);
+    }
+    if (data.containsKey('allows_multiple_values')) {
+      context.handle(
+          _allowsMultipleValuesMeta,
+          allowsMultipleValues.isAcceptableOrUnknown(
+              data['allows_multiple_values']!, _allowsMultipleValuesMeta));
+    } else if (isInserting) {
+      context.missing(_allowsMultipleValuesMeta);
+    }
+    if (data.containsKey('is_selectable')) {
+      context.handle(
+          _isSelectableMeta,
+          isSelectable.isAcceptableOrUnknown(
+              data['is_selectable']!, _isSelectableMeta));
+    } else if (isInserting) {
+      context.missing(_isSelectableMeta);
+    }
+    if (data.containsKey('is_hidden')) {
+      context.handle(_isHiddenMeta,
+          isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta));
+    } else if (isInserting) {
+      context.missing(_isHiddenMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Parameter map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Parameter(
+      id: $ParametersTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      basicDleId: $ParametersTable.$converterbasicDleId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}basic_dle_id'])!),
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      type: $ParametersTable.$convertertype.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
+      compareMode: $ParametersTable.$convertercompareMode.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}compare_mode'])!),
+      isReverseCompared: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_reverse_compared'])!,
+      allowsMultipleValues: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}allows_multiple_values'])!,
+      isSelectable: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_selectable'])!,
+      isHidden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_hidden'])!,
+      updatedAt: $ParametersTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $ParametersTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $ParametersTable createAlias(String alias) {
+    return $ParametersTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterbasicDleId =
+      const UuidValueToStringConverter();
+  static JsonTypeConverter2<ParameterType, String, String> $convertertype =
+      const EnumNameConverter<ParameterType>(ParameterType.values);
+  static JsonTypeConverter2<CompareMode, String, String> $convertercompareMode =
+      const EnumNameConverter<CompareMode>(CompareMode.values);
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class ParametersCompanion extends UpdateCompanion<Parameter> {
+  final Value<String> id;
+  final Value<String> basicDleId;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<ParameterType> type;
+  final Value<CompareMode> compareMode;
+  final Value<bool> isReverseCompared;
+  final Value<bool> allowsMultipleValues;
+  final Value<bool> isSelectable;
+  final Value<bool> isHidden;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const ParametersCompanion({
+    this.id = const Value.absent(),
+    this.basicDleId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.type = const Value.absent(),
+    this.compareMode = const Value.absent(),
+    this.isReverseCompared = const Value.absent(),
+    this.allowsMultipleValues = const Value.absent(),
+    this.isSelectable = const Value.absent(),
+    this.isHidden = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ParametersCompanion.insert({
+    this.id = const Value.absent(),
+    required String basicDleId,
+    required String title,
+    required String description,
+    required ParameterType type,
+    required CompareMode compareMode,
+    required bool isReverseCompared,
+    required bool allowsMultipleValues,
+    required bool isSelectable,
+    required bool isHidden,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : basicDleId = Value(basicDleId),
+        title = Value(title),
+        description = Value(description),
+        type = Value(type),
+        compareMode = Value(compareMode),
+        isReverseCompared = Value(isReverseCompared),
+        allowsMultipleValues = Value(allowsMultipleValues),
+        isSelectable = Value(isSelectable),
+        isHidden = Value(isHidden);
+  static Insertable<Parameter> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? basicDleId,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<String>? type,
+    Expression<String>? compareMode,
+    Expression<bool>? isReverseCompared,
+    Expression<bool>? allowsMultipleValues,
+    Expression<bool>? isSelectable,
+    Expression<bool>? isHidden,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (basicDleId != null) 'basic_dle_id': basicDleId,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (type != null) 'type': type,
+      if (compareMode != null) 'compare_mode': compareMode,
+      if (isReverseCompared != null) 'is_reverse_compared': isReverseCompared,
+      if (allowsMultipleValues != null)
+        'allows_multiple_values': allowsMultipleValues,
+      if (isSelectable != null) 'is_selectable': isSelectable,
+      if (isHidden != null) 'is_hidden': isHidden,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ParametersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? basicDleId,
+      Value<String>? title,
+      Value<String>? description,
+      Value<ParameterType>? type,
+      Value<CompareMode>? compareMode,
+      Value<bool>? isReverseCompared,
+      Value<bool>? allowsMultipleValues,
+      Value<bool>? isSelectable,
+      Value<bool>? isHidden,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return ParametersCompanion(
+      id: id ?? this.id,
+      basicDleId: basicDleId ?? this.basicDleId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      type: type ?? this.type,
+      compareMode: compareMode ?? this.compareMode,
+      isReverseCompared: isReverseCompared ?? this.isReverseCompared,
+      allowsMultipleValues: allowsMultipleValues ?? this.allowsMultipleValues,
+      isSelectable: isSelectable ?? this.isSelectable,
+      isHidden: isHidden ?? this.isHidden,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $ParametersTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (basicDleId.present) {
+      map['basic_dle_id'] = Variable<UuidValue>(
+          $ParametersTable.$converterbasicDleId.toSql(basicDleId.value),
+          PgTypes.uuid);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<String>($ParametersTable.$convertertype.toSql(type.value));
+    }
+    if (compareMode.present) {
+      map['compare_mode'] = Variable<String>(
+          $ParametersTable.$convertercompareMode.toSql(compareMode.value));
+    }
+    if (isReverseCompared.present) {
+      map['is_reverse_compared'] = Variable<bool>(isReverseCompared.value);
+    }
+    if (allowsMultipleValues.present) {
+      map['allows_multiple_values'] =
+          Variable<bool>(allowsMultipleValues.value);
+    }
+    if (isSelectable.present) {
+      map['is_selectable'] = Variable<bool>(isSelectable.value);
+    }
+    if (isHidden.present) {
+      map['is_hidden'] = Variable<bool>(isHidden.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $ParametersTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $ParametersTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ParametersCompanion(')
+          ..write('id: $id, ')
+          ..write('basicDleId: $basicDleId, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('type: $type, ')
+          ..write('compareMode: $compareMode, ')
+          ..write('isReverseCompared: $isReverseCompared, ')
+          ..write('allowsMultipleValues: $allowsMultipleValues, ')
+          ..write('isSelectable: $isSelectable, ')
+          ..write('isHidden: $isHidden, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SelectableValuesTable extends SelectableValues
+    with TableInfo<$SelectableValuesTable, SelectableValue> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SelectableValuesTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($SelectableValuesTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> parameterId =
+      GeneratedColumn<UuidValue>('parameter_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES parameters (id) ON DELETE CASCADE'))
+          .withConverter<String>($SelectableValuesTable.$converterparameterId);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<ParameterValue, Object> value =
+      GeneratedColumn<Object>('value', aliasedName, false,
+              type: PgTypes.jsonb, requiredDuringInsert: true)
+          .withConverter<ParameterValue>(
+              $SelectableValuesTable.$convertervalue);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($SelectableValuesTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($SelectableValuesTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, parameterId, description, value, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'selectable_values';
+  @override
+  VerificationContext validateIntegrity(Insertable<SelectableValue> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SelectableValue map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SelectableValue(
+      id: $SelectableValuesTable.$converterid.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      parameterId: $SelectableValuesTable.$converterparameterId.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}parameter_id'])!),
+      value: $SelectableValuesTable.$convertervalue.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.jsonb, data['${effectivePrefix}value'])!),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      updatedAt: $SelectableValuesTable.$converterupdatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $SelectableValuesTable.$convertercreatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $SelectableValuesTable createAlias(String alias) {
+    return $SelectableValuesTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterparameterId =
+      const UuidValueToStringConverter();
+  static TypeConverter<ParameterValue, Object> $convertervalue =
+      const ParameterValueConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
+  final Value<String> id;
+  final Value<String> parameterId;
+  final Value<String> description;
+  final Value<ParameterValue> value;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const SelectableValuesCompanion({
+    this.id = const Value.absent(),
+    this.parameterId = const Value.absent(),
+    this.description = const Value.absent(),
+    this.value = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SelectableValuesCompanion.insert({
+    this.id = const Value.absent(),
+    required String parameterId,
+    required String description,
+    required ParameterValue value,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : parameterId = Value(parameterId),
+        description = Value(description),
+        value = Value(value);
+  static Insertable<SelectableValue> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? parameterId,
+    Expression<String>? description,
+    Expression<Object>? value,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (parameterId != null) 'parameter_id': parameterId,
+      if (description != null) 'description': description,
+      if (value != null) 'value': value,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SelectableValuesCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? parameterId,
+      Value<String>? description,
+      Value<ParameterValue>? value,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return SelectableValuesCompanion(
+      id: id ?? this.id,
+      parameterId: parameterId ?? this.parameterId,
+      description: description ?? this.description,
+      value: value ?? this.value,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $SelectableValuesTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (parameterId.present) {
+      map['parameter_id'] = Variable<UuidValue>(
+          $SelectableValuesTable.$converterparameterId.toSql(parameterId.value),
+          PgTypes.uuid);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<Object>(
+          $SelectableValuesTable.$convertervalue.toSql(value.value),
+          PgTypes.jsonb);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $SelectableValuesTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $SelectableValuesTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SelectableValuesCompanion(')
+          ..write('id: $id, ')
+          ..write('parameterId: $parameterId, ')
+          ..write('description: $description, ')
+          ..write('value: $value, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CharacterParametersTable extends CharacterParameters
+    with TableInfo<$CharacterParametersTable, CharacterParameter> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CharacterParametersTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($CharacterParametersTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> parameterId =
+      GeneratedColumn<UuidValue>('parameter_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES parameters (id) ON DELETE CASCADE'))
+          .withConverter<String>(
+              $CharacterParametersTable.$converterparameterId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> characterId =
+      GeneratedColumn<UuidValue>('character_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES characters (id) ON DELETE CASCADE'))
+          .withConverter<String>(
+              $CharacterParametersTable.$convertercharacterId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, UuidValue> selectableId =
+      GeneratedColumn<UuidValue>('selectable_id', aliasedName, true,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES characters (id) ON DELETE SET NULL'))
+          .withConverter<String?>(
+              $CharacterParametersTable.$converterselectableIdn);
+  @override
+  late final GeneratedColumnWithTypeConverter<ParameterValue, Object> value =
+      GeneratedColumn<Object>('value', aliasedName, false,
+              type: PgTypes.jsonb, requiredDuringInsert: true)
+          .withConverter<ParameterValue>(
+              $CharacterParametersTable.$convertervalue);
+  static const VerificationMeta _indexMeta = const VerificationMeta('index');
+  @override
+  late final GeneratedColumn<int> index = GeneratedColumn<int>(
+      'index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>(
+              $CharacterParametersTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>(
+              $CharacterParametersTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        parameterId,
+        characterId,
+        selectableId,
+        value,
+        index,
+        updatedAt,
+        createdAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'character_parameters';
+  @override
+  VerificationContext validateIntegrity(Insertable<CharacterParameter> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('index')) {
+      context.handle(
+          _indexMeta, index.isAcceptableOrUnknown(data['index']!, _indexMeta));
+    } else if (isInserting) {
+      context.missing(_indexMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CharacterParameter map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CharacterParameter(
+      id: $CharacterParametersTable.$converterid.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      characterId: $CharacterParametersTable.$convertercharacterId.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}character_id'])!),
+      parameterId: $CharacterParametersTable.$converterparameterId.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}parameter_id'])!),
+      value: $CharacterParametersTable.$convertervalue.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.jsonb, data['${effectivePrefix}value'])!),
+      index: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}index'])!,
+      selectableId: $CharacterParametersTable.$converterselectableIdn.fromSql(
+          attachedDatabase.typeMapping
+              .read(PgTypes.uuid, data['${effectivePrefix}selectable_id'])),
+      updatedAt: $CharacterParametersTable.$converterupdatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $CharacterParametersTable.$convertercreatedAt.fromSql(
+          attachedDatabase.typeMapping.read(
+              dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $CharacterParametersTable createAlias(String alias) {
+    return $CharacterParametersTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterparameterId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $convertercharacterId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterselectableId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String?, UuidValue?> $converterselectableIdn =
+      NullAwareTypeConverter.wrap($converterselectableId);
+  static TypeConverter<ParameterValue, Object> $convertervalue =
+      const ParameterValueConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
+  final Value<String> id;
+  final Value<String> parameterId;
+  final Value<String> characterId;
+  final Value<String?> selectableId;
+  final Value<ParameterValue> value;
+  final Value<int> index;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CharacterParametersCompanion({
+    this.id = const Value.absent(),
+    this.parameterId = const Value.absent(),
+    this.characterId = const Value.absent(),
+    this.selectableId = const Value.absent(),
+    this.value = const Value.absent(),
+    this.index = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CharacterParametersCompanion.insert({
+    this.id = const Value.absent(),
+    required String parameterId,
+    required String characterId,
+    this.selectableId = const Value.absent(),
+    required ParameterValue value,
+    required int index,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : parameterId = Value(parameterId),
+        characterId = Value(characterId),
+        value = Value(value),
+        index = Value(index);
+  static Insertable<CharacterParameter> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? parameterId,
+    Expression<UuidValue>? characterId,
+    Expression<UuidValue>? selectableId,
+    Expression<Object>? value,
+    Expression<int>? index,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (parameterId != null) 'parameter_id': parameterId,
+      if (characterId != null) 'character_id': characterId,
+      if (selectableId != null) 'selectable_id': selectableId,
+      if (value != null) 'value': value,
+      if (index != null) 'index': index,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CharacterParametersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? parameterId,
+      Value<String>? characterId,
+      Value<String?>? selectableId,
+      Value<ParameterValue>? value,
+      Value<int>? index,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return CharacterParametersCompanion(
+      id: id ?? this.id,
+      parameterId: parameterId ?? this.parameterId,
+      characterId: characterId ?? this.characterId,
+      selectableId: selectableId ?? this.selectableId,
+      value: value ?? this.value,
+      index: index ?? this.index,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $CharacterParametersTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (parameterId.present) {
+      map['parameter_id'] = Variable<UuidValue>(
+          $CharacterParametersTable.$converterparameterId
+              .toSql(parameterId.value),
+          PgTypes.uuid);
+    }
+    if (characterId.present) {
+      map['character_id'] = Variable<UuidValue>(
+          $CharacterParametersTable.$convertercharacterId
+              .toSql(characterId.value),
+          PgTypes.uuid);
+    }
+    if (selectableId.present) {
+      map['selectable_id'] = Variable<UuidValue>(
+          $CharacterParametersTable.$converterselectableIdn
+              .toSql(selectableId.value),
+          PgTypes.uuid);
+    }
+    if (value.present) {
+      map['value'] = Variable<Object>(
+          $CharacterParametersTable.$convertervalue.toSql(value.value),
+          PgTypes.jsonb);
+    }
+    if (index.present) {
+      map['index'] = Variable<int>(index.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $CharacterParametersTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $CharacterParametersTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CharacterParametersCompanion(')
+          ..write('id: $id, ')
+          ..write('parameterId: $parameterId, ')
+          ..write('characterId: $characterId, ')
+          ..write('selectableId: $selectableId, ')
+          ..write('value: $value, ')
+          ..write('index: $index, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -3294,6 +4393,12 @@ abstract class _$Database extends GeneratedDatabase {
   late final $DleInvitationsTable dleInvitations = $DleInvitationsTable(this);
   late final $HintsTable hints = $HintsTable(this);
   late final $CharacterHintsTable characterHints = $CharacterHintsTable(this);
+  late final $BasicDlesTable basicDles = $BasicDlesTable(this);
+  late final $ParametersTable parameters = $ParametersTable(this);
+  late final $SelectableValuesTable selectableValues =
+      $SelectableValuesTable(this);
+  late final $CharacterParametersTable characterParameters =
+      $CharacterParametersTable(this);
   late final Index hintsDleId = Index.byDialect('hints_dleId', {
     SqlDialect.postgres: 'CREATE INDEX hints_dleId ON hints (dle_id)',
   });
@@ -3301,6 +4406,24 @@ abstract class _$Database extends GeneratedDatabase {
       Index.byDialect('character_hints_characterId', {
     SqlDialect.postgres:
         'CREATE INDEX character_hints_characterId ON character_hints (character_id)',
+  });
+  late final Index basicDleDleId = Index.byDialect('basic_dle_dle_Id', {
+    SqlDialect.postgres: 'CREATE INDEX basic_dle_dle_Id ON basic_dles (dle_id)',
+  });
+  late final Index parametersBasicDleId =
+      Index.byDialect('parameters_basic_dle_id', {
+    SqlDialect.postgres:
+        'CREATE INDEX parameters_basic_dle_id ON parameters (basic_dle_id)',
+  });
+  late final Index selectableValuesParameterId =
+      Index.byDialect('selectable_values_parameter_id', {
+    SqlDialect.postgres:
+        'CREATE INDEX selectable_values_parameter_id ON selectable_values (parameter_id)',
+  });
+  late final Index characterParametersIds =
+      Index.byDialect('character_parameters_ids', {
+    SqlDialect.postgres:
+        'CREATE INDEX character_parameters_ids ON character_parameters (parameter_id, character_id)',
   });
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -3320,8 +4443,16 @@ abstract class _$Database extends GeneratedDatabase {
         dleInvitations,
         hints,
         characterHints,
+        basicDles,
+        parameters,
+        selectableValues,
+        characterParameters,
         hintsDleId,
-        characterHintsCharacterId
+        characterHintsCharacterId,
+        basicDleDleId,
+        parametersBasicDleId,
+        selectableValuesParameterId,
+        characterParametersIds
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -3457,6 +4588,48 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('character_hints', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('dles',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('basic_dles', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('basic_dles',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('parameters', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('parameters',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('selectable_values', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('parameters',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('character_parameters', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('characters',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('character_parameters', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('characters',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('character_parameters', kind: UpdateKind.update),
             ],
           ),
         ],
@@ -6277,6 +7450,20 @@ final class $$DlesTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$BasicDlesTable, List<BasicDle>>
+      _BasicDleInDleTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.basicDles,
+              aliasName: $_aliasNameGenerator(db.dles.id, db.basicDles.dleId));
+
+  $$BasicDlesTableProcessedTableManager get BasicDleInDle {
+    final manager = $$BasicDlesTableTableManager($_db, $_db.basicDles)
+        .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_BasicDleInDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
@@ -6413,6 +7600,27 @@ class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
             $$HintsTableFilterComposer(
               $db: $db,
               $table: $db.hints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> BasicDleInDle(
+      Expression<bool> Function($$BasicDlesTableFilterComposer f) f) {
+    final $$BasicDlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.basicDles,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BasicDlesTableFilterComposer(
+              $db: $db,
+              $table: $db.basicDles,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -6585,6 +7793,27 @@ class $$DlesTableAnnotationComposer extends Composer<_$Database, $DlesTable> {
             ));
     return f(composer);
   }
+
+  Expression<T> BasicDleInDle<T extends Object>(
+      Expression<T> Function($$BasicDlesTableAnnotationComposer a) f) {
+    final $$BasicDlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.basicDles,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BasicDlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.basicDles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$DlesTableTableManager extends RootTableManager<
@@ -6603,7 +7832,8 @@ class $$DlesTableTableManager extends RootTableManager<
         bool DleEditorsInDle,
         bool DleAssetsInDle,
         bool DleInvitationsInDle,
-        bool HintsInDle})> {
+        bool HintsInDle,
+        bool BasicDleInDle})> {
   $$DlesTableTableManager(_$Database db, $DlesTable table)
       : super(TableManagerState(
           db: db,
@@ -6663,7 +7893,8 @@ class $$DlesTableTableManager extends RootTableManager<
               DleEditorsInDle = false,
               DleAssetsInDle = false,
               DleInvitationsInDle = false,
-              HintsInDle = false}) {
+              HintsInDle = false,
+              BasicDleInDle = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
@@ -6671,7 +7902,8 @@ class $$DlesTableTableManager extends RootTableManager<
                 if (DleEditorsInDle) db.dleEditors,
                 if (DleAssetsInDle) db.dleAssets,
                 if (DleInvitationsInDle) db.dleInvitations,
-                if (HintsInDle) db.hints
+                if (HintsInDle) db.hints,
+                if (BasicDleInDle) db.basicDles
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -6733,6 +7965,17 @@ class $$DlesTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.dleId == item.id),
+                        typedResults: items),
+                  if (BasicDleInDle)
+                    await $_getPrefetchedData<Dle, $DlesTable, BasicDle>(
+                        currentTable: table,
+                        referencedTable:
+                            $$DlesTableReferences._BasicDleInDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$DlesTableReferences(db, table, p0).BasicDleInDle,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.dleId == item.id),
                         typedResults: items)
                 ];
               },
@@ -6757,7 +8000,8 @@ typedef $$DlesTableProcessedTableManager = ProcessedTableManager<
         bool DleEditorsInDle,
         bool DleAssetsInDle,
         bool DleInvitationsInDle,
-        bool HintsInDle})>;
+        bool HintsInDle,
+        bool BasicDleInDle})>;
 typedef $$CharactersTableCreateCompanionBuilder = CharactersCompanion Function({
   Value<String> id,
   required String dleId,
@@ -6826,6 +8070,46 @@ final class $$CharactersTableReferences
 
     final cache =
         $_typedResult.readTableOrNull(_CharacterHintsInCharactersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CharacterParametersTable,
+      List<CharacterParameter>> _CharacterParametersInCharactersTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.characterParameters,
+          aliasName: $_aliasNameGenerator(
+              db.characters.id, db.characterParameters.characterId));
+
+  $$CharacterParametersTableProcessedTableManager
+      get CharacterParametersInCharacters {
+    final manager = $$CharacterParametersTableTableManager(
+            $_db, $_db.characterParameters)
+        .filter(
+            (f) => f.characterId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult
+        .readTableOrNull(_CharacterParametersInCharactersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CharacterParametersTable,
+      List<CharacterParameter>> _CharacterParametersInSelectablesTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.characterParameters,
+          aliasName: $_aliasNameGenerator(
+              db.characters.id, db.characterParameters.selectableId));
+
+  $$CharacterParametersTableProcessedTableManager
+      get CharacterParametersInSelectables {
+    final manager = $$CharacterParametersTableTableManager(
+            $_db, $_db.characterParameters)
+        .filter(
+            (f) => f.selectableId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult
+        .readTableOrNull(_CharacterParametersInSelectablesTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -6919,6 +8203,48 @@ class $$CharactersTableFilterComposer
             $$CharacterHintsTableFilterComposer(
               $db: $db,
               $table: $db.characterHints,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> CharacterParametersInCharacters(
+      Expression<bool> Function($$CharacterParametersTableFilterComposer f) f) {
+    final $$CharacterParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterParameters,
+        getReferencedColumn: (t) => t.characterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.characterParameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> CharacterParametersInSelectables(
+      Expression<bool> Function($$CharacterParametersTableFilterComposer f) f) {
+    final $$CharacterParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterParameters,
+        getReferencedColumn: (t) => t.selectableId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.characterParameters,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -7083,6 +8409,52 @@ class $$CharactersTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> CharacterParametersInCharacters<T extends Object>(
+      Expression<T> Function($$CharacterParametersTableAnnotationComposer a)
+          f) {
+    final $$CharacterParametersTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.characterParameters,
+            getReferencedColumn: (t) => t.characterId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$CharacterParametersTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.characterParameters,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+
+  Expression<T> CharacterParametersInSelectables<T extends Object>(
+      Expression<T> Function($$CharacterParametersTableAnnotationComposer a)
+          f) {
+    final $$CharacterParametersTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.characterParameters,
+            getReferencedColumn: (t) => t.selectableId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$CharacterParametersTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.characterParameters,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$CharactersTableTableManager extends RootTableManager<
@@ -7097,7 +8469,11 @@ class $$CharactersTableTableManager extends RootTableManager<
     (Character, $$CharactersTableReferences),
     Character,
     PrefetchHooks Function(
-        {bool dleId, bool imageId, bool CharacterHintsInCharacters})> {
+        {bool dleId,
+        bool imageId,
+        bool CharacterHintsInCharacters,
+        bool CharacterParametersInCharacters,
+        bool CharacterParametersInSelectables})> {
   $$CharactersTableTableManager(_$Database db, $CharactersTable table)
       : super(TableManagerState(
           db: db,
@@ -7161,11 +8537,15 @@ class $$CharactersTableTableManager extends RootTableManager<
           prefetchHooksCallback: (
               {dleId = false,
               imageId = false,
-              CharacterHintsInCharacters = false}) {
+              CharacterHintsInCharacters = false,
+              CharacterParametersInCharacters = false,
+              CharacterParametersInSelectables = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (CharacterHintsInCharacters) db.characterHints
+                if (CharacterHintsInCharacters) db.characterHints,
+                if (CharacterParametersInCharacters) db.characterParameters,
+                if (CharacterParametersInSelectables) db.characterParameters
               ],
               addJoins: <
                   T extends TableManagerState<
@@ -7217,6 +8597,32 @@ class $$CharactersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.characterId == item.id),
+                        typedResults: items),
+                  if (CharacterParametersInCharacters)
+                    await $_getPrefetchedData<Character, $CharactersTable,
+                            CharacterParameter>(
+                        currentTable: table,
+                        referencedTable: $$CharactersTableReferences
+                            ._CharacterParametersInCharactersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CharactersTableReferences(db, table, p0)
+                                .CharacterParametersInCharacters,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.characterId == item.id),
+                        typedResults: items),
+                  if (CharacterParametersInSelectables)
+                    await $_getPrefetchedData<Character, $CharactersTable,
+                            CharacterParameter>(
+                        currentTable: table,
+                        referencedTable: $$CharactersTableReferences
+                            ._CharacterParametersInSelectablesTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CharactersTableReferences(db, table, p0)
+                                .CharacterParametersInSelectables,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.selectableId == item.id),
                         typedResults: items)
                 ];
               },
@@ -7237,7 +8643,11 @@ typedef $$CharactersTableProcessedTableManager = ProcessedTableManager<
     (Character, $$CharactersTableReferences),
     Character,
     PrefetchHooks Function(
-        {bool dleId, bool imageId, bool CharacterHintsInCharacters})>;
+        {bool dleId,
+        bool imageId,
+        bool CharacterHintsInCharacters,
+        bool CharacterParametersInCharacters,
+        bool CharacterParametersInSelectables})>;
 typedef $$DleEditorsTableCreateCompanionBuilder = DleEditorsCompanion Function({
   Value<String> id,
   required String dleId,
@@ -8947,7 +10357,7 @@ typedef $$CharacterHintsTableCreateCompanionBuilder = CharacterHintsCompanion
   Value<String> id,
   required String hintId,
   required String characterId,
-  Value<HintValue?> value,
+  required HintValue value,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -8957,7 +10367,7 @@ typedef $$CharacterHintsTableUpdateCompanionBuilder = CharacterHintsCompanion
   Value<String> id,
   Value<String> hintId,
   Value<String> characterId,
-  Value<HintValue?> value,
+  Value<HintValue> value,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -9012,7 +10422,7 @@ class $$CharacterHintsTableFilterComposer
           column: $table.id,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnWithTypeConverterFilters<HintValue?, HintValue, Object> get value =>
+  ColumnWithTypeConverterFilters<HintValue, HintValue, Object> get value =>
       $composableBuilder(
           column: $table.value,
           builder: (column) => ColumnWithTypeConverterFilters(column));
@@ -9142,7 +10552,7 @@ class $$CharacterHintsTableAnnotationComposer
   GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<HintValue?, Object> get value =>
+  GeneratedColumnWithTypeConverter<HintValue, Object> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
@@ -9218,7 +10628,7 @@ class $$CharacterHintsTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<String> hintId = const Value.absent(),
             Value<String> characterId = const Value.absent(),
-            Value<HintValue?> value = const Value.absent(),
+            Value<HintValue> value = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -9236,7 +10646,7 @@ class $$CharacterHintsTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             required String hintId,
             required String characterId,
-            Value<HintValue?> value = const Value.absent(),
+            required HintValue value,
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -9317,6 +10727,1692 @@ typedef $$CharacterHintsTableProcessedTableManager = ProcessedTableManager<
     (CharacterHint, $$CharacterHintsTableReferences),
     CharacterHint,
     PrefetchHooks Function({bool hintId, bool characterId})>;
+typedef $$BasicDlesTableCreateCompanionBuilder = BasicDlesCompanion Function({
+  Value<String> id,
+  required String dleId,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$BasicDlesTableUpdateCompanionBuilder = BasicDlesCompanion Function({
+  Value<String> id,
+  Value<String> dleId,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$BasicDlesTableReferences
+    extends BaseReferences<_$Database, $BasicDlesTable, BasicDle> {
+  $$BasicDlesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DlesTable _dleIdTable(_$Database db) =>
+      db.dles.createAlias($_aliasNameGenerator(db.basicDles.dleId, db.dles.id));
+
+  $$DlesTableProcessedTableManager get dleId {
+    final $_column = $_itemColumn<UuidValue>('dle_id')!;
+
+    final manager = $$DlesTableTableManager($_db, $_db.dles)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_dleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$ParametersTable, List<Parameter>>
+      _ParametersInBasicDleTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.parameters,
+              aliasName: $_aliasNameGenerator(
+                  db.basicDles.id, db.parameters.basicDleId));
+
+  $$ParametersTableProcessedTableManager get ParametersInBasicDle {
+    final manager = $$ParametersTableTableManager($_db, $_db.parameters).filter(
+        (f) => f.basicDleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_ParametersInBasicDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$BasicDlesTableFilterComposer
+    extends Composer<_$Database, $BasicDlesTable> {
+  $$BasicDlesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$DlesTableFilterComposer get dleId {
+    final $$DlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableFilterComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> ParametersInBasicDle(
+      Expression<bool> Function($$ParametersTableFilterComposer f) f) {
+    final $$ParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.basicDleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$BasicDlesTableOrderingComposer
+    extends Composer<_$Database, $BasicDlesTable> {
+  $$BasicDlesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$DlesTableOrderingComposer get dleId {
+    final $$DlesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableOrderingComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BasicDlesTableAnnotationComposer
+    extends Composer<_$Database, $BasicDlesTable> {
+  $$BasicDlesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$DlesTableAnnotationComposer get dleId {
+    final $$DlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> ParametersInBasicDle<T extends Object>(
+      Expression<T> Function($$ParametersTableAnnotationComposer a) f) {
+    final $$ParametersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.basicDleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$BasicDlesTableTableManager extends RootTableManager<
+    _$Database,
+    $BasicDlesTable,
+    BasicDle,
+    $$BasicDlesTableFilterComposer,
+    $$BasicDlesTableOrderingComposer,
+    $$BasicDlesTableAnnotationComposer,
+    $$BasicDlesTableCreateCompanionBuilder,
+    $$BasicDlesTableUpdateCompanionBuilder,
+    (BasicDle, $$BasicDlesTableReferences),
+    BasicDle,
+    PrefetchHooks Function({bool dleId, bool ParametersInBasicDle})> {
+  $$BasicDlesTableTableManager(_$Database db, $BasicDlesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BasicDlesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BasicDlesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BasicDlesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> dleId = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BasicDlesCompanion(
+            id: id,
+            dleId: dleId,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String dleId,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BasicDlesCompanion.insert(
+            id: id,
+            dleId: dleId,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$BasicDlesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {dleId = false, ParametersInBasicDle = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (ParametersInBasicDle) db.parameters
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (dleId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.dleId,
+                    referencedTable: $$BasicDlesTableReferences._dleIdTable(db),
+                    referencedColumn:
+                        $$BasicDlesTableReferences._dleIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (ParametersInBasicDle)
+                    await $_getPrefetchedData<BasicDle, $BasicDlesTable, Parameter>(
+                        currentTable: table,
+                        referencedTable: $$BasicDlesTableReferences
+                            ._ParametersInBasicDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$BasicDlesTableReferences(db, table, p0)
+                                .ParametersInBasicDle,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.basicDleId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$BasicDlesTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $BasicDlesTable,
+    BasicDle,
+    $$BasicDlesTableFilterComposer,
+    $$BasicDlesTableOrderingComposer,
+    $$BasicDlesTableAnnotationComposer,
+    $$BasicDlesTableCreateCompanionBuilder,
+    $$BasicDlesTableUpdateCompanionBuilder,
+    (BasicDle, $$BasicDlesTableReferences),
+    BasicDle,
+    PrefetchHooks Function({bool dleId, bool ParametersInBasicDle})>;
+typedef $$ParametersTableCreateCompanionBuilder = ParametersCompanion Function({
+  Value<String> id,
+  required String basicDleId,
+  required String title,
+  required String description,
+  required ParameterType type,
+  required CompareMode compareMode,
+  required bool isReverseCompared,
+  required bool allowsMultipleValues,
+  required bool isSelectable,
+  required bool isHidden,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$ParametersTableUpdateCompanionBuilder = ParametersCompanion Function({
+  Value<String> id,
+  Value<String> basicDleId,
+  Value<String> title,
+  Value<String> description,
+  Value<ParameterType> type,
+  Value<CompareMode> compareMode,
+  Value<bool> isReverseCompared,
+  Value<bool> allowsMultipleValues,
+  Value<bool> isSelectable,
+  Value<bool> isHidden,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$ParametersTableReferences
+    extends BaseReferences<_$Database, $ParametersTable, Parameter> {
+  $$ParametersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $BasicDlesTable _basicDleIdTable(_$Database db) =>
+      db.basicDles.createAlias(
+          $_aliasNameGenerator(db.parameters.basicDleId, db.basicDles.id));
+
+  $$BasicDlesTableProcessedTableManager get basicDleId {
+    final $_column = $_itemColumn<UuidValue>('basic_dle_id')!;
+
+    final manager = $$BasicDlesTableTableManager($_db, $_db.basicDles)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_basicDleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$SelectableValuesTable, List<SelectableValue>>
+      _SelectableValuesInParametersTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.selectableValues,
+              aliasName: $_aliasNameGenerator(
+                  db.parameters.id, db.selectableValues.parameterId));
+
+  $$SelectableValuesTableProcessedTableManager
+      get SelectableValuesInParameters {
+    final manager =
+        $$SelectableValuesTableTableManager($_db, $_db.selectableValues).filter(
+            (f) => f.parameterId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_SelectableValuesInParametersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CharacterParametersTable,
+      List<CharacterParameter>> _CharacterParametersInParametersTable(
+          _$Database db) =>
+      MultiTypedResultKey.fromTable(db.characterParameters,
+          aliasName: $_aliasNameGenerator(
+              db.parameters.id, db.characterParameters.parameterId));
+
+  $$CharacterParametersTableProcessedTableManager
+      get CharacterParametersInParameters {
+    final manager = $$CharacterParametersTableTableManager(
+            $_db, $_db.characterParameters)
+        .filter(
+            (f) => f.parameterId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult
+        .readTableOrNull(_CharacterParametersInParametersTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$ParametersTableFilterComposer
+    extends Composer<_$Database, $ParametersTable> {
+  $$ParametersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<ParameterType, ParameterType, String>
+      get type => $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<CompareMode, CompareMode, String>
+      get compareMode => $composableBuilder(
+          column: $table.compareMode,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get isReverseCompared => $composableBuilder(
+      column: $table.isReverseCompared,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get allowsMultipleValues => $composableBuilder(
+      column: $table.allowsMultipleValues,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSelectable => $composableBuilder(
+      column: $table.isSelectable, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$BasicDlesTableFilterComposer get basicDleId {
+    final $$BasicDlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.basicDleId,
+        referencedTable: $db.basicDles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BasicDlesTableFilterComposer(
+              $db: $db,
+              $table: $db.basicDles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> SelectableValuesInParameters(
+      Expression<bool> Function($$SelectableValuesTableFilterComposer f) f) {
+    final $$SelectableValuesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.selectableValues,
+        getReferencedColumn: (t) => t.parameterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SelectableValuesTableFilterComposer(
+              $db: $db,
+              $table: $db.selectableValues,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> CharacterParametersInParameters(
+      Expression<bool> Function($$CharacterParametersTableFilterComposer f) f) {
+    final $$CharacterParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characterParameters,
+        getReferencedColumn: (t) => t.parameterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharacterParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.characterParameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$ParametersTableOrderingComposer
+    extends Composer<_$Database, $ParametersTable> {
+  $$ParametersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get compareMode => $composableBuilder(
+      column: $table.compareMode, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isReverseCompared => $composableBuilder(
+      column: $table.isReverseCompared,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get allowsMultipleValues => $composableBuilder(
+      column: $table.allowsMultipleValues,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSelectable => $composableBuilder(
+      column: $table.isSelectable,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isHidden => $composableBuilder(
+      column: $table.isHidden, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$BasicDlesTableOrderingComposer get basicDleId {
+    final $$BasicDlesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.basicDleId,
+        referencedTable: $db.basicDles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BasicDlesTableOrderingComposer(
+              $db: $db,
+              $table: $db.basicDles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ParametersTableAnnotationComposer
+    extends Composer<_$Database, $ParametersTable> {
+  $$ParametersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ParameterType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<CompareMode, String> get compareMode =>
+      $composableBuilder(
+          column: $table.compareMode, builder: (column) => column);
+
+  GeneratedColumn<bool> get isReverseCompared => $composableBuilder(
+      column: $table.isReverseCompared, builder: (column) => column);
+
+  GeneratedColumn<bool> get allowsMultipleValues => $composableBuilder(
+      column: $table.allowsMultipleValues, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSelectable => $composableBuilder(
+      column: $table.isSelectable, builder: (column) => column);
+
+  GeneratedColumn<bool> get isHidden =>
+      $composableBuilder(column: $table.isHidden, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$BasicDlesTableAnnotationComposer get basicDleId {
+    final $$BasicDlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.basicDleId,
+        referencedTable: $db.basicDles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BasicDlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.basicDles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> SelectableValuesInParameters<T extends Object>(
+      Expression<T> Function($$SelectableValuesTableAnnotationComposer a) f) {
+    final $$SelectableValuesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.selectableValues,
+        getReferencedColumn: (t) => t.parameterId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SelectableValuesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.selectableValues,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> CharacterParametersInParameters<T extends Object>(
+      Expression<T> Function($$CharacterParametersTableAnnotationComposer a)
+          f) {
+    final $$CharacterParametersTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.characterParameters,
+            getReferencedColumn: (t) => t.parameterId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$CharacterParametersTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.characterParameters,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$ParametersTableTableManager extends RootTableManager<
+    _$Database,
+    $ParametersTable,
+    Parameter,
+    $$ParametersTableFilterComposer,
+    $$ParametersTableOrderingComposer,
+    $$ParametersTableAnnotationComposer,
+    $$ParametersTableCreateCompanionBuilder,
+    $$ParametersTableUpdateCompanionBuilder,
+    (Parameter, $$ParametersTableReferences),
+    Parameter,
+    PrefetchHooks Function(
+        {bool basicDleId,
+        bool SelectableValuesInParameters,
+        bool CharacterParametersInParameters})> {
+  $$ParametersTableTableManager(_$Database db, $ParametersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ParametersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ParametersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ParametersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> basicDleId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<ParameterType> type = const Value.absent(),
+            Value<CompareMode> compareMode = const Value.absent(),
+            Value<bool> isReverseCompared = const Value.absent(),
+            Value<bool> allowsMultipleValues = const Value.absent(),
+            Value<bool> isSelectable = const Value.absent(),
+            Value<bool> isHidden = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ParametersCompanion(
+            id: id,
+            basicDleId: basicDleId,
+            title: title,
+            description: description,
+            type: type,
+            compareMode: compareMode,
+            isReverseCompared: isReverseCompared,
+            allowsMultipleValues: allowsMultipleValues,
+            isSelectable: isSelectable,
+            isHidden: isHidden,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String basicDleId,
+            required String title,
+            required String description,
+            required ParameterType type,
+            required CompareMode compareMode,
+            required bool isReverseCompared,
+            required bool allowsMultipleValues,
+            required bool isSelectable,
+            required bool isHidden,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ParametersCompanion.insert(
+            id: id,
+            basicDleId: basicDleId,
+            title: title,
+            description: description,
+            type: type,
+            compareMode: compareMode,
+            isReverseCompared: isReverseCompared,
+            allowsMultipleValues: allowsMultipleValues,
+            isSelectable: isSelectable,
+            isHidden: isHidden,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$ParametersTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {basicDleId = false,
+              SelectableValuesInParameters = false,
+              CharacterParametersInParameters = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (SelectableValuesInParameters) db.selectableValues,
+                if (CharacterParametersInParameters) db.characterParameters
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (basicDleId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.basicDleId,
+                    referencedTable:
+                        $$ParametersTableReferences._basicDleIdTable(db),
+                    referencedColumn:
+                        $$ParametersTableReferences._basicDleIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (SelectableValuesInParameters)
+                    await $_getPrefetchedData<Parameter, $ParametersTable,
+                            SelectableValue>(
+                        currentTable: table,
+                        referencedTable: $$ParametersTableReferences
+                            ._SelectableValuesInParametersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ParametersTableReferences(db, table, p0)
+                                .SelectableValuesInParameters,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.parameterId == item.id),
+                        typedResults: items),
+                  if (CharacterParametersInParameters)
+                    await $_getPrefetchedData<Parameter, $ParametersTable,
+                            CharacterParameter>(
+                        currentTable: table,
+                        referencedTable: $$ParametersTableReferences
+                            ._CharacterParametersInParametersTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ParametersTableReferences(db, table, p0)
+                                .CharacterParametersInParameters,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.parameterId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$ParametersTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $ParametersTable,
+    Parameter,
+    $$ParametersTableFilterComposer,
+    $$ParametersTableOrderingComposer,
+    $$ParametersTableAnnotationComposer,
+    $$ParametersTableCreateCompanionBuilder,
+    $$ParametersTableUpdateCompanionBuilder,
+    (Parameter, $$ParametersTableReferences),
+    Parameter,
+    PrefetchHooks Function(
+        {bool basicDleId,
+        bool SelectableValuesInParameters,
+        bool CharacterParametersInParameters})>;
+typedef $$SelectableValuesTableCreateCompanionBuilder
+    = SelectableValuesCompanion Function({
+  Value<String> id,
+  required String parameterId,
+  required String description,
+  required ParameterValue value,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$SelectableValuesTableUpdateCompanionBuilder
+    = SelectableValuesCompanion Function({
+  Value<String> id,
+  Value<String> parameterId,
+  Value<String> description,
+  Value<ParameterValue> value,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$SelectableValuesTableReferences extends BaseReferences<_$Database,
+    $SelectableValuesTable, SelectableValue> {
+  $$SelectableValuesTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $ParametersTable _parameterIdTable(_$Database db) =>
+      db.parameters.createAlias($_aliasNameGenerator(
+          db.selectableValues.parameterId, db.parameters.id));
+
+  $$ParametersTableProcessedTableManager get parameterId {
+    final $_column = $_itemColumn<UuidValue>('parameter_id')!;
+
+    final manager = $$ParametersTableTableManager($_db, $_db.parameters)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_parameterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$SelectableValuesTableFilterComposer
+    extends Composer<_$Database, $SelectableValuesTable> {
+  $$SelectableValuesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<ParameterValue, ParameterValue, Object>
+      get value => $composableBuilder(
+          column: $table.value,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$ParametersTableFilterComposer get parameterId {
+    final $$ParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SelectableValuesTableOrderingComposer
+    extends Composer<_$Database, $SelectableValuesTable> {
+  $$SelectableValuesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Object> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$ParametersTableOrderingComposer get parameterId {
+    final $$ParametersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableOrderingComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SelectableValuesTableAnnotationComposer
+    extends Composer<_$Database, $SelectableValuesTable> {
+  $$SelectableValuesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ParameterValue, Object> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$ParametersTableAnnotationComposer get parameterId {
+    final $$ParametersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SelectableValuesTableTableManager extends RootTableManager<
+    _$Database,
+    $SelectableValuesTable,
+    SelectableValue,
+    $$SelectableValuesTableFilterComposer,
+    $$SelectableValuesTableOrderingComposer,
+    $$SelectableValuesTableAnnotationComposer,
+    $$SelectableValuesTableCreateCompanionBuilder,
+    $$SelectableValuesTableUpdateCompanionBuilder,
+    (SelectableValue, $$SelectableValuesTableReferences),
+    SelectableValue,
+    PrefetchHooks Function({bool parameterId})> {
+  $$SelectableValuesTableTableManager(
+      _$Database db, $SelectableValuesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SelectableValuesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SelectableValuesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SelectableValuesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> parameterId = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<ParameterValue> value = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SelectableValuesCompanion(
+            id: id,
+            parameterId: parameterId,
+            description: description,
+            value: value,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String parameterId,
+            required String description,
+            required ParameterValue value,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SelectableValuesCompanion.insert(
+            id: id,
+            parameterId: parameterId,
+            description: description,
+            value: value,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$SelectableValuesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({parameterId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (parameterId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.parameterId,
+                    referencedTable:
+                        $$SelectableValuesTableReferences._parameterIdTable(db),
+                    referencedColumn: $$SelectableValuesTableReferences
+                        ._parameterIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$SelectableValuesTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $SelectableValuesTable,
+    SelectableValue,
+    $$SelectableValuesTableFilterComposer,
+    $$SelectableValuesTableOrderingComposer,
+    $$SelectableValuesTableAnnotationComposer,
+    $$SelectableValuesTableCreateCompanionBuilder,
+    $$SelectableValuesTableUpdateCompanionBuilder,
+    (SelectableValue, $$SelectableValuesTableReferences),
+    SelectableValue,
+    PrefetchHooks Function({bool parameterId})>;
+typedef $$CharacterParametersTableCreateCompanionBuilder
+    = CharacterParametersCompanion Function({
+  Value<String> id,
+  required String parameterId,
+  required String characterId,
+  Value<String?> selectableId,
+  required ParameterValue value,
+  required int index,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$CharacterParametersTableUpdateCompanionBuilder
+    = CharacterParametersCompanion Function({
+  Value<String> id,
+  Value<String> parameterId,
+  Value<String> characterId,
+  Value<String?> selectableId,
+  Value<ParameterValue> value,
+  Value<int> index,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$CharacterParametersTableReferences extends BaseReferences<
+    _$Database, $CharacterParametersTable, CharacterParameter> {
+  $$CharacterParametersTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $ParametersTable _parameterIdTable(_$Database db) =>
+      db.parameters.createAlias($_aliasNameGenerator(
+          db.characterParameters.parameterId, db.parameters.id));
+
+  $$ParametersTableProcessedTableManager get parameterId {
+    final $_column = $_itemColumn<UuidValue>('parameter_id')!;
+
+    final manager = $$ParametersTableTableManager($_db, $_db.parameters)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_parameterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CharactersTable _characterIdTable(_$Database db) =>
+      db.characters.createAlias($_aliasNameGenerator(
+          db.characterParameters.characterId, db.characters.id));
+
+  $$CharactersTableProcessedTableManager get characterId {
+    final $_column = $_itemColumn<UuidValue>('character_id')!;
+
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_characterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CharactersTable _selectableIdTable(_$Database db) =>
+      db.characters.createAlias($_aliasNameGenerator(
+          db.characterParameters.selectableId, db.characters.id));
+
+  $$CharactersTableProcessedTableManager? get selectableId {
+    final $_column = $_itemColumn<UuidValue>('selectable_id');
+    if ($_column == null) return null;
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_selectableIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$CharacterParametersTableFilterComposer
+    extends Composer<_$Database, $CharacterParametersTable> {
+  $$CharacterParametersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<ParameterValue, ParameterValue, Object>
+      get value => $composableBuilder(
+          column: $table.value,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<int> get index => $composableBuilder(
+      column: $table.index, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$ParametersTableFilterComposer get parameterId {
+    final $$ParametersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableFilterComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableFilterComposer get characterId {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableFilterComposer get selectableId {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.selectableId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterParametersTableOrderingComposer
+    extends Composer<_$Database, $CharacterParametersTable> {
+  $$CharacterParametersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Object> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get index => $composableBuilder(
+      column: $table.index, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$ParametersTableOrderingComposer get parameterId {
+    final $$ParametersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableOrderingComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableOrderingComposer get characterId {
+    final $$CharactersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableOrderingComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableOrderingComposer get selectableId {
+    final $$CharactersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.selectableId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableOrderingComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterParametersTableAnnotationComposer
+    extends Composer<_$Database, $CharacterParametersTable> {
+  $$CharacterParametersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ParameterValue, Object> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<int> get index =>
+      $composableBuilder(column: $table.index, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$ParametersTableAnnotationComposer get parameterId {
+    final $$ParametersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.parameterId,
+        referencedTable: $db.parameters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ParametersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.parameters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableAnnotationComposer get characterId {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.characterId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CharactersTableAnnotationComposer get selectableId {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.selectableId,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$CharacterParametersTableTableManager extends RootTableManager<
+    _$Database,
+    $CharacterParametersTable,
+    CharacterParameter,
+    $$CharacterParametersTableFilterComposer,
+    $$CharacterParametersTableOrderingComposer,
+    $$CharacterParametersTableAnnotationComposer,
+    $$CharacterParametersTableCreateCompanionBuilder,
+    $$CharacterParametersTableUpdateCompanionBuilder,
+    (CharacterParameter, $$CharacterParametersTableReferences),
+    CharacterParameter,
+    PrefetchHooks Function(
+        {bool parameterId, bool characterId, bool selectableId})> {
+  $$CharacterParametersTableTableManager(
+      _$Database db, $CharacterParametersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CharacterParametersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CharacterParametersTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CharacterParametersTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> parameterId = const Value.absent(),
+            Value<String> characterId = const Value.absent(),
+            Value<String?> selectableId = const Value.absent(),
+            Value<ParameterValue> value = const Value.absent(),
+            Value<int> index = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharacterParametersCompanion(
+            id: id,
+            parameterId: parameterId,
+            characterId: characterId,
+            selectableId: selectableId,
+            value: value,
+            index: index,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String parameterId,
+            required String characterId,
+            Value<String?> selectableId = const Value.absent(),
+            required ParameterValue value,
+            required int index,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CharacterParametersCompanion.insert(
+            id: id,
+            parameterId: parameterId,
+            characterId: characterId,
+            selectableId: selectableId,
+            value: value,
+            index: index,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$CharacterParametersTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {parameterId = false,
+              characterId = false,
+              selectableId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (parameterId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.parameterId,
+                    referencedTable: $$CharacterParametersTableReferences
+                        ._parameterIdTable(db),
+                    referencedColumn: $$CharacterParametersTableReferences
+                        ._parameterIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (characterId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.characterId,
+                    referencedTable: $$CharacterParametersTableReferences
+                        ._characterIdTable(db),
+                    referencedColumn: $$CharacterParametersTableReferences
+                        ._characterIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (selectableId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.selectableId,
+                    referencedTable: $$CharacterParametersTableReferences
+                        ._selectableIdTable(db),
+                    referencedColumn: $$CharacterParametersTableReferences
+                        ._selectableIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CharacterParametersTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $CharacterParametersTable,
+    CharacterParameter,
+    $$CharacterParametersTableFilterComposer,
+    $$CharacterParametersTableOrderingComposer,
+    $$CharacterParametersTableAnnotationComposer,
+    $$CharacterParametersTableCreateCompanionBuilder,
+    $$CharacterParametersTableUpdateCompanionBuilder,
+    (CharacterParameter, $$CharacterParametersTableReferences),
+    CharacterParameter,
+    PrefetchHooks Function(
+        {bool parameterId, bool characterId, bool selectableId})>;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -9347,4 +12443,12 @@ class $DatabaseManager {
       $$HintsTableTableManager(_db, _db.hints);
   $$CharacterHintsTableTableManager get characterHints =>
       $$CharacterHintsTableTableManager(_db, _db.characterHints);
+  $$BasicDlesTableTableManager get basicDles =>
+      $$BasicDlesTableTableManager(_db, _db.basicDles);
+  $$ParametersTableTableManager get parameters =>
+      $$ParametersTableTableManager(_db, _db.parameters);
+  $$SelectableValuesTableTableManager get selectableValues =>
+      $$SelectableValuesTableTableManager(_db, _db.selectableValues);
+  $$CharacterParametersTableTableManager get characterParameters =>
+      $$CharacterParametersTableTableManager(_db, _db.characterParameters);
 }

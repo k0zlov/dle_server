@@ -64,12 +64,18 @@ import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_man
     as _i553;
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/hints_rest_controller.dart'
     as _i929;
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/parameters_rest_controller.dart'
+    as _i571;
 import 'package:dle_server/contexts/dle/adapters/primary/api/exceptions/dle_exceptions_mapper.dart'
     as _i862;
-import 'package:dle_server/contexts/dle/adapters/secondary/persistence/dle_invitations_repository.dart'
-    as _i1031;
+import 'package:dle_server/contexts/dle/adapters/secondary/persistence/basic_dle_repository_drift.dart'
+    as _i255;
+import 'package:dle_server/contexts/dle/adapters/secondary/persistence/dle_invitations_repository_drift.dart'
+    as _i1003;
 import 'package:dle_server/contexts/dle/adapters/secondary/persistence/dle_repository_drift.dart'
     as _i588;
+import 'package:dle_server/contexts/dle/application/ports/basic_dle_repository_port.dart'
+    as _i309;
 import 'package:dle_server/contexts/dle/application/ports/dle_invitations_repository_port.dart'
     as _i891;
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart'
@@ -100,6 +106,8 @@ import 'package:dle_server/contexts/dle/application/use_cases/kick_editor_use_ca
     as _i678;
 import 'package:dle_server/contexts/dle/application/use_cases/leave_dle_use_case/leave_dle_use_case.dart'
     as _i543;
+import 'package:dle_server/contexts/dle/application/use_cases/manage_character_hint_use_case/manage_character_hint_use_case.dart'
+    as _i747;
 import 'package:dle_server/contexts/dle/application/use_cases/remove_character_use_case/remove_character_use_case.dart'
     as _i586;
 import 'package:dle_server/contexts/dle/application/use_cases/remove_hint_use_case/remove_hint_use_case.dart'
@@ -194,6 +202,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i862.DleExceptionsMapper>(
         () => _i862.DleExceptionsMapper());
     gh.lazySingleton<_i434.WebSocketManager>(() => _i434.WebSocketManager());
+    gh.lazySingleton<_i571.ParametersRestController>(
+        () => _i571.ParametersRestController());
     gh.factory<_i295.JwtClient>(
       () => dependencyContainer.accessJwtClient,
       instanceName: 'accessJwtClient',
@@ -284,6 +294,16 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i452.DleRepositoryPort>(),
               eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
             ));
+    gh.lazySingletonAsync<_i747.ManageCharacterHintUseCase>(
+        () async => _i747.ManageCharacterHintUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
+    gh.lazySingletonAsync<_i891.DleInvitationsRepositoryPort>(() async =>
+        _i1003.DleInvitationsRepositoryDrift(
+            db: await getAsync<_i780.Database>()));
+    gh.lazySingletonAsync<_i309.BasicDleRepositoryPort>(() async =>
+        _i255.BasicDleRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i44.MailService>(() => _i44.MailServiceImpl(
           smtpServer: gh<_i576.SmtpServer>(),
           emailUrl: gh<String>(instanceName: 'emailUrl'),
@@ -308,9 +328,6 @@ extension GetItInjectableX on _i174.GetIt {
         _i865.EmailCodesRepositoryDrift(db: await getAsync<_i780.Database>()));
     gh.lazySingletonAsync<_i747.ProfilesRepositoryPort>(() async =>
         _i564.ProfilesRepositoryDrift(db: await getAsync<_i780.Database>()));
-    gh.lazySingletonAsync<_i891.DleInvitationsRepositoryPort>(() async =>
-        _i1031.DleInvitationsRepositoryDrift(
-            db: await getAsync<_i780.Database>()));
     gh.lazySingleton<_i601.AuthMiddleware>(
         () => _i601.AuthMiddleware(tokenService: gh<_i665.TokenService>()));
     gh.lazySingletonAsync<_i681.DleInvitationSentListener>(() async =>
@@ -335,13 +352,6 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.lazySingleton<_i779.UploadsStoragePort>(() => _i945.LocalUploadsStorage(
         basePath: gh<String>(instanceName: 'uploadsBaseDirectory')));
-    gh.lazySingletonAsync<_i929.HintsRestController>(
-        () async => _i929.HintsRestController(
-              mapper: gh<_i862.DleExceptionsMapper>(),
-              createHintUseCase: await getAsync<_i1050.CreateHintUseCase>(),
-              editHintUseCase: await getAsync<_i537.EditHintUseCase>(),
-              removeHintUseCase: await getAsync<_i220.RemoveHintUseCase>(),
-            ));
     gh.lazySingletonAsync<_i109.SaveUploadUseCase>(
         () async => _i109.SaveUploadUseCase(
               storage: gh<_i779.UploadsStoragePort>(),
@@ -377,6 +387,15 @@ extension GetItInjectableX on _i174.GetIt {
           sendEmailCodeUseCase: await getAsync<_i546.SendEmailCodeUseCase>(),
           passwordResetUrl: gh<String>(instanceName: 'passwordResetUrl'),
         ));
+    gh.lazySingletonAsync<_i929.HintsRestController>(
+        () async => _i929.HintsRestController(
+              mapper: gh<_i862.DleExceptionsMapper>(),
+              createHintUseCase: await getAsync<_i1050.CreateHintUseCase>(),
+              editHintUseCase: await getAsync<_i537.EditHintUseCase>(),
+              removeHintUseCase: await getAsync<_i220.RemoveHintUseCase>(),
+              manageCharacterHintUseCase:
+                  await getAsync<_i747.ManageCharacterHintUseCase>(),
+            ));
     gh.lazySingletonAsync<_i924.LoginUseCase>(() async => _i924.LoginUseCase(
           repository: await getAsync<_i221.UsersRepositoryPort>(),
           tokenService: gh<_i665.TokenService>(),

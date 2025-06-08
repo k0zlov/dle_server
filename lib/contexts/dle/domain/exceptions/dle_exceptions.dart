@@ -5,3 +5,5 @@ class InvitationAlreadyAcceptedException implements DomainException {}
 class InvitationExpiredException implements DomainException {}
 
 class InvitationCanceledException implements DomainException {}
+
+class WrongHintValueTypeException implements DomainException {}

@@ -10,7 +10,7 @@ class HintValueConverter extends TypeConverter<HintValue, Object> {
     try {
       fromDb as Map<String, dynamic>;
     } catch (e) {
-      return HintValue(type: HintType.text, data: null);
+      return const HintValue(type: HintType.text, data: null);
     }
 
     // Deserialize JSON string from the database into a Dart `HintValue` object

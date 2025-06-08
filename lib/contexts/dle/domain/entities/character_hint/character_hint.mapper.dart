@@ -30,7 +30,7 @@ class CharacterHintMapper extends ClassMapperBase<CharacterHint> {
   static String _$characterId(CharacterHint v) => v.characterId;
   static const Field<CharacterHint, String> _f$characterId =
       Field('characterId', _$characterId);
-  static HintValue? _$value(CharacterHint v) => v.value;
+  static HintValue _$value(CharacterHint v) => v.value;
   static const Field<CharacterHint, HintValue> _f$value =
       Field('value', _$value);
   static DateTime _$updatedAt(CharacterHint v) => v.updatedAt;
@@ -113,7 +113,7 @@ extension CharacterHintValueCopy<$R, $Out>
 
 abstract class CharacterHintCopyWith<$R, $In extends CharacterHint, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  HintValueCopyWith<$R, HintValue, HintValue>? get value;
+  HintValueCopyWith<$R, HintValue, HintValue> get value;
   $R call(
       {String? id,
       String? hintId,
@@ -133,21 +133,21 @@ class _CharacterHintCopyWithImpl<$R, $Out>
   late final ClassMapperBase<CharacterHint> $mapper =
       CharacterHintMapper.ensureInitialized();
   @override
-  HintValueCopyWith<$R, HintValue, HintValue>? get value =>
-      $value.value?.copyWith.$chain((v) => call(value: v));
+  HintValueCopyWith<$R, HintValue, HintValue> get value =>
+      $value.value.copyWith.$chain((v) => call(value: v));
   @override
   $R call(
           {Object? id = $none,
           String? hintId,
           String? characterId,
-          Object? value = $none,
+          HintValue? value,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (hintId != null) #hintId: hintId,
         if (characterId != null) #characterId: characterId,
-        if (value != $none) #value: value,
+        if (value != null) #value: value,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
       }));

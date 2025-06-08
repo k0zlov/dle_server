@@ -209,4 +209,14 @@ class DleManageRoute extends Route {
       handler: hintsController.remove,
     );
   }
+
+  Endpoint get manageCharacterHint {
+    return Endpoint.post(
+      path: '<id>/hints/<hintId>/character-hints/<characterId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      body: [Field<Object>('value', isRequired: false)],
+      handler: hintsController.manageCharacterHint,
+    );
+  }
 }

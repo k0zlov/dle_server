@@ -30,6 +30,8 @@ mixin _$ManageDleDto {
   List<DleAssetDto> get assets => throw _privateConstructorUsedError;
   List<ManageCharacterDto> get characters => throw _privateConstructorUsedError;
   List<ManageHintDto> get hints => throw _privateConstructorUsedError;
+  List<ManageCharacterHintDto> get characterHints =>
+      throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
   /// Serializes this ManageDleDto to a JSON map.
@@ -59,6 +61,7 @@ abstract class $ManageDleDtoCopyWith<$Res> {
       List<DleAssetDto> assets,
       List<ManageCharacterDto> characters,
       List<ManageHintDto> hints,
+      List<ManageCharacterHintDto> characterHints,
       String? description});
 }
 
@@ -87,6 +90,7 @@ class _$ManageDleDtoCopyWithImpl<$Res, $Val extends ManageDleDto>
     Object? assets = null,
     Object? characters = null,
     Object? hints = null,
+    Object? characterHints = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
@@ -130,6 +134,10 @@ class _$ManageDleDtoCopyWithImpl<$Res, $Val extends ManageDleDto>
           ? _value.hints
           : hints // ignore: cast_nullable_to_non_nullable
               as List<ManageHintDto>,
+      characterHints: null == characterHints
+          ? _value.characterHints
+          : characterHints // ignore: cast_nullable_to_non_nullable
+              as List<ManageCharacterHintDto>,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -157,6 +165,7 @@ abstract class _$$ManageDleDtoImplCopyWith<$Res>
       List<DleAssetDto> assets,
       List<ManageCharacterDto> characters,
       List<ManageHintDto> hints,
+      List<ManageCharacterHintDto> characterHints,
       String? description});
 }
 
@@ -183,6 +192,7 @@ class __$$ManageDleDtoImplCopyWithImpl<$Res>
     Object? assets = null,
     Object? characters = null,
     Object? hints = null,
+    Object? characterHints = null,
     Object? description = freezed,
   }) {
     return _then(_$ManageDleDtoImpl(
@@ -226,6 +236,10 @@ class __$$ManageDleDtoImplCopyWithImpl<$Res>
           ? _value._hints
           : hints // ignore: cast_nullable_to_non_nullable
               as List<ManageHintDto>,
+      characterHints: null == characterHints
+          ? _value._characterHints
+          : characterHints // ignore: cast_nullable_to_non_nullable
+              as List<ManageCharacterHintDto>,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -248,11 +262,13 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
       required final List<DleAssetDto> assets,
       required final List<ManageCharacterDto> characters,
       required final List<ManageHintDto> hints,
+      required final List<ManageCharacterHintDto> characterHints,
       this.description})
       : _editors = editors,
         _assets = assets,
         _characters = characters,
-        _hints = hints;
+        _hints = hints,
+        _characterHints = characterHints;
 
   factory _$ManageDleDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ManageDleDtoImplFromJson(json);
@@ -301,12 +317,20 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
     return EqualUnmodifiableListView(_hints);
   }
 
+  final List<ManageCharacterHintDto> _characterHints;
+  @override
+  List<ManageCharacterHintDto> get characterHints {
+    if (_characterHints is EqualUnmodifiableListView) return _characterHints;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_characterHints);
+  }
+
   @override
   final String? description;
 
   @override
   String toString() {
-    return 'ManageDleDto(id: $id, title: $title, type: $type, isPrivate: $isPrivate, updatedAt: $updatedAt, createdAt: $createdAt, editors: $editors, assets: $assets, characters: $characters, hints: $hints, description: $description)';
+    return 'ManageDleDto(id: $id, title: $title, type: $type, isPrivate: $isPrivate, updatedAt: $updatedAt, createdAt: $createdAt, editors: $editors, assets: $assets, characters: $characters, hints: $hints, characterHints: $characterHints, description: $description)';
   }
 
   @override
@@ -328,6 +352,8 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
             const DeepCollectionEquality()
                 .equals(other._characters, _characters) &&
             const DeepCollectionEquality().equals(other._hints, _hints) &&
+            const DeepCollectionEquality()
+                .equals(other._characterHints, _characterHints) &&
             (identical(other.description, description) ||
                 other.description == description));
   }
@@ -346,6 +372,7 @@ class _$ManageDleDtoImpl implements _ManageDleDto {
       const DeepCollectionEquality().hash(_assets),
       const DeepCollectionEquality().hash(_characters),
       const DeepCollectionEquality().hash(_hints),
+      const DeepCollectionEquality().hash(_characterHints),
       description);
 
   /// Create a copy of ManageDleDto
@@ -376,6 +403,7 @@ abstract class _ManageDleDto implements ManageDleDto {
       required final List<DleAssetDto> assets,
       required final List<ManageCharacterDto> characters,
       required final List<ManageHintDto> hints,
+      required final List<ManageCharacterHintDto> characterHints,
       final String? description}) = _$ManageDleDtoImpl;
 
   factory _ManageDleDto.fromJson(Map<String, dynamic> json) =
@@ -401,6 +429,8 @@ abstract class _ManageDleDto implements ManageDleDto {
   List<ManageCharacterDto> get characters;
   @override
   List<ManageHintDto> get hints;
+  @override
+  List<ManageCharacterHintDto> get characterHints;
   @override
   String? get description;
 

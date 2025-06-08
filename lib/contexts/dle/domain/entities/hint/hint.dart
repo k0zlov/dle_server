@@ -1,10 +1,15 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dle_server/contexts/dle/domain/exceptions/dle_exceptions.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'hint.mapper.dart';
 
 @MappableEnum()
-enum HintType { text }
+enum HintType {
+  text;
+
+  bool get isText => this == text;
+}
 
 @MappableClass()
 class Hint extends Entity with HintMappable {
@@ -38,6 +43,12 @@ class Hint extends Entity with HintMappable {
   final bool isHidden;
   final DateTime updatedAt;
   final DateTime createdAt;
+
+  void checkValue(dynamic value) {
+    if (type.isText && value is String) return;
+
+    throw WrongHintValueTypeException();
+  }
 
   Hint edit({
     String? title,
