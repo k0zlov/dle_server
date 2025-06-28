@@ -4,7 +4,7 @@ import 'package:dle_server/kernel/domain/entities/entity.dart';
 part 'dle_asset.mapper.dart';
 
 @MappableEnum()
-enum DleAssetType { icon }
+enum DleAssetType { preview, character, other }
 
 @MappableClass()
 class DleAsset extends Entity with DleAssetMappable {
@@ -14,6 +14,7 @@ class DleAsset extends Entity with DleAssetMappable {
     required this.dleId,
     required this.uploadId,
     required this.type,
+    this.description = '',
     required this.updatedAt,
     required this.createdAt,
   });
@@ -23,6 +24,7 @@ class DleAsset extends Entity with DleAssetMappable {
     required this.dleId,
     required this.uploadId,
     required this.type,
+    this.description = '',
   }) : updatedAt = DateTime.now(),
        createdAt = DateTime.now();
 
@@ -30,6 +32,7 @@ class DleAsset extends Entity with DleAssetMappable {
   final String uploadId;
   final String userId;
   final DleAssetType type;
+  final String description;
 
   final DateTime updatedAt;
   final DateTime createdAt;

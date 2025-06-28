@@ -14,6 +14,8 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BasicDleMapper._());
       ParameterMapper.ensureInitialized();
+      CharacterParameterMapper.ensureInitialized();
+      SelectableValueMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -34,6 +36,17 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
   static List<Parameter> _$parameters(BasicDle v) => v.parameters;
   static const Field<BasicDle, List<Parameter>> _f$parameters =
       Field('parameters', _$parameters, opt: true, def: const <Parameter>[]);
+  static List<CharacterParameter> _$characterParameters(BasicDle v) =>
+      v.characterParameters;
+  static const Field<BasicDle, List<CharacterParameter>>
+      _f$characterParameters = Field(
+          'characterParameters', _$characterParameters,
+          opt: true, def: const <CharacterParameter>[]);
+  static List<SelectableValue> _$selectableValues(BasicDle v) =>
+      v.selectableValues;
+  static const Field<BasicDle, List<SelectableValue>> _f$selectableValues =
+      Field('selectableValues', _$selectableValues,
+          opt: true, def: const <SelectableValue>[]);
 
   @override
   final MappableFields<BasicDle> fields = const {
@@ -42,6 +55,8 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
     #parameters: _f$parameters,
+    #characterParameters: _f$characterParameters,
+    #selectableValues: _f$selectableValues,
   };
 
   static BasicDle _instantiate(DecodingData data) {
@@ -50,7 +65,9 @@ class BasicDleMapper extends ClassMapperBase<BasicDle> {
         dleId: data.dec(_f$dleId),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt),
-        parameters: data.dec(_f$parameters));
+        parameters: data.dec(_f$parameters),
+        characterParameters: data.dec(_f$characterParameters),
+        selectableValues: data.dec(_f$selectableValues));
   }
 
   @override
@@ -104,12 +121,22 @@ abstract class BasicDleCopyWith<$R, $In extends BasicDle, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, Parameter, ParameterCopyWith<$R, Parameter, Parameter>>
       get parameters;
+  ListCopyWith<
+      $R,
+      CharacterParameter,
+      CharacterParameterCopyWith<$R, CharacterParameter,
+          CharacterParameter>> get characterParameters;
+  ListCopyWith<$R, SelectableValue,
+          SelectableValueCopyWith<$R, SelectableValue, SelectableValue>>
+      get selectableValues;
   $R call(
       {String? id,
       String? dleId,
       DateTime? updatedAt,
       DateTime? createdAt,
-      List<Parameter>? parameters});
+      List<Parameter>? parameters,
+      List<CharacterParameter>? characterParameters,
+      List<SelectableValue>? selectableValues});
   BasicDleCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -126,18 +153,37 @@ class _BasicDleCopyWithImpl<$R, $Out>
       get parameters => ListCopyWith($value.parameters,
           (v, t) => v.copyWith.$chain(t), (v) => call(parameters: v));
   @override
+  ListCopyWith<
+      $R,
+      CharacterParameter,
+      CharacterParameterCopyWith<$R, CharacterParameter,
+          CharacterParameter>> get characterParameters => ListCopyWith(
+      $value.characterParameters,
+      (v, t) => v.copyWith.$chain(t),
+      (v) => call(characterParameters: v));
+  @override
+  ListCopyWith<$R, SelectableValue,
+          SelectableValueCopyWith<$R, SelectableValue, SelectableValue>>
+      get selectableValues => ListCopyWith($value.selectableValues,
+          (v, t) => v.copyWith.$chain(t), (v) => call(selectableValues: v));
+  @override
   $R call(
           {Object? id = $none,
           String? dleId,
           DateTime? updatedAt,
           DateTime? createdAt,
-          List<Parameter>? parameters}) =>
+          List<Parameter>? parameters,
+          List<CharacterParameter>? characterParameters,
+          List<SelectableValue>? selectableValues}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (dleId != null) #dleId: dleId,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt,
-        if (parameters != null) #parameters: parameters
+        if (parameters != null) #parameters: parameters,
+        if (characterParameters != null)
+          #characterParameters: characterParameters,
+        if (selectableValues != null) #selectableValues: selectableValues
       }));
   @override
   BasicDle $make(CopyWithData data) => BasicDle(
@@ -145,7 +191,11 @@ class _BasicDleCopyWithImpl<$R, $Out>
       dleId: data.get(#dleId, or: $value.dleId),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt),
-      parameters: data.get(#parameters, or: $value.parameters));
+      parameters: data.get(#parameters, or: $value.parameters),
+      characterParameters:
+          data.get(#characterParameters, or: $value.characterParameters),
+      selectableValues:
+          data.get(#selectableValues, or: $value.selectableValues));
 
   @override
   BasicDleCopyWith<$R2, BasicDle, $Out2> $chain<$R2, $Out2>(

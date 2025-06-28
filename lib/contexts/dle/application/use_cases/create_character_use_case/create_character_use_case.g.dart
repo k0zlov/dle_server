@@ -17,10 +17,7 @@ _$CreateCharacterParamsImpl _$$CreateCharacterParamsImplFromJson(
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      imageBytes: (json['imageBytes'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList(),
-      mimeType: json['mimeType'] as String?,
+      assetId: json['assetId'] as String?,
     );
 
 Map<String, dynamic> _$$CreateCharacterParamsImplToJson(
@@ -31,6 +28,5 @@ Map<String, dynamic> _$$CreateCharacterParamsImplToJson(
       'name': instance.name,
       'isHidden': instance.isHidden,
       'aliases': instance.aliases,
-      'imageBytes': instance.imageBytes,
-      'mimeType': instance.mimeType,
+      'assetId': instance.assetId,
     };

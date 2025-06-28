@@ -10,7 +10,7 @@ class Character extends Entity with CharacterMappable {
     required this.dleId,
     required this.name,
     required this.aliases,
-    required this.imageId,
+    required this.assetId,
     required this.isHidden,
     required this.updatedAt,
     required this.createdAt,
@@ -21,14 +21,14 @@ class Character extends Entity with CharacterMappable {
     required this.dleId,
     this.aliases = const <String>[],
     this.isHidden = false,
-    this.imageId,
+    this.assetId,
   }) : updatedAt = DateTime.now(),
        createdAt = DateTime.now();
 
   final String dleId;
   final String name;
   final List<String> aliases;
-  final String? imageId;
+  final String? assetId;
   final bool isHidden;
 
   final DateTime updatedAt;
@@ -40,7 +40,7 @@ class Character extends Entity with CharacterMappable {
       dleId: dleId,
       name: name,
       aliases: aliases,
-      imageId: null,
+      assetId: null,
       isHidden: isHidden,
       updatedAt: DateTime.now(),
       createdAt: createdAt,
@@ -48,14 +48,14 @@ class Character extends Entity with CharacterMappable {
   }
 
   Character edit({
-    String? imageId,
+    String? assetId,
     String? name,
     List<String>? aliases,
     bool? isHidden,
   }) {
     return copyWith(
       name: name,
-      imageId: imageId,
+      assetId: assetId,
       aliases: aliases,
       isHidden: isHidden,
       updatedAt: DateTime.now(),

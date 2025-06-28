@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:dle_server/contexts/dle/application/exceptions/dle_exceptions.dart';
+import 'package:dle_server/contexts/dle/application/ports/basic_dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
+import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle_created.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -32,10 +34,12 @@ class CreateDleParams with _$CreateDleParams {
 class CreateDleUseCase implements UseCase<Dle, CreateDleParams> {
   const CreateDleUseCase({
     required this.repository,
+    required this.basicDleRepository,
     @dleContext required this.eventBus,
   });
 
   final DleRepositoryPort repository;
+  final BasicDleRepositoryPort basicDleRepository;
   final DomainEventBus eventBus;
 
   @override
@@ -75,7 +79,18 @@ class CreateDleUseCase implements UseCase<Dle, CreateDleParams> {
     dle = dle.addEditor(editor);
 
     await repository.save(dle);
-    eventBus.publish(DleUpdatedEvent(dle: dle));
+
+    try {
+      if (params.type == DleType.basic) {
+        final BasicDle basicDle = BasicDle.create(dleId: dle.id);
+        await basicDleRepository.save(basicDle);
+      }
+    } catch (e) {
+      await repository.delete(dle.id);
+      rethrow;
+    }
+
+    eventBus.publish(DleCreatedEvent(dle: dle));
     return dle;
   }
 }

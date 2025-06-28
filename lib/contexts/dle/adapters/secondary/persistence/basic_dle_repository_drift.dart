@@ -1,5 +1,6 @@
 import 'package:dle_server/contexts/dle/application/ports/basic_dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
+import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/basic_dle_extension.dart';
@@ -8,6 +9,7 @@ import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/se
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/extensions/table_extension.dart';
 import 'package:injectable/injectable.dart';
+import 'package:uuid/uuid.dart';
 
 @LazySingleton(as: BasicDleRepositoryPort)
 class BasicDleRepositoryDrift implements BasicDleRepositoryPort {
@@ -22,32 +24,12 @@ class BasicDleRepositoryDrift implements BasicDleRepositoryPort {
         BasicDleMapperExtension.fromEntity(basicDle),
       );
 
-      final List<SelectableValue> selectables = [];
-      final Set<String> parameterIds =
-          basicDle.parameters.map((e) => e.id).toSet();
-
-      for (final Parameter parameter in basicDle.parameters) {
-        selectables.addAll(parameter.selectableValues);
-      }
-
-      await db.selectableValues.deleteWhere(
-        (tbl) =>
-            tbl.id.isNotIn(selectables.map((e) => UuidValue.fromString(e.id))) &
-            tbl.parameterId.isNotIn(parameterIds.map(UuidValue.fromString)),
-      );
-
-      if (selectables.isNotEmpty) {
-        await db.batch((batch) {
-          batch.insertAllOnConflictUpdate(
-            db.selectableValues,
-            selectables.map(SelectableValueMapperExtension.fromEntity),
-          );
-        });
-      }
+      final Set<UuidValue> parameterIds =
+          basicDle.parameters.map((e) => UuidValue.fromString(e.id)).toSet();
 
       await db.parameters.deleteWhere(
         (tbl) =>
-            tbl.id.isNotIn(parameterIds.map(UuidValue.fromString)) &
+            tbl.id.isNotIn(parameterIds) &
             tbl.basicDleId.equals(UuidValue.fromString(basicDle.id)),
       );
 
@@ -57,38 +39,74 @@ class BasicDleRepositoryDrift implements BasicDleRepositoryPort {
           basicDle.parameters.map(ParameterMapperExtension.fromEntity),
         );
       });
+
+      final Set<UuidValue> selectableIds =
+          basicDle.selectableValues
+              .map((e) => UuidValue.fromString(e.id))
+              .toSet();
+
+      await db.selectableValues.deleteWhere(
+        (tbl) =>
+            tbl.id.isNotIn(selectableIds) & tbl.parameterId.isIn(parameterIds),
+      );
+
+      await db.batch((batch) {
+        batch.insertAllOnConflictUpdate(
+          db.selectableValues,
+          basicDle.selectableValues.map(
+            SelectableValueMapperExtension.fromEntity,
+          ),
+        );
+      });
+
+      final Set<String> characterParamIds =
+          basicDle.characterParameters.map((e) => e.id).toSet();
+
+      await db.characterParameters.deleteWhere(
+        (tbl) =>
+            tbl.id.isNotIn(characterParamIds.map(UuidValue.fromString)) &
+            tbl.parameterId.isIn(parameterIds),
+      );
     });
   }
 
   @override
-  Future<BasicDle?> find(String basicDleId) async {
-    final BasicDle? basicDle = await db.basicDles.getOrNull(
-      (tbl) => tbl.id.equals(UuidValue.fromString(basicDleId)),
+  Future<BasicDle?> find({String? basicDleId, String? dleId}) async {
+    assert(
+      basicDleId != null || dleId != null,
+      'Either basicDleId or dleId must be provided.',
     );
+
+    final BasicDle? basicDle = await db.basicDles.getOrNull((tbl) {
+      if (basicDleId != null) {
+        return tbl.id.equals(UuidValue.fromString(basicDleId));
+      } else {
+        return tbl.dleId.equals(UuidValue.fromString(dleId!));
+      }
+    });
 
     if (basicDle == null) return null;
 
     final List<Parameter> parameters = await db.parameters.getWhere(
-      (tbl) => tbl.basicDleId.equals(UuidValue.fromString(basicDleId)),
+      (tbl) => tbl.basicDleId.equals(UuidValue.fromString(basicDle.id)),
     );
 
     if (parameters.isEmpty) return basicDle;
 
-    final Set<String> parameterIds = parameters.map((e) => e.id).toSet();
+    final Set<UuidValue> parameterIds =
+        parameters.map((e) => UuidValue.fromString(e.id)).toSet();
 
     final List<SelectableValue> selectables = await db.selectableValues
-        .getWhere(
-          (tbl) => tbl.parameterId.isIn(parameterIds.map(UuidValue.fromString)),
-        );
+        .getWhere((tbl) => tbl.parameterId.isIn(parameterIds));
 
-    final List<Parameter> parametersWithSelectables =
-        parameters.map((e) {
-          return e.copyWith(
-            selectableValues:
-                selectables.where((s) => s.parameterId == e.id).toList(),
-          );
-        }).toList();
+    final List<CharacterParameter> characterParams = await db
+        .characterParameters
+        .getWhere((tbl) => tbl.parameterId.isIn(parameterIds));
 
-    return basicDle.copyWith(parameters: parametersWithSelectables);
+    return basicDle.copyWith(
+      parameters: parameters,
+      selectableValues: selectables,
+      characterParameters: characterParams,
+    );
   }
 }

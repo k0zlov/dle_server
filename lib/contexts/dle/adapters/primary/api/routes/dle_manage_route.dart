@@ -143,6 +143,12 @@ class DleManageRoute extends Route {
       path: '<id>/characters',
       authRequired: true,
       middlewares: [authMiddleware],
+      body: [
+        Field<String>('name'),
+        Field<String>('assetId', isRequired: false),
+        Field<List<dynamic>>('aliases', isRequired: false),
+        Field<bool>('isHidden', isRequired: false),
+      ],
       handler: charactersController.create,
     );
   }
@@ -152,6 +158,12 @@ class DleManageRoute extends Route {
       path: '<id>/characters/<characterId>',
       authRequired: true,
       middlewares: [authMiddleware],
+      body: [
+        Field<String>('name', isRequired: false),
+        Field<String>('assetId', isRequired: false),
+        Field<List<dynamic>>('aliases', isRequired: false),
+        Field<bool>('isHidden', isRequired: false),
+      ],
       handler: charactersController.edit,
     );
   }

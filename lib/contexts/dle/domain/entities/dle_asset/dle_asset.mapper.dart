@@ -25,8 +25,12 @@ class DleAssetTypeMapper extends EnumMapper<DleAssetType> {
   @override
   DleAssetType decode(dynamic value) {
     switch (value) {
-      case 'icon':
-        return DleAssetType.icon;
+      case 'preview':
+        return DleAssetType.preview;
+      case 'character':
+        return DleAssetType.character;
+      case 'other':
+        return DleAssetType.other;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -35,8 +39,12 @@ class DleAssetTypeMapper extends EnumMapper<DleAssetType> {
   @override
   dynamic encode(DleAssetType self) {
     switch (self) {
-      case DleAssetType.icon:
-        return 'icon';
+      case DleAssetType.preview:
+        return 'preview';
+      case DleAssetType.character:
+        return 'character';
+      case DleAssetType.other:
+        return 'other';
     }
   }
 }
@@ -74,6 +82,9 @@ class DleAssetMapper extends ClassMapperBase<DleAsset> {
       Field('uploadId', _$uploadId);
   static DleAssetType _$type(DleAsset v) => v.type;
   static const Field<DleAsset, DleAssetType> _f$type = Field('type', _$type);
+  static String _$description(DleAsset v) => v.description;
+  static const Field<DleAsset, String> _f$description =
+      Field('description', _$description, opt: true, def: '');
   static DateTime _$updatedAt(DleAsset v) => v.updatedAt;
   static const Field<DleAsset, DateTime> _f$updatedAt =
       Field('updatedAt', _$updatedAt);
@@ -88,6 +99,7 @@ class DleAssetMapper extends ClassMapperBase<DleAsset> {
     #dleId: _f$dleId,
     #uploadId: _f$uploadId,
     #type: _f$type,
+    #description: _f$description,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
   };
@@ -99,6 +111,7 @@ class DleAssetMapper extends ClassMapperBase<DleAsset> {
         dleId: data.dec(_f$dleId),
         uploadId: data.dec(_f$uploadId),
         type: data.dec(_f$type),
+        description: data.dec(_f$description),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt));
   }
@@ -158,6 +171,7 @@ abstract class DleAssetCopyWith<$R, $In extends DleAsset, $Out>
       String? dleId,
       String? uploadId,
       DleAssetType? type,
+      String? description,
       DateTime? updatedAt,
       DateTime? createdAt});
   DleAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -178,6 +192,7 @@ class _DleAssetCopyWithImpl<$R, $Out>
           String? dleId,
           String? uploadId,
           DleAssetType? type,
+          String? description,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
@@ -186,6 +201,7 @@ class _DleAssetCopyWithImpl<$R, $Out>
         if (dleId != null) #dleId: dleId,
         if (uploadId != null) #uploadId: uploadId,
         if (type != null) #type: type,
+        if (description != null) #description: description,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
       }));
@@ -196,6 +212,7 @@ class _DleAssetCopyWithImpl<$R, $Out>
       dleId: data.get(#dleId, or: $value.dleId),
       uploadId: data.get(#uploadId, or: $value.uploadId),
       type: data.get(#type, or: $value.type),
+      description: data.get(#description, or: $value.description),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt));
 

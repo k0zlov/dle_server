@@ -16,11 +16,8 @@ _$EditCharacterParamsImpl _$$EditCharacterParamsImplFromJson(
       isHidden: json['isHidden'] as bool?,
       aliases:
           (json['aliases'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      imageBytes: (json['imageBytes'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList(),
-      mimeType: json['mimeType'] as String?,
-      deleteImage: json['deleteImage'] as bool?,
+      assetId: json['assetId'] as String?,
+      deleteImage: json['deleteImage'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$EditCharacterParamsImplToJson(
@@ -32,7 +29,6 @@ Map<String, dynamic> _$$EditCharacterParamsImplToJson(
       'name': instance.name,
       'isHidden': instance.isHidden,
       'aliases': instance.aliases,
-      'imageBytes': instance.imageBytes,
-      'mimeType': instance.mimeType,
+      'assetId': instance.assetId,
       'deleteImage': instance.deleteImage,
     };

@@ -9,7 +9,7 @@ extension CharacterMapperExtension on CharactersCompanion {
       dleId: Value(c.dleId),
       isHidden: Value(c.isHidden),
       aliases: Value(c.aliases),
-      imageId: Value(c.imageId),
+      assetId: Value(c.assetId),
       updatedAt: Value(c.updatedAt),
       createdAt: Value(c.createdAt),
     );

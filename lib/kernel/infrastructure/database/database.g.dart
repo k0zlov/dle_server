@@ -1754,501 +1754,6 @@ class DlesCompanion extends UpdateCompanion<Dle> {
   }
 }
 
-class $CharactersTable extends Characters
-    with TableInfo<$CharactersTable, Character> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $CharactersTable(this.attachedDatabase, [this._alias]);
-  @override
-  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
-      GeneratedColumn<UuidValue>('id', aliasedName, false,
-              type: PgTypes.uuid,
-              requiredDuringInsert: false,
-              defaultValue: genRandomUuid())
-          .withConverter<String>($CharactersTable.$converterid);
-  @override
-  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
-      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
-              type: PgTypes.uuid,
-              requiredDuringInsert: true,
-              defaultConstraints: GeneratedColumn.constraintIsAlways(
-                  'REFERENCES dles (id) ON DELETE CASCADE'))
-          .withConverter<String>($CharactersTable.$converterdleId);
-  @override
-  late final GeneratedColumnWithTypeConverter<String?, UuidValue> imageId =
-      GeneratedColumn<UuidValue>('image_id', aliasedName, true,
-              type: PgTypes.uuid,
-              requiredDuringInsert: false,
-              defaultConstraints: GeneratedColumn.constraintIsAlways(
-                  'REFERENCES uploads (id) ON DELETE SET NULL'))
-          .withConverter<String?>($CharactersTable.$converterimageIdn);
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _isHiddenMeta =
-      const VerificationMeta('isHidden');
-  @override
-  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
-      'is_hidden', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(false));
-  @override
-  late final GeneratedColumnWithTypeConverter<List<String>, String> aliases =
-      GeneratedColumn<String>('aliases', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<List<String>>($CharactersTable.$converteraliases);
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
-      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
-              type: dialectAwareTimestamp,
-              requiredDuringInsert: false,
-              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
-          .withConverter<DateTime>($CharactersTable.$converterupdatedAt);
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
-      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
-              type: dialectAwareTimestamp,
-              requiredDuringInsert: false,
-              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
-          .withConverter<DateTime>($CharactersTable.$convertercreatedAt);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, dleId, imageId, name, isHidden, aliases, updatedAt, createdAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'characters';
-  @override
-  VerificationContext validateIntegrity(Insertable<Character> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('is_hidden')) {
-      context.handle(_isHiddenMeta,
-          isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Character map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Character(
-      id: $CharactersTable.$converterid.fromSql(attachedDatabase.typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
-      dleId: $CharactersTable.$converterdleId.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      aliases: $CharactersTable.$converteraliases.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}aliases'])!),
-      imageId: $CharactersTable.$converterimageIdn.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}image_id'])),
-      isHidden: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_hidden'])!,
-      updatedAt: $CharactersTable.$converterupdatedAt.fromSql(attachedDatabase
-          .typeMapping
-          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
-      createdAt: $CharactersTable.$convertercreatedAt.fromSql(attachedDatabase
-          .typeMapping
-          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
-    );
-  }
-
-  @override
-  $CharactersTable createAlias(String alias) {
-    return $CharactersTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<String, UuidValue> $converterid =
-      const UuidValueToStringConverter();
-  static TypeConverter<String, UuidValue> $converterdleId =
-      const UuidValueToStringConverter();
-  static TypeConverter<String, UuidValue> $converterimageId =
-      const UuidValueToStringConverter();
-  static TypeConverter<String?, UuidValue?> $converterimageIdn =
-      NullAwareTypeConverter.wrap($converterimageId);
-  static TypeConverter<List<String>, String> $converteraliases =
-      const StringListConverter();
-  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
-      const PgDateTimeConverter();
-  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
-      const PgDateTimeConverter();
-}
-
-class CharactersCompanion extends UpdateCompanion<Character> {
-  final Value<String> id;
-  final Value<String> dleId;
-  final Value<String?> imageId;
-  final Value<String> name;
-  final Value<bool> isHidden;
-  final Value<List<String>> aliases;
-  final Value<DateTime> updatedAt;
-  final Value<DateTime> createdAt;
-  final Value<int> rowid;
-  const CharactersCompanion({
-    this.id = const Value.absent(),
-    this.dleId = const Value.absent(),
-    this.imageId = const Value.absent(),
-    this.name = const Value.absent(),
-    this.isHidden = const Value.absent(),
-    this.aliases = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  CharactersCompanion.insert({
-    this.id = const Value.absent(),
-    required String dleId,
-    this.imageId = const Value.absent(),
-    required String name,
-    this.isHidden = const Value.absent(),
-    required List<String> aliases,
-    this.updatedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  })  : dleId = Value(dleId),
-        name = Value(name),
-        aliases = Value(aliases);
-  static Insertable<Character> custom({
-    Expression<UuidValue>? id,
-    Expression<UuidValue>? dleId,
-    Expression<UuidValue>? imageId,
-    Expression<String>? name,
-    Expression<bool>? isHidden,
-    Expression<String>? aliases,
-    Expression<PgDateTime>? updatedAt,
-    Expression<PgDateTime>? createdAt,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (dleId != null) 'dle_id': dleId,
-      if (imageId != null) 'image_id': imageId,
-      if (name != null) 'name': name,
-      if (isHidden != null) 'is_hidden': isHidden,
-      if (aliases != null) 'aliases': aliases,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (createdAt != null) 'created_at': createdAt,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  CharactersCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? dleId,
-      Value<String?>? imageId,
-      Value<String>? name,
-      Value<bool>? isHidden,
-      Value<List<String>>? aliases,
-      Value<DateTime>? updatedAt,
-      Value<DateTime>? createdAt,
-      Value<int>? rowid}) {
-    return CharactersCompanion(
-      id: id ?? this.id,
-      dleId: dleId ?? this.dleId,
-      imageId: imageId ?? this.imageId,
-      name: name ?? this.name,
-      isHidden: isHidden ?? this.isHidden,
-      aliases: aliases ?? this.aliases,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt ?? this.createdAt,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<UuidValue>(
-          $CharactersTable.$converterid.toSql(id.value), PgTypes.uuid);
-    }
-    if (dleId.present) {
-      map['dle_id'] = Variable<UuidValue>(
-          $CharactersTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
-    }
-    if (imageId.present) {
-      map['image_id'] = Variable<UuidValue>(
-          $CharactersTable.$converterimageIdn.toSql(imageId.value),
-          PgTypes.uuid);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (isHidden.present) {
-      map['is_hidden'] = Variable<bool>(isHidden.value);
-    }
-    if (aliases.present) {
-      map['aliases'] = Variable<String>(
-          $CharactersTable.$converteraliases.toSql(aliases.value));
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<PgDateTime>(
-          $CharactersTable.$converterupdatedAt.toSql(updatedAt.value),
-          dialectAwareTimestamp);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<PgDateTime>(
-          $CharactersTable.$convertercreatedAt.toSql(createdAt.value),
-          dialectAwareTimestamp);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('CharactersCompanion(')
-          ..write('id: $id, ')
-          ..write('dleId: $dleId, ')
-          ..write('imageId: $imageId, ')
-          ..write('name: $name, ')
-          ..write('isHidden: $isHidden, ')
-          ..write('aliases: $aliases, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $DleEditorsTable extends DleEditors
-    with TableInfo<$DleEditorsTable, DleEditor> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $DleEditorsTable(this.attachedDatabase, [this._alias]);
-  @override
-  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
-      GeneratedColumn<UuidValue>('id', aliasedName, false,
-              type: PgTypes.uuid,
-              requiredDuringInsert: false,
-              defaultValue: genRandomUuid())
-          .withConverter<String>($DleEditorsTable.$converterid);
-  @override
-  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
-      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
-              type: PgTypes.uuid,
-              requiredDuringInsert: true,
-              defaultConstraints: GeneratedColumn.constraintIsAlways(
-                  'REFERENCES dles (id) ON DELETE CASCADE'))
-          .withConverter<String>($DleEditorsTable.$converterdleId);
-  @override
-  late final GeneratedColumnWithTypeConverter<String, UuidValue> userId =
-      GeneratedColumn<UuidValue>('user_id', aliasedName, false,
-              type: PgTypes.uuid,
-              requiredDuringInsert: true,
-              defaultConstraints: GeneratedColumn.constraintIsAlways(
-                  'REFERENCES users (id) ON DELETE CASCADE'))
-          .withConverter<String>($DleEditorsTable.$converteruserId);
-  @override
-  late final GeneratedColumnWithTypeConverter<DleEditorRole, String> role =
-      GeneratedColumn<String>('role', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<DleEditorRole>($DleEditorsTable.$converterrole);
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
-      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
-              type: dialectAwareTimestamp,
-              requiredDuringInsert: false,
-              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
-          .withConverter<DateTime>($DleEditorsTable.$converterupdatedAt);
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
-      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
-              type: dialectAwareTimestamp,
-              requiredDuringInsert: false,
-              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
-          .withConverter<DateTime>($DleEditorsTable.$convertercreatedAt);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, dleId, userId, role, updatedAt, createdAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'dle_editors';
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  DleEditor map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DleEditor(
-      id: $DleEditorsTable.$converterid.fromSql(attachedDatabase.typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
-      userId: $DleEditorsTable.$converteruserId.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}user_id'])!),
-      dleId: $DleEditorsTable.$converterdleId.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
-      role: $DleEditorsTable.$converterrole.fromSql(attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}role'])!),
-      updatedAt: $DleEditorsTable.$converterupdatedAt.fromSql(attachedDatabase
-          .typeMapping
-          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
-      createdAt: $DleEditorsTable.$convertercreatedAt.fromSql(attachedDatabase
-          .typeMapping
-          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
-    );
-  }
-
-  @override
-  $DleEditorsTable createAlias(String alias) {
-    return $DleEditorsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<String, UuidValue> $converterid =
-      const UuidValueToStringConverter();
-  static TypeConverter<String, UuidValue> $converterdleId =
-      const UuidValueToStringConverter();
-  static TypeConverter<String, UuidValue> $converteruserId =
-      const UuidValueToStringConverter();
-  static JsonTypeConverter2<DleEditorRole, String, String> $converterrole =
-      const EnumNameConverter<DleEditorRole>(DleEditorRole.values);
-  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
-      const PgDateTimeConverter();
-  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
-      const PgDateTimeConverter();
-}
-
-class DleEditorsCompanion extends UpdateCompanion<DleEditor> {
-  final Value<String> id;
-  final Value<String> dleId;
-  final Value<String> userId;
-  final Value<DleEditorRole> role;
-  final Value<DateTime> updatedAt;
-  final Value<DateTime> createdAt;
-  final Value<int> rowid;
-  const DleEditorsCompanion({
-    this.id = const Value.absent(),
-    this.dleId = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.role = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  DleEditorsCompanion.insert({
-    this.id = const Value.absent(),
-    required String dleId,
-    required String userId,
-    required DleEditorRole role,
-    this.updatedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  })  : dleId = Value(dleId),
-        userId = Value(userId),
-        role = Value(role);
-  static Insertable<DleEditor> custom({
-    Expression<UuidValue>? id,
-    Expression<UuidValue>? dleId,
-    Expression<UuidValue>? userId,
-    Expression<String>? role,
-    Expression<PgDateTime>? updatedAt,
-    Expression<PgDateTime>? createdAt,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (dleId != null) 'dle_id': dleId,
-      if (userId != null) 'user_id': userId,
-      if (role != null) 'role': role,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (createdAt != null) 'created_at': createdAt,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  DleEditorsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? dleId,
-      Value<String>? userId,
-      Value<DleEditorRole>? role,
-      Value<DateTime>? updatedAt,
-      Value<DateTime>? createdAt,
-      Value<int>? rowid}) {
-    return DleEditorsCompanion(
-      id: id ?? this.id,
-      dleId: dleId ?? this.dleId,
-      userId: userId ?? this.userId,
-      role: role ?? this.role,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt ?? this.createdAt,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<UuidValue>(
-          $DleEditorsTable.$converterid.toSql(id.value), PgTypes.uuid);
-    }
-    if (dleId.present) {
-      map['dle_id'] = Variable<UuidValue>(
-          $DleEditorsTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<UuidValue>(
-          $DleEditorsTable.$converteruserId.toSql(userId.value), PgTypes.uuid);
-    }
-    if (role.present) {
-      map['role'] =
-          Variable<String>($DleEditorsTable.$converterrole.toSql(role.value));
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<PgDateTime>(
-          $DleEditorsTable.$converterupdatedAt.toSql(updatedAt.value),
-          dialectAwareTimestamp);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<PgDateTime>(
-          $DleEditorsTable.$convertercreatedAt.toSql(createdAt.value),
-          dialectAwareTimestamp);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('DleEditorsCompanion(')
-          ..write('id: $id, ')
-          ..write('dleId: $dleId, ')
-          ..write('userId: $userId, ')
-          ..write('role: $role, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $DleAssetsTable extends DleAssets
     with TableInfo<$DleAssetsTable, DleAsset> {
   @override
@@ -2485,6 +1990,501 @@ class DleAssetsCompanion extends UpdateCompanion<DleAsset> {
           ..write('userId: $userId, ')
           ..write('uploadId: $uploadId, ')
           ..write('type: $type, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CharactersTable extends Characters
+    with TableInfo<$CharactersTable, Character> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CharactersTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($CharactersTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
+      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($CharactersTable.$converterdleId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, UuidValue> assetId =
+      GeneratedColumn<UuidValue>('asset_id', aliasedName, true,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dle_assets (id) ON DELETE SET NULL'))
+          .withConverter<String?>($CharactersTable.$converterassetIdn);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isHiddenMeta =
+      const VerificationMeta('isHidden');
+  @override
+  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
+      'is_hidden', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(false));
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String> aliases =
+      GeneratedColumn<String>('aliases', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($CharactersTable.$converteraliases);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharactersTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($CharactersTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, dleId, assetId, name, isHidden, aliases, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'characters';
+  @override
+  VerificationContext validateIntegrity(Insertable<Character> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('is_hidden')) {
+      context.handle(_isHiddenMeta,
+          isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Character map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Character(
+      id: $CharactersTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      dleId: $CharactersTable.$converterdleId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      aliases: $CharactersTable.$converteraliases.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}aliases'])!),
+      assetId: $CharactersTable.$converterassetIdn.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}asset_id'])),
+      isHidden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_hidden'])!,
+      updatedAt: $CharactersTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $CharactersTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $CharactersTable createAlias(String alias) {
+    return $CharactersTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterdleId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterassetId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String?, UuidValue?> $converterassetIdn =
+      NullAwareTypeConverter.wrap($converterassetId);
+  static TypeConverter<List<String>, String> $converteraliases =
+      const StringListConverter();
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class CharactersCompanion extends UpdateCompanion<Character> {
+  final Value<String> id;
+  final Value<String> dleId;
+  final Value<String?> assetId;
+  final Value<String> name;
+  final Value<bool> isHidden;
+  final Value<List<String>> aliases;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CharactersCompanion({
+    this.id = const Value.absent(),
+    this.dleId = const Value.absent(),
+    this.assetId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.isHidden = const Value.absent(),
+    this.aliases = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CharactersCompanion.insert({
+    this.id = const Value.absent(),
+    required String dleId,
+    this.assetId = const Value.absent(),
+    required String name,
+    this.isHidden = const Value.absent(),
+    required List<String> aliases,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : dleId = Value(dleId),
+        name = Value(name),
+        aliases = Value(aliases);
+  static Insertable<Character> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? dleId,
+    Expression<UuidValue>? assetId,
+    Expression<String>? name,
+    Expression<bool>? isHidden,
+    Expression<String>? aliases,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dleId != null) 'dle_id': dleId,
+      if (assetId != null) 'asset_id': assetId,
+      if (name != null) 'name': name,
+      if (isHidden != null) 'is_hidden': isHidden,
+      if (aliases != null) 'aliases': aliases,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CharactersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? dleId,
+      Value<String?>? assetId,
+      Value<String>? name,
+      Value<bool>? isHidden,
+      Value<List<String>>? aliases,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return CharactersCompanion(
+      id: id ?? this.id,
+      dleId: dleId ?? this.dleId,
+      assetId: assetId ?? this.assetId,
+      name: name ?? this.name,
+      isHidden: isHidden ?? this.isHidden,
+      aliases: aliases ?? this.aliases,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $CharactersTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (dleId.present) {
+      map['dle_id'] = Variable<UuidValue>(
+          $CharactersTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
+    }
+    if (assetId.present) {
+      map['asset_id'] = Variable<UuidValue>(
+          $CharactersTable.$converterassetIdn.toSql(assetId.value),
+          PgTypes.uuid);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (isHidden.present) {
+      map['is_hidden'] = Variable<bool>(isHidden.value);
+    }
+    if (aliases.present) {
+      map['aliases'] = Variable<String>(
+          $CharactersTable.$converteraliases.toSql(aliases.value));
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $CharactersTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $CharactersTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CharactersCompanion(')
+          ..write('id: $id, ')
+          ..write('dleId: $dleId, ')
+          ..write('assetId: $assetId, ')
+          ..write('name: $name, ')
+          ..write('isHidden: $isHidden, ')
+          ..write('aliases: $aliases, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DleEditorsTable extends DleEditors
+    with TableInfo<$DleEditorsTable, DleEditor> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DleEditorsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> id =
+      GeneratedColumn<UuidValue>('id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: false,
+              defaultValue: genRandomUuid())
+          .withConverter<String>($DleEditorsTable.$converterid);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> dleId =
+      GeneratedColumn<UuidValue>('dle_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES dles (id) ON DELETE CASCADE'))
+          .withConverter<String>($DleEditorsTable.$converterdleId);
+  @override
+  late final GeneratedColumnWithTypeConverter<String, UuidValue> userId =
+      GeneratedColumn<UuidValue>('user_id', aliasedName, false,
+              type: PgTypes.uuid,
+              requiredDuringInsert: true,
+              defaultConstraints: GeneratedColumn.constraintIsAlways(
+                  'REFERENCES users (id) ON DELETE CASCADE'))
+          .withConverter<String>($DleEditorsTable.$converteruserId);
+  @override
+  late final GeneratedColumnWithTypeConverter<DleEditorRole, String> role =
+      GeneratedColumn<String>('role', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<DleEditorRole>($DleEditorsTable.$converterrole);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
+      GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($DleEditorsTable.$converterupdatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> createdAt =
+      GeneratedColumn<PgDateTime>('created_at', aliasedName, false,
+              type: dialectAwareTimestamp,
+              requiredDuringInsert: false,
+              defaultValue: const CustomExpression('CURRENT_TIMESTAMP'))
+          .withConverter<DateTime>($DleEditorsTable.$convertercreatedAt);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, dleId, userId, role, updatedAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'dle_editors';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DleEditor map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DleEditor(
+      id: $DleEditorsTable.$converterid.fromSql(attachedDatabase.typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}id'])!),
+      userId: $DleEditorsTable.$converteruserId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}user_id'])!),
+      dleId: $DleEditorsTable.$converterdleId.fromSql(attachedDatabase
+          .typeMapping
+          .read(PgTypes.uuid, data['${effectivePrefix}dle_id'])!),
+      role: $DleEditorsTable.$converterrole.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}role'])!),
+      updatedAt: $DleEditorsTable.$converterupdatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
+      createdAt: $DleEditorsTable.$convertercreatedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(dialectAwareTimestamp, data['${effectivePrefix}created_at'])!),
+    );
+  }
+
+  @override
+  $DleEditorsTable createAlias(String alias) {
+    return $DleEditorsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<String, UuidValue> $converterid =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converterdleId =
+      const UuidValueToStringConverter();
+  static TypeConverter<String, UuidValue> $converteruserId =
+      const UuidValueToStringConverter();
+  static JsonTypeConverter2<DleEditorRole, String, String> $converterrole =
+      const EnumNameConverter<DleEditorRole>(DleEditorRole.values);
+  static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
+      const PgDateTimeConverter();
+  static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
+      const PgDateTimeConverter();
+}
+
+class DleEditorsCompanion extends UpdateCompanion<DleEditor> {
+  final Value<String> id;
+  final Value<String> dleId;
+  final Value<String> userId;
+  final Value<DleEditorRole> role;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const DleEditorsCompanion({
+    this.id = const Value.absent(),
+    this.dleId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.role = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DleEditorsCompanion.insert({
+    this.id = const Value.absent(),
+    required String dleId,
+    required String userId,
+    required DleEditorRole role,
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : dleId = Value(dleId),
+        userId = Value(userId),
+        role = Value(role);
+  static Insertable<DleEditor> custom({
+    Expression<UuidValue>? id,
+    Expression<UuidValue>? dleId,
+    Expression<UuidValue>? userId,
+    Expression<String>? role,
+    Expression<PgDateTime>? updatedAt,
+    Expression<PgDateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dleId != null) 'dle_id': dleId,
+      if (userId != null) 'user_id': userId,
+      if (role != null) 'role': role,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DleEditorsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? dleId,
+      Value<String>? userId,
+      Value<DleEditorRole>? role,
+      Value<DateTime>? updatedAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return DleEditorsCompanion(
+      id: id ?? this.id,
+      dleId: dleId ?? this.dleId,
+      userId: userId ?? this.userId,
+      role: role ?? this.role,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<UuidValue>(
+          $DleEditorsTable.$converterid.toSql(id.value), PgTypes.uuid);
+    }
+    if (dleId.present) {
+      map['dle_id'] = Variable<UuidValue>(
+          $DleEditorsTable.$converterdleId.toSql(dleId.value), PgTypes.uuid);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<UuidValue>(
+          $DleEditorsTable.$converteruserId.toSql(userId.value), PgTypes.uuid);
+    }
+    if (role.present) {
+      map['role'] =
+          Variable<String>($DleEditorsTable.$converterrole.toSql(role.value));
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<PgDateTime>(
+          $DleEditorsTable.$converterupdatedAt.toSql(updatedAt.value),
+          dialectAwareTimestamp);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<PgDateTime>(
+          $DleEditorsTable.$convertercreatedAt.toSql(createdAt.value),
+          dialectAwareTimestamp);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DleEditorsCompanion(')
+          ..write('id: $id, ')
+          ..write('dleId: $dleId, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
@@ -3864,18 +3864,16 @@ class $SelectableValuesTable extends SelectableValues
               defaultConstraints: GeneratedColumn.constraintIsAlways(
                   'REFERENCES parameters (id) ON DELETE CASCADE'))
           .withConverter<String>($SelectableValuesTable.$converterparameterId);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
-  late final GeneratedColumnWithTypeConverter<ParameterValue, Object> value =
-      GeneratedColumn<Object>('value', aliasedName, false,
-              type: PgTypes.jsonb, requiredDuringInsert: true)
-          .withConverter<ParameterValue>(
-              $SelectableValuesTable.$convertervalue);
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   late final GeneratedColumnWithTypeConverter<DateTime, PgDateTime> updatedAt =
       GeneratedColumn<PgDateTime>('updated_at', aliasedName, false,
@@ -3892,7 +3890,7 @@ class $SelectableValuesTable extends SelectableValues
           .withConverter<DateTime>($SelectableValuesTable.$convertercreatedAt);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, parameterId, description, value, updatedAt, createdAt];
+      [id, parameterId, title, value, updatedAt, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3903,13 +3901,17 @@ class $SelectableValuesTable extends SelectableValues
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('description')) {
+    if (data.containsKey('title')) {
       context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
-      context.missing(_descriptionMeta);
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    } else if (isInserting) {
+      context.missing(_valueMeta);
     }
     return context;
   }
@@ -3926,11 +3928,10 @@ class $SelectableValuesTable extends SelectableValues
       parameterId: $SelectableValuesTable.$converterparameterId.fromSql(
           attachedDatabase.typeMapping
               .read(PgTypes.uuid, data['${effectivePrefix}parameter_id'])!),
-      value: $SelectableValuesTable.$convertervalue.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.jsonb, data['${effectivePrefix}value'])!),
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       updatedAt: $SelectableValuesTable.$converterupdatedAt.fromSql(
           attachedDatabase.typeMapping.read(
               dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
@@ -3949,8 +3950,6 @@ class $SelectableValuesTable extends SelectableValues
       const UuidValueToStringConverter();
   static TypeConverter<String, UuidValue> $converterparameterId =
       const UuidValueToStringConverter();
-  static TypeConverter<ParameterValue, Object> $convertervalue =
-      const ParameterValueConverter();
   static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
       const PgDateTimeConverter();
   static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
@@ -3960,15 +3959,15 @@ class $SelectableValuesTable extends SelectableValues
 class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
   final Value<String> id;
   final Value<String> parameterId;
-  final Value<String> description;
-  final Value<ParameterValue> value;
+  final Value<String> title;
+  final Value<String> value;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const SelectableValuesCompanion({
     this.id = const Value.absent(),
     this.parameterId = const Value.absent(),
-    this.description = const Value.absent(),
+    this.title = const Value.absent(),
     this.value = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -3977,19 +3976,19 @@ class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
   SelectableValuesCompanion.insert({
     this.id = const Value.absent(),
     required String parameterId,
-    required String description,
-    required ParameterValue value,
+    required String title,
+    required String value,
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : parameterId = Value(parameterId),
-        description = Value(description),
+        title = Value(title),
         value = Value(value);
   static Insertable<SelectableValue> custom({
     Expression<UuidValue>? id,
     Expression<UuidValue>? parameterId,
-    Expression<String>? description,
-    Expression<Object>? value,
+    Expression<String>? title,
+    Expression<String>? value,
     Expression<PgDateTime>? updatedAt,
     Expression<PgDateTime>? createdAt,
     Expression<int>? rowid,
@@ -3997,7 +3996,7 @@ class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (parameterId != null) 'parameter_id': parameterId,
-      if (description != null) 'description': description,
+      if (title != null) 'title': title,
       if (value != null) 'value': value,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
@@ -4008,15 +4007,15 @@ class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
   SelectableValuesCompanion copyWith(
       {Value<String>? id,
       Value<String>? parameterId,
-      Value<String>? description,
-      Value<ParameterValue>? value,
+      Value<String>? title,
+      Value<String>? value,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
       Value<int>? rowid}) {
     return SelectableValuesCompanion(
       id: id ?? this.id,
       parameterId: parameterId ?? this.parameterId,
-      description: description ?? this.description,
+      title: title ?? this.title,
       value: value ?? this.value,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
@@ -4036,13 +4035,11 @@ class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
           $SelectableValuesTable.$converterparameterId.toSql(parameterId.value),
           PgTypes.uuid);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (value.present) {
-      map['value'] = Variable<Object>(
-          $SelectableValuesTable.$convertervalue.toSql(value.value),
-          PgTypes.jsonb);
+      map['value'] = Variable<String>(value.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<PgDateTime>(
@@ -4065,7 +4062,7 @@ class SelectableValuesCompanion extends UpdateCompanion<SelectableValue> {
     return (StringBuffer('SelectableValuesCompanion(')
           ..write('id: $id, ')
           ..write('parameterId: $parameterId, ')
-          ..write('description: $description, ')
+          ..write('title: $title, ')
           ..write('value: $value, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
@@ -4115,12 +4112,11 @@ class $CharacterParametersTable extends CharacterParameters
                   'REFERENCES characters (id) ON DELETE SET NULL'))
           .withConverter<String?>(
               $CharacterParametersTable.$converterselectableIdn);
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
-  late final GeneratedColumnWithTypeConverter<ParameterValue, Object> value =
-      GeneratedColumn<Object>('value', aliasedName, false,
-              type: PgTypes.jsonb, requiredDuringInsert: true)
-          .withConverter<ParameterValue>(
-              $CharacterParametersTable.$convertervalue);
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _indexMeta = const VerificationMeta('index');
   @override
   late final GeneratedColumn<int> index = GeneratedColumn<int>(
@@ -4163,6 +4159,12 @@ class $CharacterParametersTable extends CharacterParameters
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
     if (data.containsKey('index')) {
       context.handle(
           _indexMeta, index.isAcceptableOrUnknown(data['index']!, _indexMeta));
@@ -4187,9 +4189,8 @@ class $CharacterParametersTable extends CharacterParameters
       parameterId: $CharacterParametersTable.$converterparameterId.fromSql(
           attachedDatabase.typeMapping
               .read(PgTypes.uuid, data['${effectivePrefix}parameter_id'])!),
-      value: $CharacterParametersTable.$convertervalue.fromSql(attachedDatabase
-          .typeMapping
-          .read(PgTypes.jsonb, data['${effectivePrefix}value'])!),
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
       index: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}index'])!,
       selectableId: $CharacterParametersTable.$converterselectableIdn.fromSql(
@@ -4219,8 +4220,6 @@ class $CharacterParametersTable extends CharacterParameters
       const UuidValueToStringConverter();
   static TypeConverter<String?, UuidValue?> $converterselectableIdn =
       NullAwareTypeConverter.wrap($converterselectableId);
-  static TypeConverter<ParameterValue, Object> $convertervalue =
-      const ParameterValueConverter();
   static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
       const PgDateTimeConverter();
   static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
@@ -4232,7 +4231,7 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
   final Value<String> parameterId;
   final Value<String> characterId;
   final Value<String?> selectableId;
-  final Value<ParameterValue> value;
+  final Value<String> value;
   final Value<int> index;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
@@ -4253,7 +4252,7 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
     required String parameterId,
     required String characterId,
     this.selectableId = const Value.absent(),
-    required ParameterValue value,
+    required String value,
     required int index,
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -4267,7 +4266,7 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
     Expression<UuidValue>? parameterId,
     Expression<UuidValue>? characterId,
     Expression<UuidValue>? selectableId,
-    Expression<Object>? value,
+    Expression<String>? value,
     Expression<int>? index,
     Expression<PgDateTime>? updatedAt,
     Expression<PgDateTime>? createdAt,
@@ -4291,7 +4290,7 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
       Value<String>? parameterId,
       Value<String>? characterId,
       Value<String?>? selectableId,
-      Value<ParameterValue>? value,
+      Value<String>? value,
       Value<int>? index,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
@@ -4335,9 +4334,7 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
           PgTypes.uuid);
     }
     if (value.present) {
-      map['value'] = Variable<Object>(
-          $CharacterParametersTable.$convertervalue.toSql(value.value),
-          PgTypes.jsonb);
+      map['value'] = Variable<String>(value.value);
     }
     if (index.present) {
       map['index'] = Variable<int>(index.value);
@@ -4387,9 +4384,9 @@ abstract class _$Database extends GeneratedDatabase {
   late final $UploadsTable uploads = $UploadsTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $DlesTable dles = $DlesTable(this);
+  late final $DleAssetsTable dleAssets = $DleAssetsTable(this);
   late final $CharactersTable characters = $CharactersTable(this);
   late final $DleEditorsTable dleEditors = $DleEditorsTable(this);
-  late final $DleAssetsTable dleAssets = $DleAssetsTable(this);
   late final $DleInvitationsTable dleInvitations = $DleInvitationsTable(this);
   late final $HintsTable hints = $HintsTable(this);
   late final $CharacterHintsTable characterHints = $CharacterHintsTable(this);
@@ -4437,9 +4434,9 @@ abstract class _$Database extends GeneratedDatabase {
         uploads,
         profiles,
         dles,
+        dleAssets,
         characters,
         dleEditors,
-        dleAssets,
         dleInvitations,
         hints,
         characterHints,
@@ -4503,11 +4500,32 @@ abstract class _$Database extends GeneratedDatabase {
             on: TableUpdateQuery.onTableName('dles',
                 limitUpdateKind: UpdateKind.delete),
             result: [
-              TableUpdate('characters', kind: UpdateKind.delete),
+              TableUpdate('dle_assets', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('dle_assets', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(
             on: TableUpdateQuery.onTableName('uploads',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('dle_assets', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('dles',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('characters', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('dle_assets',
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('characters', kind: UpdateKind.update),
@@ -4525,27 +4543,6 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('dle_editors', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('dles',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('dle_assets', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('users',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('dle_assets', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('uploads',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('dle_assets', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(
@@ -4741,20 +4738,6 @@ final class $$UsersTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<$DleEditorsTable, List<DleEditor>>
-      _DleEditorsInUserTable(_$Database db) => MultiTypedResultKey.fromTable(
-          db.dleEditors,
-          aliasName: $_aliasNameGenerator(db.users.id, db.dleEditors.userId));
-
-  $$DleEditorsTableProcessedTableManager get DleEditorsInUser {
-    final manager = $$DleEditorsTableTableManager($_db, $_db.dleEditors)
-        .filter((f) => f.userId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_DleEditorsInUserTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-
   static MultiTypedResultKey<$DleAssetsTable, List<DleAsset>>
       _DleAssetsInUserTable(_$Database db) => MultiTypedResultKey.fromTable(
           db.dleAssets,
@@ -4765,6 +4748,20 @@ final class $$UsersTableReferences
         .filter((f) => f.userId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_DleAssetsInUserTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$DleEditorsTable, List<DleEditor>>
+      _DleEditorsInUserTable(_$Database db) => MultiTypedResultKey.fromTable(
+          db.dleEditors,
+          aliasName: $_aliasNameGenerator(db.users.id, db.dleEditors.userId));
+
+  $$DleEditorsTableProcessedTableManager get DleEditorsInUser {
+    final manager = $$DleEditorsTableTableManager($_db, $_db.dleEditors)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_DleEditorsInUserTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -4943,27 +4940,6 @@ class $$UsersTableFilterComposer extends Composer<_$Database, $UsersTable> {
     return f(composer);
   }
 
-  Expression<bool> DleEditorsInUser(
-      Expression<bool> Function($$DleEditorsTableFilterComposer f) f) {
-    final $$DleEditorsTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.dleEditors,
-        getReferencedColumn: (t) => t.userId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DleEditorsTableFilterComposer(
-              $db: $db,
-              $table: $db.dleEditors,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
   Expression<bool> DleAssetsInUser(
       Expression<bool> Function($$DleAssetsTableFilterComposer f) f) {
     final $$DleAssetsTableFilterComposer composer = $composerBuilder(
@@ -4977,6 +4953,27 @@ class $$UsersTableFilterComposer extends Composer<_$Database, $UsersTable> {
             $$DleAssetsTableFilterComposer(
               $db: $db,
               $table: $db.dleAssets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> DleEditorsInUser(
+      Expression<bool> Function($$DleEditorsTableFilterComposer f) f) {
+    final $$DleEditorsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.dleEditors,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DleEditorsTableFilterComposer(
+              $db: $db,
+              $table: $db.dleEditors,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5192,27 +5189,6 @@ class $$UsersTableAnnotationComposer extends Composer<_$Database, $UsersTable> {
     return f(composer);
   }
 
-  Expression<T> DleEditorsInUser<T extends Object>(
-      Expression<T> Function($$DleEditorsTableAnnotationComposer a) f) {
-    final $$DleEditorsTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.dleEditors,
-        getReferencedColumn: (t) => t.userId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DleEditorsTableAnnotationComposer(
-              $db: $db,
-              $table: $db.dleEditors,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
   Expression<T> DleAssetsInUser<T extends Object>(
       Expression<T> Function($$DleAssetsTableAnnotationComposer a) f) {
     final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
@@ -5226,6 +5202,27 @@ class $$UsersTableAnnotationComposer extends Composer<_$Database, $UsersTable> {
             $$DleAssetsTableAnnotationComposer(
               $db: $db,
               $table: $db.dleAssets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> DleEditorsInUser<T extends Object>(
+      Expression<T> Function($$DleEditorsTableAnnotationComposer a) f) {
+    final $$DleEditorsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.dleEditors,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DleEditorsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dleEditors,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5294,8 +5291,8 @@ class $$UsersTableTableManager extends RootTableManager<
         bool PasswordResetTokensInUsers,
         bool UploadsInUsers,
         bool ProfileInUser,
-        bool DleEditorsInUser,
         bool DleAssetsInUser,
+        bool DleEditorsInUser,
         bool DleInvitationsInviters,
         bool DleInvitationsInvitees})> {
   $$UsersTableTableManager(_$Database db, $UsersTable table)
@@ -5354,8 +5351,8 @@ class $$UsersTableTableManager extends RootTableManager<
               PasswordResetTokensInUsers = false,
               UploadsInUsers = false,
               ProfileInUser = false,
-              DleEditorsInUser = false,
               DleAssetsInUser = false,
+              DleEditorsInUser = false,
               DleInvitationsInviters = false,
               DleInvitationsInvitees = false}) {
             return PrefetchHooks(
@@ -5366,8 +5363,8 @@ class $$UsersTableTableManager extends RootTableManager<
                 if (PasswordResetTokensInUsers) db.passwordResetTokens,
                 if (UploadsInUsers) db.uploads,
                 if (ProfileInUser) db.profiles,
-                if (DleEditorsInUser) db.dleEditors,
                 if (DleAssetsInUser) db.dleAssets,
+                if (DleEditorsInUser) db.dleEditors,
                 if (DleInvitationsInviters) db.dleInvitations,
                 if (DleInvitationsInvitees) db.dleInvitations
               ],
@@ -5434,18 +5431,6 @@ class $$UsersTableTableManager extends RootTableManager<
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
                         typedResults: items),
-                  if (DleEditorsInUser)
-                    await $_getPrefetchedData<User, $UsersTable, DleEditor>(
-                        currentTable: table,
-                        referencedTable:
-                            $$UsersTableReferences._DleEditorsInUserTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$UsersTableReferences(db, table, p0)
-                                .DleEditorsInUser,
-                        referencedItemsForCurrentItem: (item,
-                                referencedItems) =>
-                            referencedItems.where((e) => e.userId == item.id),
-                        typedResults: items),
                   if (DleAssetsInUser)
                     await $_getPrefetchedData<User, $UsersTable, DleAsset>(
                         currentTable: table,
@@ -5454,6 +5439,18 @@ class $$UsersTableTableManager extends RootTableManager<
                         managerFromTypedResult: (p0) =>
                             $$UsersTableReferences(db, table, p0)
                                 .DleAssetsInUser,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (DleEditorsInUser)
+                    await $_getPrefetchedData<User, $UsersTable, DleEditor>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._DleEditorsInUserTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .DleEditorsInUser,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
@@ -5508,8 +5505,8 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
         bool PasswordResetTokensInUsers,
         bool UploadsInUsers,
         bool ProfileInUser,
-        bool DleEditorsInUser,
         bool DleAssetsInUser,
+        bool DleEditorsInUser,
         bool DleInvitationsInviters,
         bool DleInvitationsInvitees})>;
 typedef $$AuthSessionsTableCreateCompanionBuilder = AuthSessionsCompanion
@@ -6513,21 +6510,6 @@ final class $$UploadsTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<$CharactersTable, List<Character>>
-      _CharactersInDleTable(_$Database db) =>
-          MultiTypedResultKey.fromTable(db.characters,
-              aliasName:
-                  $_aliasNameGenerator(db.uploads.id, db.characters.imageId));
-
-  $$CharactersTableProcessedTableManager get CharactersInDle {
-    final manager = $$CharactersTableTableManager($_db, $_db.characters)
-        .filter((f) => f.imageId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_CharactersInDleTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-
   static MultiTypedResultKey<$DleAssetsTable, List<DleAsset>>
       _DleAssetInUploadTable(_$Database db) =>
           MultiTypedResultKey.fromTable(db.dleAssets,
@@ -6606,27 +6588,6 @@ class $$UploadsTableFilterComposer extends Composer<_$Database, $UploadsTable> {
             $$ProfilesTableFilterComposer(
               $db: $db,
               $table: $db.profiles,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<bool> CharactersInDle(
-      Expression<bool> Function($$CharactersTableFilterComposer f) f) {
-    final $$CharactersTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.characters,
-        getReferencedColumn: (t) => t.imageId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharactersTableFilterComposer(
-              $db: $db,
-              $table: $db.characters,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -6767,27 +6728,6 @@ class $$UploadsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> CharactersInDle<T extends Object>(
-      Expression<T> Function($$CharactersTableAnnotationComposer a) f) {
-    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.characters,
-        getReferencedColumn: (t) => t.imageId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharactersTableAnnotationComposer(
-              $db: $db,
-              $table: $db.characters,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
   Expression<T> DleAssetInUpload<T extends Object>(
       Expression<T> Function($$DleAssetsTableAnnotationComposer a) f) {
     final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
@@ -6822,10 +6762,7 @@ class $$UploadsTableTableManager extends RootTableManager<
     (Upload, $$UploadsTableReferences),
     Upload,
     PrefetchHooks Function(
-        {bool uploaderId,
-        bool profilesRefs,
-        bool CharactersInDle,
-        bool DleAssetInUpload})> {
+        {bool uploaderId, bool profilesRefs, bool DleAssetInUpload})> {
   $$UploadsTableTableManager(_$Database db, $UploadsTable table)
       : super(TableManagerState(
           db: db,
@@ -6879,13 +6816,11 @@ class $$UploadsTableTableManager extends RootTableManager<
           prefetchHooksCallback: (
               {uploaderId = false,
               profilesRefs = false,
-              CharactersInDle = false,
               DleAssetInUpload = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (profilesRefs) db.profiles,
-                if (CharactersInDle) db.characters,
                 if (DleAssetInUpload) db.dleAssets
               ],
               addJoins: <
@@ -6928,18 +6863,6 @@ class $$UploadsTableTableManager extends RootTableManager<
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.pictureId == item.id),
                         typedResults: items),
-                  if (CharactersInDle)
-                    await $_getPrefetchedData<Upload, $UploadsTable, Character>(
-                        currentTable: table,
-                        referencedTable:
-                            $$UploadsTableReferences._CharactersInDleTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$UploadsTableReferences(db, table, p0)
-                                .CharactersInDle,
-                        referencedItemsForCurrentItem: (item,
-                                referencedItems) =>
-                            referencedItems.where((e) => e.imageId == item.id),
-                        typedResults: items),
                   if (DleAssetInUpload)
                     await $_getPrefetchedData<Upload, $UploadsTable, DleAsset>(
                         currentTable: table,
@@ -6971,10 +6894,7 @@ typedef $$UploadsTableProcessedTableManager = ProcessedTableManager<
     (Upload, $$UploadsTableReferences),
     Upload,
     PrefetchHooks Function(
-        {bool uploaderId,
-        bool profilesRefs,
-        bool CharactersInDle,
-        bool DleAssetInUpload})>;
+        {bool uploaderId, bool profilesRefs, bool DleAssetInUpload})>;
 typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   Value<String> id,
   required String userId,
@@ -7380,6 +7300,20 @@ final class $$DlesTableReferences
     extends BaseReferences<_$Database, $DlesTable, Dle> {
   $$DlesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
+  static MultiTypedResultKey<$DleAssetsTable, List<DleAsset>>
+      _DleAssetsInDleTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.dleAssets,
+              aliasName: $_aliasNameGenerator(db.dles.id, db.dleAssets.dleId));
+
+  $$DleAssetsTableProcessedTableManager get DleAssetsInDle {
+    final manager = $$DleAssetsTableTableManager($_db, $_db.dleAssets)
+        .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_DleAssetsInDleTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
   static MultiTypedResultKey<$CharactersTable, List<Character>>
       _CharactersInDleTable(_$Database db) =>
           MultiTypedResultKey.fromTable(db.characters,
@@ -7404,20 +7338,6 @@ final class $$DlesTableReferences
         .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_DleEditorsInDleTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-
-  static MultiTypedResultKey<$DleAssetsTable, List<DleAsset>>
-      _DleAssetsInDleTable(_$Database db) =>
-          MultiTypedResultKey.fromTable(db.dleAssets,
-              aliasName: $_aliasNameGenerator(db.dles.id, db.dleAssets.dleId));
-
-  $$DleAssetsTableProcessedTableManager get DleAssetsInDle {
-    final manager = $$DleAssetsTableTableManager($_db, $_db.dleAssets)
-        .filter((f) => f.dleId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_DleAssetsInDleTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -7503,6 +7423,27 @@ class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
           column: $table.createdAt,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
+  Expression<bool> DleAssetsInDle(
+      Expression<bool> Function($$DleAssetsTableFilterComposer f) f) {
+    final $$DleAssetsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.dleAssets,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DleAssetsTableFilterComposer(
+              $db: $db,
+              $table: $db.dleAssets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
   Expression<bool> CharactersInDle(
       Expression<bool> Function($$CharactersTableFilterComposer f) f) {
     final $$CharactersTableFilterComposer composer = $composerBuilder(
@@ -7537,27 +7478,6 @@ class $$DlesTableFilterComposer extends Composer<_$Database, $DlesTable> {
             $$DleEditorsTableFilterComposer(
               $db: $db,
               $table: $db.dleEditors,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<bool> DleAssetsInDle(
-      Expression<bool> Function($$DleAssetsTableFilterComposer f) f) {
-    final $$DleAssetsTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.dleAssets,
-        getReferencedColumn: (t) => t.dleId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DleAssetsTableFilterComposer(
-              $db: $db,
-              $table: $db.dleAssets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -7689,6 +7609,27 @@ class $$DlesTableAnnotationComposer extends Composer<_$Database, $DlesTable> {
   GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
+  Expression<T> DleAssetsInDle<T extends Object>(
+      Expression<T> Function($$DleAssetsTableAnnotationComposer a) f) {
+    final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.dleAssets,
+        getReferencedColumn: (t) => t.dleId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DleAssetsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dleAssets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
   Expression<T> CharactersInDle<T extends Object>(
       Expression<T> Function($$CharactersTableAnnotationComposer a) f) {
     final $$CharactersTableAnnotationComposer composer = $composerBuilder(
@@ -7723,27 +7664,6 @@ class $$DlesTableAnnotationComposer extends Composer<_$Database, $DlesTable> {
             $$DleEditorsTableAnnotationComposer(
               $db: $db,
               $table: $db.dleEditors,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<T> DleAssetsInDle<T extends Object>(
-      Expression<T> Function($$DleAssetsTableAnnotationComposer a) f) {
-    final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.dleAssets,
-        getReferencedColumn: (t) => t.dleId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DleAssetsTableAnnotationComposer(
-              $db: $db,
-              $table: $db.dleAssets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -7828,9 +7748,9 @@ class $$DlesTableTableManager extends RootTableManager<
     (Dle, $$DlesTableReferences),
     Dle,
     PrefetchHooks Function(
-        {bool CharactersInDle,
+        {bool DleAssetsInDle,
+        bool CharactersInDle,
         bool DleEditorsInDle,
-        bool DleAssetsInDle,
         bool DleInvitationsInDle,
         bool HintsInDle,
         bool BasicDleInDle})> {
@@ -7889,18 +7809,18 @@ class $$DlesTableTableManager extends RootTableManager<
                   (e.readTable(table), $$DlesTableReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {CharactersInDle = false,
+              {DleAssetsInDle = false,
+              CharactersInDle = false,
               DleEditorsInDle = false,
-              DleAssetsInDle = false,
               DleInvitationsInDle = false,
               HintsInDle = false,
               BasicDleInDle = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
+                if (DleAssetsInDle) db.dleAssets,
                 if (CharactersInDle) db.characters,
                 if (DleEditorsInDle) db.dleEditors,
-                if (DleAssetsInDle) db.dleAssets,
                 if (DleInvitationsInDle) db.dleInvitations,
                 if (HintsInDle) db.hints,
                 if (BasicDleInDle) db.basicDles
@@ -7908,6 +7828,17 @@ class $$DlesTableTableManager extends RootTableManager<
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
+                  if (DleAssetsInDle)
+                    await $_getPrefetchedData<Dle, $DlesTable, DleAsset>(
+                        currentTable: table,
+                        referencedTable:
+                            $$DlesTableReferences._DleAssetsInDleTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$DlesTableReferences(db, table, p0).DleAssetsInDle,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.dleId == item.id),
+                        typedResults: items),
                   if (CharactersInDle)
                     await $_getPrefetchedData<Dle, $DlesTable, Character>(
                         currentTable: table,
@@ -7928,17 +7859,6 @@ class $$DlesTableTableManager extends RootTableManager<
                         managerFromTypedResult: (p0) =>
                             $$DlesTableReferences(db, table, p0)
                                 .DleEditorsInDle,
-                        referencedItemsForCurrentItem: (item,
-                                referencedItems) =>
-                            referencedItems.where((e) => e.dleId == item.id),
-                        typedResults: items),
-                  if (DleAssetsInDle)
-                    await $_getPrefetchedData<Dle, $DlesTable, DleAsset>(
-                        currentTable: table,
-                        referencedTable:
-                            $$DlesTableReferences._DleAssetsInDleTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$DlesTableReferences(db, table, p0).DleAssetsInDle,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.dleId == item.id),
@@ -7996,16 +7916,552 @@ typedef $$DlesTableProcessedTableManager = ProcessedTableManager<
     (Dle, $$DlesTableReferences),
     Dle,
     PrefetchHooks Function(
-        {bool CharactersInDle,
+        {bool DleAssetsInDle,
+        bool CharactersInDle,
         bool DleEditorsInDle,
-        bool DleAssetsInDle,
         bool DleInvitationsInDle,
         bool HintsInDle,
         bool BasicDleInDle})>;
+typedef $$DleAssetsTableCreateCompanionBuilder = DleAssetsCompanion Function({
+  Value<String> id,
+  required String dleId,
+  required String userId,
+  required String uploadId,
+  required DleAssetType type,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$DleAssetsTableUpdateCompanionBuilder = DleAssetsCompanion Function({
+  Value<String> id,
+  Value<String> dleId,
+  Value<String> userId,
+  Value<String> uploadId,
+  Value<DleAssetType> type,
+  Value<DateTime> updatedAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+final class $$DleAssetsTableReferences
+    extends BaseReferences<_$Database, $DleAssetsTable, DleAsset> {
+  $$DleAssetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DlesTable _dleIdTable(_$Database db) =>
+      db.dles.createAlias($_aliasNameGenerator(db.dleAssets.dleId, db.dles.id));
+
+  $$DlesTableProcessedTableManager get dleId {
+    final $_column = $_itemColumn<UuidValue>('dle_id')!;
+
+    final manager = $$DlesTableTableManager($_db, $_db.dles)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_dleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $UsersTable _userIdTable(_$Database db) => db.users
+      .createAlias($_aliasNameGenerator(db.dleAssets.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<UuidValue>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $UploadsTable _uploadIdTable(_$Database db) => db.uploads
+      .createAlias($_aliasNameGenerator(db.dleAssets.uploadId, db.uploads.id));
+
+  $$UploadsTableProcessedTableManager get uploadId {
+    final $_column = $_itemColumn<UuidValue>('upload_id')!;
+
+    final manager = $$UploadsTableTableManager($_db, $_db.uploads)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_uploadIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$CharactersTable, List<Character>>
+      _CharactersInAssetsTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.characters,
+              aliasName:
+                  $_aliasNameGenerator(db.dleAssets.id, db.characters.assetId));
+
+  $$CharactersTableProcessedTableManager get CharactersInAssets {
+    final manager = $$CharactersTableTableManager($_db, $_db.characters)
+        .filter((f) => f.assetId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_CharactersInAssetsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$DleAssetsTableFilterComposer
+    extends Composer<_$Database, $DleAssetsTable> {
+  $$DleAssetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
+      $composableBuilder(
+          column: $table.id,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DleAssetType, DleAssetType, String> get type =>
+      $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get updatedAt => $composableBuilder(
+          column: $table.updatedAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
+      get createdAt => $composableBuilder(
+          column: $table.createdAt,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$DlesTableFilterComposer get dleId {
+    final $$DlesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableFilterComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableFilterComposer get uploadId {
+    final $$UploadsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploadId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableFilterComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> CharactersInAssets(
+      Expression<bool> Function($$CharactersTableFilterComposer f) f) {
+    final $$CharactersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.assetId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableFilterComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$DleAssetsTableOrderingComposer
+    extends Composer<_$Database, $DleAssetsTable> {
+  $$DleAssetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<UuidValue> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$DlesTableOrderingComposer get dleId {
+    final $$DlesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableOrderingComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableOrderingComposer get uploadId {
+    final $$UploadsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploadId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableOrderingComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$DleAssetsTableAnnotationComposer
+    extends Composer<_$Database, $DleAssetsTable> {
+  $$DleAssetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DleAssetType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$DlesTableAnnotationComposer get dleId {
+    final $$DlesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.dleId,
+        referencedTable: $db.dles,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$DlesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.dles,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UploadsTableAnnotationComposer get uploadId {
+    final $$UploadsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.uploadId,
+        referencedTable: $db.uploads,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UploadsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.uploads,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> CharactersInAssets<T extends Object>(
+      Expression<T> Function($$CharactersTableAnnotationComposer a) f) {
+    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.characters,
+        getReferencedColumn: (t) => t.assetId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CharactersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.characters,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$DleAssetsTableTableManager extends RootTableManager<
+    _$Database,
+    $DleAssetsTable,
+    DleAsset,
+    $$DleAssetsTableFilterComposer,
+    $$DleAssetsTableOrderingComposer,
+    $$DleAssetsTableAnnotationComposer,
+    $$DleAssetsTableCreateCompanionBuilder,
+    $$DleAssetsTableUpdateCompanionBuilder,
+    (DleAsset, $$DleAssetsTableReferences),
+    DleAsset,
+    PrefetchHooks Function(
+        {bool dleId, bool userId, bool uploadId, bool CharactersInAssets})> {
+  $$DleAssetsTableTableManager(_$Database db, $DleAssetsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DleAssetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DleAssetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DleAssetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> dleId = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<String> uploadId = const Value.absent(),
+            Value<DleAssetType> type = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DleAssetsCompanion(
+            id: id,
+            dleId: dleId,
+            userId: userId,
+            uploadId: uploadId,
+            type: type,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            required String dleId,
+            required String userId,
+            required String uploadId,
+            required DleAssetType type,
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DleAssetsCompanion.insert(
+            id: id,
+            dleId: dleId,
+            userId: userId,
+            uploadId: uploadId,
+            type: type,
+            updatedAt: updatedAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$DleAssetsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {dleId = false,
+              userId = false,
+              uploadId = false,
+              CharactersInAssets = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (CharactersInAssets) db.characters],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (dleId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.dleId,
+                    referencedTable: $$DleAssetsTableReferences._dleIdTable(db),
+                    referencedColumn:
+                        $$DleAssetsTableReferences._dleIdTable(db).id,
+                  ) as T;
+                }
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$DleAssetsTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$DleAssetsTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+                if (uploadId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.uploadId,
+                    referencedTable:
+                        $$DleAssetsTableReferences._uploadIdTable(db),
+                    referencedColumn:
+                        $$DleAssetsTableReferences._uploadIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (CharactersInAssets)
+                    await $_getPrefetchedData<DleAsset, $DleAssetsTable, Character>(
+                        currentTable: table,
+                        referencedTable:
+                            $$DleAssetsTableReferences._CharactersInAssetsTable(
+                                db),
+                        managerFromTypedResult: (p0) =>
+                            $$DleAssetsTableReferences(db, table, p0)
+                                .CharactersInAssets,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.assetId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$DleAssetsTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $DleAssetsTable,
+    DleAsset,
+    $$DleAssetsTableFilterComposer,
+    $$DleAssetsTableOrderingComposer,
+    $$DleAssetsTableAnnotationComposer,
+    $$DleAssetsTableCreateCompanionBuilder,
+    $$DleAssetsTableUpdateCompanionBuilder,
+    (DleAsset, $$DleAssetsTableReferences),
+    DleAsset,
+    PrefetchHooks Function(
+        {bool dleId, bool userId, bool uploadId, bool CharactersInAssets})>;
 typedef $$CharactersTableCreateCompanionBuilder = CharactersCompanion Function({
   Value<String> id,
   required String dleId,
-  Value<String?> imageId,
+  Value<String?> assetId,
   required String name,
   Value<bool> isHidden,
   required List<String> aliases,
@@ -8016,7 +8472,7 @@ typedef $$CharactersTableCreateCompanionBuilder = CharactersCompanion Function({
 typedef $$CharactersTableUpdateCompanionBuilder = CharactersCompanion Function({
   Value<String> id,
   Value<String> dleId,
-  Value<String?> imageId,
+  Value<String?> assetId,
   Value<String> name,
   Value<bool> isHidden,
   Value<List<String>> aliases,
@@ -8043,15 +8499,16 @@ final class $$CharactersTableReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static $UploadsTable _imageIdTable(_$Database db) => db.uploads
-      .createAlias($_aliasNameGenerator(db.characters.imageId, db.uploads.id));
+  static $DleAssetsTable _assetIdTable(_$Database db) =>
+      db.dleAssets.createAlias(
+          $_aliasNameGenerator(db.characters.assetId, db.dleAssets.id));
 
-  $$UploadsTableProcessedTableManager? get imageId {
-    final $_column = $_itemColumn<UuidValue>('image_id');
+  $$DleAssetsTableProcessedTableManager? get assetId {
+    final $_column = $_itemColumn<UuidValue>('asset_id');
     if ($_column == null) return null;
-    final manager = $$UploadsTableTableManager($_db, $_db.uploads)
+    final manager = $$DleAssetsTableTableManager($_db, $_db.dleAssets)
         .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_imageIdTable($_db));
+    final item = $_typedResult.readTableOrNull(_assetIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -8170,18 +8627,18 @@ class $$CharactersTableFilterComposer
     return composer;
   }
 
-  $$UploadsTableFilterComposer get imageId {
-    final $$UploadsTableFilterComposer composer = $composerBuilder(
+  $$DleAssetsTableFilterComposer get assetId {
+    final $$DleAssetsTableFilterComposer composer = $composerBuilder(
         composer: this,
-        getCurrentColumn: (t) => t.imageId,
-        referencedTable: $db.uploads,
+        getCurrentColumn: (t) => t.assetId,
+        referencedTable: $db.dleAssets,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableFilterComposer(
+            $$DleAssetsTableFilterComposer(
               $db: $db,
-              $table: $db.uploads,
+              $table: $db.dleAssets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -8301,18 +8758,18 @@ class $$CharactersTableOrderingComposer
     return composer;
   }
 
-  $$UploadsTableOrderingComposer get imageId {
-    final $$UploadsTableOrderingComposer composer = $composerBuilder(
+  $$DleAssetsTableOrderingComposer get assetId {
+    final $$DleAssetsTableOrderingComposer composer = $composerBuilder(
         composer: this,
-        getCurrentColumn: (t) => t.imageId,
-        referencedTable: $db.uploads,
+        getCurrentColumn: (t) => t.assetId,
+        referencedTable: $db.dleAssets,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableOrderingComposer(
+            $$DleAssetsTableOrderingComposer(
               $db: $db,
-              $table: $db.uploads,
+              $table: $db.dleAssets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -8369,18 +8826,18 @@ class $$CharactersTableAnnotationComposer
     return composer;
   }
 
-  $$UploadsTableAnnotationComposer get imageId {
-    final $$UploadsTableAnnotationComposer composer = $composerBuilder(
+  $$DleAssetsTableAnnotationComposer get assetId {
+    final $$DleAssetsTableAnnotationComposer composer = $composerBuilder(
         composer: this,
-        getCurrentColumn: (t) => t.imageId,
-        referencedTable: $db.uploads,
+        getCurrentColumn: (t) => t.assetId,
+        referencedTable: $db.dleAssets,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableAnnotationComposer(
+            $$DleAssetsTableAnnotationComposer(
               $db: $db,
-              $table: $db.uploads,
+              $table: $db.dleAssets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -8470,7 +8927,7 @@ class $$CharactersTableTableManager extends RootTableManager<
     Character,
     PrefetchHooks Function(
         {bool dleId,
-        bool imageId,
+        bool assetId,
         bool CharacterHintsInCharacters,
         bool CharacterParametersInCharacters,
         bool CharacterParametersInSelectables})> {
@@ -8487,7 +8944,7 @@ class $$CharactersTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> dleId = const Value.absent(),
-            Value<String?> imageId = const Value.absent(),
+            Value<String?> assetId = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<bool> isHidden = const Value.absent(),
             Value<List<String>> aliases = const Value.absent(),
@@ -8498,7 +8955,7 @@ class $$CharactersTableTableManager extends RootTableManager<
               CharactersCompanion(
             id: id,
             dleId: dleId,
-            imageId: imageId,
+            assetId: assetId,
             name: name,
             isHidden: isHidden,
             aliases: aliases,
@@ -8509,7 +8966,7 @@ class $$CharactersTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             Value<String> id = const Value.absent(),
             required String dleId,
-            Value<String?> imageId = const Value.absent(),
+            Value<String?> assetId = const Value.absent(),
             required String name,
             Value<bool> isHidden = const Value.absent(),
             required List<String> aliases,
@@ -8520,7 +8977,7 @@ class $$CharactersTableTableManager extends RootTableManager<
               CharactersCompanion.insert(
             id: id,
             dleId: dleId,
-            imageId: imageId,
+            assetId: assetId,
             name: name,
             isHidden: isHidden,
             aliases: aliases,
@@ -8536,7 +8993,7 @@ class $$CharactersTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {dleId = false,
-              imageId = false,
+              assetId = false,
               CharacterHintsInCharacters = false,
               CharacterParametersInCharacters = false,
               CharacterParametersInSelectables = false}) {
@@ -8570,14 +9027,14 @@ class $$CharactersTableTableManager extends RootTableManager<
                         $$CharactersTableReferences._dleIdTable(db).id,
                   ) as T;
                 }
-                if (imageId) {
+                if (assetId) {
                   state = state.withJoin(
                     currentTable: table,
-                    currentColumn: table.imageId,
+                    currentColumn: table.assetId,
                     referencedTable:
-                        $$CharactersTableReferences._imageIdTable(db),
+                        $$CharactersTableReferences._assetIdTable(db),
                     referencedColumn:
-                        $$CharactersTableReferences._imageIdTable(db).id,
+                        $$CharactersTableReferences._assetIdTable(db).id,
                   ) as T;
                 }
 
@@ -8644,7 +9101,7 @@ typedef $$CharactersTableProcessedTableManager = ProcessedTableManager<
     Character,
     PrefetchHooks Function(
         {bool dleId,
-        bool imageId,
+        bool assetId,
         bool CharacterHintsInCharacters,
         bool CharacterParametersInCharacters,
         bool CharacterParametersInSelectables})>;
@@ -9018,466 +9475,6 @@ typedef $$DleEditorsTableProcessedTableManager = ProcessedTableManager<
     (DleEditor, $$DleEditorsTableReferences),
     DleEditor,
     PrefetchHooks Function({bool dleId, bool userId})>;
-typedef $$DleAssetsTableCreateCompanionBuilder = DleAssetsCompanion Function({
-  Value<String> id,
-  required String dleId,
-  required String userId,
-  required String uploadId,
-  required DleAssetType type,
-  Value<DateTime> updatedAt,
-  Value<DateTime> createdAt,
-  Value<int> rowid,
-});
-typedef $$DleAssetsTableUpdateCompanionBuilder = DleAssetsCompanion Function({
-  Value<String> id,
-  Value<String> dleId,
-  Value<String> userId,
-  Value<String> uploadId,
-  Value<DleAssetType> type,
-  Value<DateTime> updatedAt,
-  Value<DateTime> createdAt,
-  Value<int> rowid,
-});
-
-final class $$DleAssetsTableReferences
-    extends BaseReferences<_$Database, $DleAssetsTable, DleAsset> {
-  $$DleAssetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $DlesTable _dleIdTable(_$Database db) =>
-      db.dles.createAlias($_aliasNameGenerator(db.dleAssets.dleId, db.dles.id));
-
-  $$DlesTableProcessedTableManager get dleId {
-    final $_column = $_itemColumn<UuidValue>('dle_id')!;
-
-    final manager = $$DlesTableTableManager($_db, $_db.dles)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_dleIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-
-  static $UsersTable _userIdTable(_$Database db) => db.users
-      .createAlias($_aliasNameGenerator(db.dleAssets.userId, db.users.id));
-
-  $$UsersTableProcessedTableManager get userId {
-    final $_column = $_itemColumn<UuidValue>('user_id')!;
-
-    final manager = $$UsersTableTableManager($_db, $_db.users)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-
-  static $UploadsTable _uploadIdTable(_$Database db) => db.uploads
-      .createAlias($_aliasNameGenerator(db.dleAssets.uploadId, db.uploads.id));
-
-  $$UploadsTableProcessedTableManager get uploadId {
-    final $_column = $_itemColumn<UuidValue>('upload_id')!;
-
-    final manager = $$UploadsTableTableManager($_db, $_db.uploads)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_uploadIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-}
-
-class $$DleAssetsTableFilterComposer
-    extends Composer<_$Database, $DleAssetsTable> {
-  $$DleAssetsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnWithTypeConverterFilters<String, String, UuidValue> get id =>
-      $composableBuilder(
-          column: $table.id,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnWithTypeConverterFilters<DleAssetType, DleAssetType, String> get type =>
-      $composableBuilder(
-          column: $table.type,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
-      get updatedAt => $composableBuilder(
-          column: $table.updatedAt,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
-      get createdAt => $composableBuilder(
-          column: $table.createdAt,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  $$DlesTableFilterComposer get dleId {
-    final $$DlesTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.dleId,
-        referencedTable: $db.dles,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DlesTableFilterComposer(
-              $db: $db,
-              $table: $db.dles,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UsersTableFilterComposer get userId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $db.users,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UsersTableFilterComposer(
-              $db: $db,
-              $table: $db.users,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UploadsTableFilterComposer get uploadId {
-    final $$UploadsTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.uploadId,
-        referencedTable: $db.uploads,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableFilterComposer(
-              $db: $db,
-              $table: $db.uploads,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-}
-
-class $$DleAssetsTableOrderingComposer
-    extends Composer<_$Database, $DleAssetsTable> {
-  $$DleAssetsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<UuidValue> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get type => $composableBuilder(
-      column: $table.type, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
-      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<PgDateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
-
-  $$DlesTableOrderingComposer get dleId {
-    final $$DlesTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.dleId,
-        referencedTable: $db.dles,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DlesTableOrderingComposer(
-              $db: $db,
-              $table: $db.dles,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UsersTableOrderingComposer get userId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $db.users,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UsersTableOrderingComposer(
-              $db: $db,
-              $table: $db.users,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UploadsTableOrderingComposer get uploadId {
-    final $$UploadsTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.uploadId,
-        referencedTable: $db.uploads,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableOrderingComposer(
-              $db: $db,
-              $table: $db.uploads,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-}
-
-class $$DleAssetsTableAnnotationComposer
-    extends Composer<_$Database, $DleAssetsTable> {
-  $$DleAssetsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<DleAssetType, String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  $$DlesTableAnnotationComposer get dleId {
-    final $$DlesTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.dleId,
-        referencedTable: $db.dles,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$DlesTableAnnotationComposer(
-              $db: $db,
-              $table: $db.dles,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UsersTableAnnotationComposer get userId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $db.users,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UsersTableAnnotationComposer(
-              $db: $db,
-              $table: $db.users,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$UploadsTableAnnotationComposer get uploadId {
-    final $$UploadsTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.uploadId,
-        referencedTable: $db.uploads,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$UploadsTableAnnotationComposer(
-              $db: $db,
-              $table: $db.uploads,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-}
-
-class $$DleAssetsTableTableManager extends RootTableManager<
-    _$Database,
-    $DleAssetsTable,
-    DleAsset,
-    $$DleAssetsTableFilterComposer,
-    $$DleAssetsTableOrderingComposer,
-    $$DleAssetsTableAnnotationComposer,
-    $$DleAssetsTableCreateCompanionBuilder,
-    $$DleAssetsTableUpdateCompanionBuilder,
-    (DleAsset, $$DleAssetsTableReferences),
-    DleAsset,
-    PrefetchHooks Function({bool dleId, bool userId, bool uploadId})> {
-  $$DleAssetsTableTableManager(_$Database db, $DleAssetsTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$DleAssetsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$DleAssetsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$DleAssetsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> dleId = const Value.absent(),
-            Value<String> userId = const Value.absent(),
-            Value<String> uploadId = const Value.absent(),
-            Value<DleAssetType> type = const Value.absent(),
-            Value<DateTime> updatedAt = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              DleAssetsCompanion(
-            id: id,
-            dleId: dleId,
-            userId: userId,
-            uploadId: uploadId,
-            type: type,
-            updatedAt: updatedAt,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            required String dleId,
-            required String userId,
-            required String uploadId,
-            required DleAssetType type,
-            Value<DateTime> updatedAt = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              DleAssetsCompanion.insert(
-            id: id,
-            dleId: dleId,
-            userId: userId,
-            uploadId: uploadId,
-            type: type,
-            updatedAt: updatedAt,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (
-                    e.readTable(table),
-                    $$DleAssetsTableReferences(db, table, e)
-                  ))
-              .toList(),
-          prefetchHooksCallback: (
-              {dleId = false, userId = false, uploadId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins: <
-                  T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic>>(state) {
-                if (dleId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.dleId,
-                    referencedTable: $$DleAssetsTableReferences._dleIdTable(db),
-                    referencedColumn:
-                        $$DleAssetsTableReferences._dleIdTable(db).id,
-                  ) as T;
-                }
-                if (userId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.userId,
-                    referencedTable:
-                        $$DleAssetsTableReferences._userIdTable(db),
-                    referencedColumn:
-                        $$DleAssetsTableReferences._userIdTable(db).id,
-                  ) as T;
-                }
-                if (uploadId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.uploadId,
-                    referencedTable:
-                        $$DleAssetsTableReferences._uploadIdTable(db),
-                    referencedColumn:
-                        $$DleAssetsTableReferences._uploadIdTable(db).id,
-                  ) as T;
-                }
-
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ));
-}
-
-typedef $$DleAssetsTableProcessedTableManager = ProcessedTableManager<
-    _$Database,
-    $DleAssetsTable,
-    DleAsset,
-    $$DleAssetsTableFilterComposer,
-    $$DleAssetsTableOrderingComposer,
-    $$DleAssetsTableAnnotationComposer,
-    $$DleAssetsTableCreateCompanionBuilder,
-    $$DleAssetsTableUpdateCompanionBuilder,
-    (DleAsset, $$DleAssetsTableReferences),
-    DleAsset,
-    PrefetchHooks Function({bool dleId, bool userId, bool uploadId})>;
 typedef $$DleInvitationsTableCreateCompanionBuilder = DleInvitationsCompanion
     Function({
   Value<String> id,
@@ -11624,8 +11621,8 @@ typedef $$SelectableValuesTableCreateCompanionBuilder
     = SelectableValuesCompanion Function({
   Value<String> id,
   required String parameterId,
-  required String description,
-  required ParameterValue value,
+  required String title,
+  required String value,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -11634,8 +11631,8 @@ typedef $$SelectableValuesTableUpdateCompanionBuilder
     = SelectableValuesCompanion Function({
   Value<String> id,
   Value<String> parameterId,
-  Value<String> description,
-  Value<ParameterValue> value,
+  Value<String> title,
+  Value<String> value,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -11676,13 +11673,11 @@ class $$SelectableValuesTableFilterComposer
           column: $table.id,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnFilters<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
 
-  ColumnWithTypeConverterFilters<ParameterValue, ParameterValue, Object>
-      get value => $composableBuilder(
-          column: $table.value,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   ColumnWithTypeConverterFilters<DateTime, DateTime, PgDateTime>
       get updatedAt => $composableBuilder(
@@ -11727,10 +11722,10 @@ class $$SelectableValuesTableOrderingComposer
   ColumnOrderings<UuidValue> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<Object> get value => $composableBuilder(
+  ColumnOrderings<String> get value => $composableBuilder(
       column: $table.value, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<PgDateTime> get updatedAt => $composableBuilder(
@@ -11772,10 +11767,10 @@ class $$SelectableValuesTableAnnotationComposer
   GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => column);
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<ParameterValue, Object> get value =>
+  GeneratedColumn<String> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<DateTime, PgDateTime> get updatedAt =>
@@ -11831,8 +11826,8 @@ class $$SelectableValuesTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> parameterId = const Value.absent(),
-            Value<String> description = const Value.absent(),
-            Value<ParameterValue> value = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -11840,7 +11835,7 @@ class $$SelectableValuesTableTableManager extends RootTableManager<
               SelectableValuesCompanion(
             id: id,
             parameterId: parameterId,
-            description: description,
+            title: title,
             value: value,
             updatedAt: updatedAt,
             createdAt: createdAt,
@@ -11849,8 +11844,8 @@ class $$SelectableValuesTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             Value<String> id = const Value.absent(),
             required String parameterId,
-            required String description,
-            required ParameterValue value,
+            required String title,
+            required String value,
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -11858,7 +11853,7 @@ class $$SelectableValuesTableTableManager extends RootTableManager<
               SelectableValuesCompanion.insert(
             id: id,
             parameterId: parameterId,
-            description: description,
+            title: title,
             value: value,
             updatedAt: updatedAt,
             createdAt: createdAt,
@@ -11927,7 +11922,7 @@ typedef $$CharacterParametersTableCreateCompanionBuilder
   required String parameterId,
   required String characterId,
   Value<String?> selectableId,
-  required ParameterValue value,
+  required String value,
   required int index,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
@@ -11939,7 +11934,7 @@ typedef $$CharacterParametersTableUpdateCompanionBuilder
   Value<String> parameterId,
   Value<String> characterId,
   Value<String?> selectableId,
-  Value<ParameterValue> value,
+  Value<String> value,
   Value<int> index,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
@@ -12011,10 +12006,8 @@ class $$CharacterParametersTableFilterComposer
           column: $table.id,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnWithTypeConverterFilters<ParameterValue, ParameterValue, Object>
-      get value => $composableBuilder(
-          column: $table.value,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get index => $composableBuilder(
       column: $table.index, builder: (column) => ColumnFilters(column));
@@ -12102,7 +12095,7 @@ class $$CharacterParametersTableOrderingComposer
   ColumnOrderings<UuidValue> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<Object> get value => $composableBuilder(
+  ColumnOrderings<String> get value => $composableBuilder(
       column: $table.value, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get index => $composableBuilder(
@@ -12187,7 +12180,7 @@ class $$CharacterParametersTableAnnotationComposer
   GeneratedColumnWithTypeConverter<String, UuidValue> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<ParameterValue, Object> get value =>
+  GeneratedColumn<String> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
 
   GeneratedColumn<int> get index =>
@@ -12291,7 +12284,7 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             Value<String> parameterId = const Value.absent(),
             Value<String> characterId = const Value.absent(),
             Value<String?> selectableId = const Value.absent(),
-            Value<ParameterValue> value = const Value.absent(),
+            Value<String> value = const Value.absent(),
             Value<int> index = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -12313,7 +12306,7 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             required String parameterId,
             required String characterId,
             Value<String?> selectableId = const Value.absent(),
-            required ParameterValue value,
+            required String value,
             required int index,
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -12431,12 +12424,12 @@ class $DatabaseManager {
   $$ProfilesTableTableManager get profiles =>
       $$ProfilesTableTableManager(_db, _db.profiles);
   $$DlesTableTableManager get dles => $$DlesTableTableManager(_db, _db.dles);
+  $$DleAssetsTableTableManager get dleAssets =>
+      $$DleAssetsTableTableManager(_db, _db.dleAssets);
   $$CharactersTableTableManager get characters =>
       $$CharactersTableTableManager(_db, _db.characters);
   $$DleEditorsTableTableManager get dleEditors =>
       $$DleEditorsTableTableManager(_db, _db.dleEditors);
-  $$DleAssetsTableTableManager get dleAssets =>
-      $$DleAssetsTableTableManager(_db, _db.dleAssets);
   $$DleInvitationsTableTableManager get dleInvitations =>
       $$DleInvitationsTableTableManager(_db, _db.dleInvitations);
   $$HintsTableTableManager get hints =>

@@ -26,8 +26,7 @@ mixin _$CreateCharacterParams {
   String get name => throw _privateConstructorUsedError;
   bool get isHidden => throw _privateConstructorUsedError;
   List<String> get aliases => throw _privateConstructorUsedError;
-  List<int>? get imageBytes => throw _privateConstructorUsedError;
-  String? get mimeType => throw _privateConstructorUsedError;
+  String? get assetId => throw _privateConstructorUsedError;
 
   /// Serializes this CreateCharacterParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,8 +50,7 @@ abstract class $CreateCharacterParamsCopyWith<$Res> {
       String name,
       bool isHidden,
       List<String> aliases,
-      List<int>? imageBytes,
-      String? mimeType});
+      String? assetId});
 }
 
 /// @nodoc
@@ -76,8 +74,7 @@ class _$CreateCharacterParamsCopyWithImpl<$Res,
     Object? name = null,
     Object? isHidden = null,
     Object? aliases = null,
-    Object? imageBytes = freezed,
-    Object? mimeType = freezed,
+    Object? assetId = freezed,
   }) {
     return _then(_value.copyWith(
       userId: null == userId
@@ -100,13 +97,9 @@ class _$CreateCharacterParamsCopyWithImpl<$Res,
           ? _value.aliases
           : aliases // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      imageBytes: freezed == imageBytes
-          ? _value.imageBytes
-          : imageBytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
+      assetId: freezed == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -127,8 +120,7 @@ abstract class _$$CreateCharacterParamsImplCopyWith<$Res>
       String name,
       bool isHidden,
       List<String> aliases,
-      List<int>? imageBytes,
-      String? mimeType});
+      String? assetId});
 }
 
 /// @nodoc
@@ -150,8 +142,7 @@ class __$$CreateCharacterParamsImplCopyWithImpl<$Res>
     Object? name = null,
     Object? isHidden = null,
     Object? aliases = null,
-    Object? imageBytes = freezed,
-    Object? mimeType = freezed,
+    Object? assetId = freezed,
   }) {
     return _then(_$CreateCharacterParamsImpl(
       userId: null == userId
@@ -174,13 +165,9 @@ class __$$CreateCharacterParamsImplCopyWithImpl<$Res>
           ? _value._aliases
           : aliases // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      imageBytes: freezed == imageBytes
-          ? _value._imageBytes
-          : imageBytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
+      assetId: freezed == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -195,10 +182,8 @@ class _$CreateCharacterParamsImpl implements _CreateCharacterParams {
       required this.name,
       this.isHidden = false,
       final List<String> aliases = const [],
-      final List<int>? imageBytes,
-      this.mimeType})
-      : _aliases = aliases,
-        _imageBytes = imageBytes;
+      this.assetId})
+      : _aliases = aliases;
 
   factory _$CreateCharacterParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateCharacterParamsImplFromJson(json);
@@ -221,22 +206,12 @@ class _$CreateCharacterParamsImpl implements _CreateCharacterParams {
     return EqualUnmodifiableListView(_aliases);
   }
 
-  final List<int>? _imageBytes;
   @override
-  List<int>? get imageBytes {
-    final value = _imageBytes;
-    if (value == null) return null;
-    if (_imageBytes is EqualUnmodifiableListView) return _imageBytes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  final String? mimeType;
+  final String? assetId;
 
   @override
   String toString() {
-    return 'CreateCharacterParams(userId: $userId, dleId: $dleId, name: $name, isHidden: $isHidden, aliases: $aliases, imageBytes: $imageBytes, mimeType: $mimeType)';
+    return 'CreateCharacterParams(userId: $userId, dleId: $dleId, name: $name, isHidden: $isHidden, aliases: $aliases, assetId: $assetId)';
   }
 
   @override
@@ -250,23 +225,13 @@ class _$CreateCharacterParamsImpl implements _CreateCharacterParams {
             (identical(other.isHidden, isHidden) ||
                 other.isHidden == isHidden) &&
             const DeepCollectionEquality().equals(other._aliases, _aliases) &&
-            const DeepCollectionEquality()
-                .equals(other._imageBytes, _imageBytes) &&
-            (identical(other.mimeType, mimeType) ||
-                other.mimeType == mimeType));
+            (identical(other.assetId, assetId) || other.assetId == assetId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      dleId,
-      name,
-      isHidden,
-      const DeepCollectionEquality().hash(_aliases),
-      const DeepCollectionEquality().hash(_imageBytes),
-      mimeType);
+  int get hashCode => Object.hash(runtimeType, userId, dleId, name, isHidden,
+      const DeepCollectionEquality().hash(_aliases), assetId);
 
   /// Create a copy of CreateCharacterParams
   /// with the given fields replaced by the non-null parameter values.
@@ -292,8 +257,7 @@ abstract class _CreateCharacterParams implements CreateCharacterParams {
       required final String name,
       final bool isHidden,
       final List<String> aliases,
-      final List<int>? imageBytes,
-      final String? mimeType}) = _$CreateCharacterParamsImpl;
+      final String? assetId}) = _$CreateCharacterParamsImpl;
 
   factory _CreateCharacterParams.fromJson(Map<String, dynamic> json) =
       _$CreateCharacterParamsImpl.fromJson;
@@ -309,9 +273,7 @@ abstract class _CreateCharacterParams implements CreateCharacterParams {
   @override
   List<String> get aliases;
   @override
-  List<int>? get imageBytes;
-  @override
-  String? get mimeType;
+  String? get assetId;
 
   /// Create a copy of CreateCharacterParams
   /// with the given fields replaced by the non-null parameter values.

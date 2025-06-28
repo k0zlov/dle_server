@@ -26,6 +26,7 @@ class EditAssetParams with _$EditAssetParams {
     required String dleId,
     required String userId,
     required DleAssetType type,
+    String? description,
     List<int>? bytes,
     String? mimeType,
   }) = _EditAssetParams;
@@ -97,6 +98,7 @@ class EditAssetUseCase implements UseCase<Dle, EditAssetParams> {
             userId: params.userId,
             dleId: dle.id,
             uploadId: upload.id,
+            description: params.description ?? '',
             type: params.type,
           ),
         );

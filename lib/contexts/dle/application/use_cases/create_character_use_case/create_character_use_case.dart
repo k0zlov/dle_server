@@ -7,9 +7,7 @@ import 'package:dle_server/contexts/dle/domain/entities/character/character.dart
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
-import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
-import 'package:dle_server/kernel/domain/entities/upload/upload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -25,8 +23,7 @@ class CreateCharacterParams with _$CreateCharacterParams {
     required String name,
     @Default(false) bool isHidden,
     @Default([]) List<String> aliases,
-    List<int>? imageBytes,
-    String? mimeType,
+    String? assetId,
   }) = _CreateCharacterParams;
 
   factory CreateCharacterParams.fromJson(Map<String, dynamic> json) =>
@@ -37,13 +34,11 @@ class CreateCharacterParams with _$CreateCharacterParams {
 class CreateCharacterUseCase implements UseCase<Dle, CreateCharacterParams> {
   const CreateCharacterUseCase({
     required this.repository,
-    required this.saveUploadUseCase,
     @dleContext required this.eventBus,
   });
 
   final DomainEventBus eventBus;
   final DleRepositoryPort repository;
-  final SaveUploadUseCase saveUploadUseCase;
 
   @override
   Future<Dle> call(CreateCharacterParams params) async {
@@ -53,45 +48,29 @@ class CreateCharacterUseCase implements UseCase<Dle, CreateCharacterParams> {
       throw DleNotFoundException();
     }
 
-    final bool canManageCharacters = dle.userCanManageCharacters(params.userId);
+    final bool canManageCharacters = dle.userCanManageDle(params.userId);
 
     if (!canManageCharacters) {
       throw EditorPermissionsException();
     }
 
-    Character character = Character.create(
+    final Character character = Character.create(
       name: params.name,
       dleId: dle.id,
+      assetId: params.assetId,
       aliases: params.aliases,
       isHidden: params.isHidden,
     );
 
-    if (params.imageBytes != null && params.mimeType != null) {
-      try {
-        final Upload upload = await saveUploadUseCase(
-          SaveUploadParams(
-            bytes: params.imageBytes!,
-            mimeType: params.mimeType!,
-            userId: params.userId,
-          ),
-        );
-
-        character = character.edit(imageId: upload.id);
-      } catch (e) {
-        throw CouldNotUploadFileException();
-      }
-    }
-
     final Dle updatedDle = dle.addCharacter(character);
-
     await repository.save(
       updatedDle,
       overrideAssets: false,
       overrideEditors: false,
       overrideHints: false,
     );
-    eventBus.publish(DleUpdatedEvent(dle: updatedDle));
 
+    eventBus.publish(DleUpdatedEvent(dle: updatedDle));
     return updatedDle;
   }
 }

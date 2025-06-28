@@ -46,7 +46,7 @@ class RemoveHintUseCase implements UseCase<Dle, RemoveHintParams> {
       throw DleNotFoundException();
     }
 
-    final bool canManageHints = dle.userCanManageHints(params.userId);
+    final bool canManageHints = dle.userCanManageDle(params.userId);
 
     if (!canManageHints) {
       throw EditorPermissionsException();

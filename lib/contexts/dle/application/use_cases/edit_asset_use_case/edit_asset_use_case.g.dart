@@ -12,6 +12,7 @@ _$EditAssetParamsImpl _$$EditAssetParamsImplFromJson(
       dleId: json['dleId'] as String,
       userId: json['userId'] as String,
       type: $enumDecode(_$DleAssetTypeEnumMap, json['type']),
+      description: json['description'] as String?,
       bytes: (json['bytes'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toList(),
@@ -24,10 +25,13 @@ Map<String, dynamic> _$$EditAssetParamsImplToJson(
       'dleId': instance.dleId,
       'userId': instance.userId,
       'type': _$DleAssetTypeEnumMap[instance.type]!,
+      'description': instance.description,
       'bytes': instance.bytes,
       'mimeType': instance.mimeType,
     };
 
 const _$DleAssetTypeEnumMap = {
-  DleAssetType.icon: 'icon',
+  DleAssetType.preview: 'preview',
+  DleAssetType.character: 'character',
+  DleAssetType.other: 'other',
 };

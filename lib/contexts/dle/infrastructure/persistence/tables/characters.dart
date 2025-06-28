@@ -1,10 +1,10 @@
 import 'package:dle_server/contexts/dle/domain/entities/character/character.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dle_assets.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/dles.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/string_list_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
-import 'package:dle_server/kernel/infrastructure/database/tables/uploads.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 
 export 'package:dle_server/contexts/dle/domain/entities/character/character.dart';
@@ -22,10 +22,10 @@ class Characters extends Table {
           .references(Dles, #id, onDelete: KeyAction.cascade)
           .map(const UuidValueToStringConverter())();
 
-  @ReferenceName('CharactersInDle')
-  UuidColumn get imageId =>
+  @ReferenceName('CharactersInAssets')
+  UuidColumn get assetId =>
       customType(PgTypes.uuid)
-          .references(Uploads, #id, onDelete: KeyAction.setNull)
+          .references(DleAssets, #id, onDelete: KeyAction.setNull)
           .map(const UuidValueToStringConverter())
           .nullable()();
 

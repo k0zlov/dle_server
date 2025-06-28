@@ -1,11 +1,23 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
+import 'package:uuid/uuid.dart';
 
 part 'parameter.mapper.dart';
 
 @MappableEnum()
-enum ParameterType { number, text, image }
+enum ParameterType {
+  number,
+  text,
+  image;
+
+  bool check(String value) {
+    return switch (this) {
+      ParameterType.text => true,
+      ParameterType.image => Uuid.isValidUUID(fromString: value),
+      ParameterType.number => int.tryParse(value) != null,
+    };
+  }
+}
 
 @MappableEnum()
 enum CompareMode { indexed, compared, none }
@@ -25,7 +37,6 @@ class Parameter extends Entity with ParameterMappable {
     required this.isHidden,
     required this.updatedAt,
     required this.createdAt,
-    this.selectableValues = const <SelectableValue>[],
   });
 
   Parameter.create({
@@ -38,7 +49,6 @@ class Parameter extends Entity with ParameterMappable {
     this.isReverseCompared = false,
     this.compareMode = CompareMode.none,
     this.allowsMultipleValues = false,
-    this.selectableValues = const <SelectableValue>[],
   }) : updatedAt = DateTime.now(),
        createdAt = DateTime.now();
 
@@ -54,38 +64,24 @@ class Parameter extends Entity with ParameterMappable {
   final bool isSelectable;
   final bool isHidden;
 
-  final List<SelectableValue> selectableValues;
-
   final DateTime updatedAt;
   final DateTime createdAt;
 
   Parameter edit({
-    bool? isSelectable,
     bool? isHidden,
     bool? allowsMultipleValues,
     bool? isReverseCompared,
     CompareMode? compareMode,
-    ParameterType? type,
     String? title,
     String? description,
-    List<SelectableValue>? selectableValues,
   }) {
-    List<SelectableValue> newSelectableValues =
-        selectableValues ?? this.selectableValues;
-
-    if ((isSelectable != null && !isSelectable) || type != this.type) {
-      newSelectableValues = [];
-    }
-
     return copyWith(
       title: title,
       description: description,
       compareMode: compareMode,
+      isReverseCompared: isReverseCompared,
       allowsMultipleValues: allowsMultipleValues,
       isHidden: isHidden,
-      type: type,
-      selectableValues: newSelectableValues,
-      isSelectable: isSelectable,
       updatedAt: DateTime.now(),
     );
   }

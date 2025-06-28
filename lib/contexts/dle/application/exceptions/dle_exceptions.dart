@@ -31,3 +31,9 @@ class HintsQuantityException implements AppException {}
 class HintNotFoundException implements AppException {}
 
 class CharacterHintNotFoundException implements AppException {}
+
+class ParameterNotFoundException implements AppException {}
+
+class SelectableValueNotFoundException implements AppException {}
+
+class InvalidParameterValueType implements AppException {}

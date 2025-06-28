@@ -8,7 +8,6 @@ import 'package:dle_server/contexts/dle/domain/entities/character/character.dart
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
-import 'package:dle_server/kernel/application/use_cases/delete_upload_use_case/delete_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -33,13 +32,11 @@ class RemoveCharacterParams with _$RemoveCharacterParams {
 class RemoveCharacterUseCase implements UseCase<Dle, RemoveCharacterParams> {
   const RemoveCharacterUseCase({
     required this.repository,
-    required this.deleteUploadUseCase,
     @dleContext required this.eventBus,
   });
 
   final DomainEventBus eventBus;
   final DleRepositoryPort repository;
-  final DeleteUploadUseCase deleteUploadUseCase;
 
   @override
   Future<Dle> call(RemoveCharacterParams params) async {
@@ -49,7 +46,7 @@ class RemoveCharacterUseCase implements UseCase<Dle, RemoveCharacterParams> {
       throw DleNotFoundException();
     }
 
-    final bool canManageCharacters = dle.userCanManageCharacters(params.userId);
+    final bool canManageCharacters = dle.userCanManageDle(params.userId);
 
     if (!canManageCharacters) {
       throw EditorPermissionsException();
@@ -61,12 +58,6 @@ class RemoveCharacterUseCase implements UseCase<Dle, RemoveCharacterParams> {
 
     if (character == null) {
       throw CharacterNotFoundException();
-    }
-
-    if (character.imageId != null) {
-      await deleteUploadUseCase(
-        DeleteUploadParams(uploadId: character.imageId!),
-      );
     }
 
     final Dle updatedDle = dle.removeCharacter(params.characterId);

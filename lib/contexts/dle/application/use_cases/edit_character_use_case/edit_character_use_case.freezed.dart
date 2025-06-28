@@ -26,9 +26,8 @@ mixin _$EditCharacterParams {
   String? get name => throw _privateConstructorUsedError;
   bool? get isHidden => throw _privateConstructorUsedError;
   List<String>? get aliases => throw _privateConstructorUsedError;
-  List<int>? get imageBytes => throw _privateConstructorUsedError;
-  String? get mimeType => throw _privateConstructorUsedError;
-  bool? get deleteImage => throw _privateConstructorUsedError;
+  String? get assetId => throw _privateConstructorUsedError;
+  bool get deleteImage => throw _privateConstructorUsedError;
 
   /// Serializes this EditCharacterParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,9 +52,8 @@ abstract class $EditCharacterParamsCopyWith<$Res> {
       String? name,
       bool? isHidden,
       List<String>? aliases,
-      List<int>? imageBytes,
-      String? mimeType,
-      bool? deleteImage});
+      String? assetId,
+      bool deleteImage});
 }
 
 /// @nodoc
@@ -79,9 +77,8 @@ class _$EditCharacterParamsCopyWithImpl<$Res, $Val extends EditCharacterParams>
     Object? name = freezed,
     Object? isHidden = freezed,
     Object? aliases = freezed,
-    Object? imageBytes = freezed,
-    Object? mimeType = freezed,
-    Object? deleteImage = freezed,
+    Object? assetId = freezed,
+    Object? deleteImage = null,
   }) {
     return _then(_value.copyWith(
       userId: null == userId
@@ -108,18 +105,14 @@ class _$EditCharacterParamsCopyWithImpl<$Res, $Val extends EditCharacterParams>
           ? _value.aliases
           : aliases // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      imageBytes: freezed == imageBytes
-          ? _value.imageBytes
-          : imageBytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
+      assetId: freezed == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
               as String?,
-      deleteImage: freezed == deleteImage
+      deleteImage: null == deleteImage
           ? _value.deleteImage
           : deleteImage // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
     ) as $Val);
   }
 }
@@ -139,9 +132,8 @@ abstract class _$$EditCharacterParamsImplCopyWith<$Res>
       String? name,
       bool? isHidden,
       List<String>? aliases,
-      List<int>? imageBytes,
-      String? mimeType,
-      bool? deleteImage});
+      String? assetId,
+      bool deleteImage});
 }
 
 /// @nodoc
@@ -163,9 +155,8 @@ class __$$EditCharacterParamsImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? isHidden = freezed,
     Object? aliases = freezed,
-    Object? imageBytes = freezed,
-    Object? mimeType = freezed,
-    Object? deleteImage = freezed,
+    Object? assetId = freezed,
+    Object? deleteImage = null,
   }) {
     return _then(_$EditCharacterParamsImpl(
       userId: null == userId
@@ -192,18 +183,14 @@ class __$$EditCharacterParamsImplCopyWithImpl<$Res>
           ? _value._aliases
           : aliases // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      imageBytes: freezed == imageBytes
-          ? _value._imageBytes
-          : imageBytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
+      assetId: freezed == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
               as String?,
-      deleteImage: freezed == deleteImage
+      deleteImage: null == deleteImage
           ? _value.deleteImage
           : deleteImage // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
     ));
   }
 }
@@ -218,11 +205,9 @@ class _$EditCharacterParamsImpl implements _EditCharacterParams {
       this.name,
       this.isHidden,
       final List<String>? aliases,
-      final List<int>? imageBytes,
-      this.mimeType,
-      this.deleteImage})
-      : _aliases = aliases,
-        _imageBytes = imageBytes;
+      this.assetId,
+      this.deleteImage = false})
+      : _aliases = aliases;
 
   factory _$EditCharacterParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$EditCharacterParamsImplFromJson(json);
@@ -247,24 +232,15 @@ class _$EditCharacterParamsImpl implements _EditCharacterParams {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<int>? _imageBytes;
   @override
-  List<int>? get imageBytes {
-    final value = _imageBytes;
-    if (value == null) return null;
-    if (_imageBytes is EqualUnmodifiableListView) return _imageBytes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  final String? assetId;
   @override
-  final String? mimeType;
-  @override
-  final bool? deleteImage;
+  @JsonKey()
+  final bool deleteImage;
 
   @override
   String toString() {
-    return 'EditCharacterParams(userId: $userId, dleId: $dleId, characterId: $characterId, name: $name, isHidden: $isHidden, aliases: $aliases, imageBytes: $imageBytes, mimeType: $mimeType, deleteImage: $deleteImage)';
+    return 'EditCharacterParams(userId: $userId, dleId: $dleId, characterId: $characterId, name: $name, isHidden: $isHidden, aliases: $aliases, assetId: $assetId, deleteImage: $deleteImage)';
   }
 
   @override
@@ -280,10 +256,7 @@ class _$EditCharacterParamsImpl implements _EditCharacterParams {
             (identical(other.isHidden, isHidden) ||
                 other.isHidden == isHidden) &&
             const DeepCollectionEquality().equals(other._aliases, _aliases) &&
-            const DeepCollectionEquality()
-                .equals(other._imageBytes, _imageBytes) &&
-            (identical(other.mimeType, mimeType) ||
-                other.mimeType == mimeType) &&
+            (identical(other.assetId, assetId) || other.assetId == assetId) &&
             (identical(other.deleteImage, deleteImage) ||
                 other.deleteImage == deleteImage));
   }
@@ -298,8 +271,7 @@ class _$EditCharacterParamsImpl implements _EditCharacterParams {
       name,
       isHidden,
       const DeepCollectionEquality().hash(_aliases),
-      const DeepCollectionEquality().hash(_imageBytes),
-      mimeType,
+      assetId,
       deleteImage);
 
   /// Create a copy of EditCharacterParams
@@ -327,9 +299,8 @@ abstract class _EditCharacterParams implements EditCharacterParams {
       final String? name,
       final bool? isHidden,
       final List<String>? aliases,
-      final List<int>? imageBytes,
-      final String? mimeType,
-      final bool? deleteImage}) = _$EditCharacterParamsImpl;
+      final String? assetId,
+      final bool deleteImage}) = _$EditCharacterParamsImpl;
 
   factory _EditCharacterParams.fromJson(Map<String, dynamic> json) =
       _$EditCharacterParamsImpl.fromJson;
@@ -347,11 +318,9 @@ abstract class _EditCharacterParams implements EditCharacterParams {
   @override
   List<String>? get aliases;
   @override
-  List<int>? get imageBytes;
+  String? get assetId;
   @override
-  String? get mimeType;
-  @override
-  bool? get deleteImage;
+  bool get deleteImage;
 
   /// Create a copy of EditCharacterParams
   /// with the given fields replaced by the non-null parameter values.

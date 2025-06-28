@@ -115,7 +115,6 @@ class ParameterMapper extends ClassMapperBase<Parameter> {
       MapperContainer.globals.use(_instance = ParameterMapper._());
       ParameterTypeMapper.ensureInitialized();
       CompareModeMapper.ensureInitialized();
-      SelectableValueMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -156,11 +155,6 @@ class ParameterMapper extends ClassMapperBase<Parameter> {
   static DateTime _$createdAt(Parameter v) => v.createdAt;
   static const Field<Parameter, DateTime> _f$createdAt =
       Field('createdAt', _$createdAt);
-  static List<SelectableValue> _$selectableValues(Parameter v) =>
-      v.selectableValues;
-  static const Field<Parameter, List<SelectableValue>> _f$selectableValues =
-      Field('selectableValues', _$selectableValues,
-          opt: true, def: const <SelectableValue>[]);
 
   @override
   final MappableFields<Parameter> fields = const {
@@ -176,7 +170,6 @@ class ParameterMapper extends ClassMapperBase<Parameter> {
     #isHidden: _f$isHidden,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
-    #selectableValues: _f$selectableValues,
   };
 
   static Parameter _instantiate(DecodingData data) {
@@ -192,8 +185,7 @@ class ParameterMapper extends ClassMapperBase<Parameter> {
         isSelectable: data.dec(_f$isSelectable),
         isHidden: data.dec(_f$isHidden),
         updatedAt: data.dec(_f$updatedAt),
-        createdAt: data.dec(_f$createdAt),
-        selectableValues: data.dec(_f$selectableValues));
+        createdAt: data.dec(_f$createdAt));
   }
 
   @override
@@ -246,9 +238,6 @@ extension ParameterValueCopy<$R, $Out> on ObjectCopyWith<$R, Parameter, $Out> {
 
 abstract class ParameterCopyWith<$R, $In extends Parameter, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, SelectableValue,
-          SelectableValueCopyWith<$R, SelectableValue, SelectableValue>>
-      get selectableValues;
   $R call(
       {String? id,
       String? basicDleId,
@@ -261,8 +250,7 @@ abstract class ParameterCopyWith<$R, $In extends Parameter, $Out>
       bool? isSelectable,
       bool? isHidden,
       DateTime? updatedAt,
-      DateTime? createdAt,
-      List<SelectableValue>? selectableValues});
+      DateTime? createdAt});
   ParameterCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -274,11 +262,6 @@ class _ParameterCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<Parameter> $mapper =
       ParameterMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, SelectableValue,
-          SelectableValueCopyWith<$R, SelectableValue, SelectableValue>>
-      get selectableValues => ListCopyWith($value.selectableValues,
-          (v, t) => v.copyWith.$chain(t), (v) => call(selectableValues: v));
   @override
   $R call(
           {Object? id = $none,
@@ -292,8 +275,7 @@ class _ParameterCopyWithImpl<$R, $Out>
           bool? isSelectable,
           bool? isHidden,
           DateTime? updatedAt,
-          DateTime? createdAt,
-          List<SelectableValue>? selectableValues}) =>
+          DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (basicDleId != null) #basicDleId: basicDleId,
@@ -307,8 +289,7 @@ class _ParameterCopyWithImpl<$R, $Out>
         if (isSelectable != null) #isSelectable: isSelectable,
         if (isHidden != null) #isHidden: isHidden,
         if (updatedAt != null) #updatedAt: updatedAt,
-        if (createdAt != null) #createdAt: createdAt,
-        if (selectableValues != null) #selectableValues: selectableValues
+        if (createdAt != null) #createdAt: createdAt
       }));
   @override
   Parameter $make(CopyWithData data) => Parameter(
@@ -325,9 +306,7 @@ class _ParameterCopyWithImpl<$R, $Out>
       isSelectable: data.get(#isSelectable, or: $value.isSelectable),
       isHidden: data.get(#isHidden, or: $value.isHidden),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
-      createdAt: data.get(#createdAt, or: $value.createdAt),
-      selectableValues:
-          data.get(#selectableValues, or: $value.selectableValues));
+      createdAt: data.get(#createdAt, or: $value.createdAt));
 
   @override
   ParameterCopyWith<$R2, Parameter, $Out2> $chain<$R2, $Out2>(

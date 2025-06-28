@@ -7,3 +7,5 @@ class InvitationExpiredException implements DomainException {}
 class InvitationCanceledException implements DomainException {}
 
 class WrongHintValueTypeException implements DomainException {}
+
+class TooManyParametersInBasicDle implements DomainException {}

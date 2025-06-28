@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:dle_server/contexts/dle/adapters/primary/api/dto/manage_dle_dto/manage_dle_dto.dart';
-import 'package:dle_server/contexts/dle/adapters/primary/api/dto/manage_dle_socket_dto/manage_dle_socket_dto.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/exceptions/dle_exceptions_mapper.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/get_user_dle_use_case/get_user_dle_use_case.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle_created.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/contexts/dle/domain/events/editor_left.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
@@ -41,12 +41,13 @@ class DleManageSocketController {
         wsManager.send(
           id: dleManageId,
           userId: event.editorUserId,
-          data: ManageDleSocketDto(
-            type: ManageDleSocketEventType.delete,
-            dtoList: dleDtoList,
-          ),
+          type: SocketEventType.delete,
+          data: dleDtoList,
         );
 
+        _sendForAllDleEditors(event.dle);
+      })
+      ..subscribe<DleCreatedEvent>((event) {
         _sendForAllDleEditors(event.dle);
       })
       ..subscribe<DleUpdatedEvent>((event) {
@@ -63,10 +64,8 @@ class DleManageSocketController {
       wsManager.send(
         id: dleManageId,
         userId: userId,
-        data: ManageDleSocketDto(
-          type: ManageDleSocketEventType.update,
-          dtoList: dleDtoList,
-        ),
+        type: SocketEventType.update,
+        data: dleDtoList,
       );
     }
   }
@@ -86,10 +85,8 @@ class DleManageSocketController {
           wsManager.send(
             id: dleManageId,
             userId: userId,
-            data: ManageDleSocketDto(
-              type: ManageDleSocketEventType.update,
-              dtoList: dleList.map(ManageDleDto.fromEntity).toList(),
-            ),
+            type: SocketEventType.update,
+            data: dleList.map(ManageDleDto.fromEntity).toList(),
           );
         } catch (e) {
           channel.sink.addError(jsonEncode(mapper(e).toMap()));

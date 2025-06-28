@@ -13,7 +13,6 @@ class SelectableValueMapper extends ClassMapperBase<SelectableValue> {
   static SelectableValueMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SelectableValueMapper._());
-      ParameterValueMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -27,12 +26,12 @@ class SelectableValueMapper extends ClassMapperBase<SelectableValue> {
   static String _$parameterId(SelectableValue v) => v.parameterId;
   static const Field<SelectableValue, String> _f$parameterId =
       Field('parameterId', _$parameterId);
-  static ParameterValue _$value(SelectableValue v) => v.value;
-  static const Field<SelectableValue, ParameterValue> _f$value =
+  static String _$value(SelectableValue v) => v.value;
+  static const Field<SelectableValue, String> _f$value =
       Field('value', _$value);
-  static String _$description(SelectableValue v) => v.description;
-  static const Field<SelectableValue, String> _f$description =
-      Field('description', _$description);
+  static String _$title(SelectableValue v) => v.title;
+  static const Field<SelectableValue, String> _f$title =
+      Field('title', _$title);
   static DateTime _$updatedAt(SelectableValue v) => v.updatedAt;
   static const Field<SelectableValue, DateTime> _f$updatedAt =
       Field('updatedAt', _$updatedAt);
@@ -45,7 +44,7 @@ class SelectableValueMapper extends ClassMapperBase<SelectableValue> {
     #id: _f$id,
     #parameterId: _f$parameterId,
     #value: _f$value,
-    #description: _f$description,
+    #title: _f$title,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
   };
@@ -55,7 +54,7 @@ class SelectableValueMapper extends ClassMapperBase<SelectableValue> {
         id: data.dec(_f$id),
         parameterId: data.dec(_f$parameterId),
         value: data.dec(_f$value),
-        description: data.dec(_f$description),
+        title: data.dec(_f$title),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt));
   }
@@ -113,12 +112,11 @@ extension SelectableValueValueCopy<$R, $Out>
 
 abstract class SelectableValueCopyWith<$R, $In extends SelectableValue, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ParameterValueCopyWith<$R, ParameterValue, ParameterValue> get value;
   $R call(
       {String? id,
       String? parameterId,
-      ParameterValue? value,
-      String? description,
+      String? value,
+      String? title,
       DateTime? updatedAt,
       DateTime? createdAt});
   SelectableValueCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -134,21 +132,18 @@ class _SelectableValueCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SelectableValue> $mapper =
       SelectableValueMapper.ensureInitialized();
   @override
-  ParameterValueCopyWith<$R, ParameterValue, ParameterValue> get value =>
-      $value.value.copyWith.$chain((v) => call(value: v));
-  @override
   $R call(
           {Object? id = $none,
           String? parameterId,
-          ParameterValue? value,
-          String? description,
+          String? value,
+          String? title,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (parameterId != null) #parameterId: parameterId,
         if (value != null) #value: value,
-        if (description != null) #description: description,
+        if (title != null) #title: title,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
       }));
@@ -157,7 +152,7 @@ class _SelectableValueCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       parameterId: data.get(#parameterId, or: $value.parameterId),
       value: data.get(#value, or: $value.value),
-      description: data.get(#description, or: $value.description),
+      title: data.get(#title, or: $value.title),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt));
 

@@ -8,10 +8,7 @@ import 'package:dle_server/contexts/dle/domain/entities/character/character.dart
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
-import 'package:dle_server/kernel/application/use_cases/delete_upload_use_case/delete_upload_use_case.dart';
-import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
-import 'package:dle_server/kernel/domain/entities/upload/upload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -28,9 +25,8 @@ class EditCharacterParams with _$EditCharacterParams {
     String? name,
     bool? isHidden,
     List<String>? aliases,
-    List<int>? imageBytes,
-    String? mimeType,
-    bool? deleteImage,
+    String? assetId,
+    @Default(false) bool deleteImage,
   }) = _EditCharacterParams;
 
   factory EditCharacterParams.fromJson(Map<String, dynamic> json) =>
@@ -42,14 +38,10 @@ class EditCharacterUseCase implements UseCase<Dle, EditCharacterParams> {
   const EditCharacterUseCase({
     required this.repository,
     @dleContext required this.eventBus,
-    required this.saveUploadUseCase,
-    required this.deleteUploadUseCase,
   });
 
   final DomainEventBus eventBus;
   final DleRepositoryPort repository;
-  final SaveUploadUseCase saveUploadUseCase;
-  final DeleteUploadUseCase deleteUploadUseCase;
 
   @override
   Future<Dle> call(EditCharacterParams params) async {
@@ -59,7 +51,7 @@ class EditCharacterUseCase implements UseCase<Dle, EditCharacterParams> {
       throw DleNotFoundException();
     }
 
-    final bool canManageCharacters = dle.userCanManageCharacters(params.userId);
+    final bool canManageCharacters = dle.userCanManageDle(params.userId);
 
     if (!canManageCharacters) {
       throw EditorPermissionsException();
@@ -73,44 +65,12 @@ class EditCharacterUseCase implements UseCase<Dle, EditCharacterParams> {
       throw CharacterNotFoundException();
     }
 
-    final bool shouldUpdateImage =
-        params.imageBytes != null &&
-        params.mimeType != null &&
-        (params.imageBytes?.isNotEmpty ?? false);
-
-    final bool shouldDeleteImage =
-        shouldUpdateImage ||
-        (character.imageId != null && (params.deleteImage ?? false));
-
-    Character editedCharacter = character.copyWith(
+    final Character editedCharacter = character.edit(
       name: params.name,
       aliases: params.aliases,
       isHidden: params.isHidden,
+      assetId: params.deleteImage ? null : params.assetId,
     );
-
-    if (shouldDeleteImage && character.imageId != null) {
-      await deleteUploadUseCase(
-        DeleteUploadParams(uploadId: character.imageId!),
-      );
-
-      editedCharacter = editedCharacter.removeImage();
-    }
-
-    if (shouldUpdateImage) {
-      try {
-        final Upload upload = await saveUploadUseCase(
-          SaveUploadParams(
-            bytes: params.imageBytes!,
-            mimeType: params.mimeType!,
-            userId: params.userId,
-          ),
-        );
-
-        editedCharacter = editedCharacter.edit(imageId: upload.id);
-      } catch (e) {
-        throw CouldNotUploadFileException();
-      }
-    }
 
     final Dle updatedDle = dle.editCharacter(editedCharacter);
     await repository.save(

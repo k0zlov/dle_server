@@ -1,5 +1,4 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:dle_server/contexts/dle/domain/value_objects/parameter_value/parameter_value.dart';
 import 'package:dle_server/kernel/domain/entities/entity.dart';
 
 part 'character_parameter.mapper.dart';
@@ -29,17 +28,13 @@ class CharacterParameter extends Entity with CharacterParameterMappable {
   final String characterId;
   final String parameterId;
   final int index;
-  final ParameterValue? value;
+  final String? value;
   final String? selectableId;
 
   final DateTime updatedAt;
   final DateTime createdAt;
 
-  CharacterParameter edit({
-    String? selectableId,
-    int? index,
-    ParameterValue? value,
-  }) {
+  CharacterParameter edit({String? selectableId, int? index, String? value}) {
     return copyWith(
       selectableId: selectableId,
       index: index,

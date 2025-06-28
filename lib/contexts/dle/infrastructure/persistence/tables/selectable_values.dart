@@ -1,5 +1,4 @@
 import 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
-import 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/parameters.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/uuid_value_to_string.dart';
@@ -7,8 +6,6 @@ import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 
 export 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
-export 'package:dle_server/contexts/dle/domain/value_objects/parameter_value/parameter_value.dart';
-export 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 
 @UseRowClass(SelectableValue)
 @TableIndex(name: 'selectable_values_parameter_id', columns: {#parameterId})
@@ -24,10 +21,9 @@ class SelectableValues extends Table {
           .references(Parameters, #id, onDelete: KeyAction.cascade)
           .map(const UuidValueToStringConverter())();
 
-  TextColumn get description => text()();
+  TextColumn get title => text()();
 
-  Column<Object> get value =>
-      customType(PgTypes.jsonb).map(const ParameterValueConverter())();
+  TextColumn get value => text()();
 
   TimestampColumn get updatedAt =>
       customType(dialectAwareTimestamp)

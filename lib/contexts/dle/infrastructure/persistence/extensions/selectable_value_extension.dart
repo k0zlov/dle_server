@@ -7,7 +7,7 @@ extension SelectableValueMapperExtension on SelectableValuesCompanion {
       id: Value(selectableValue.id),
       parameterId: Value(selectableValue.parameterId),
       value: Value(selectableValue.value),
-      description: Value(selectableValue.description),
+      title: Value(selectableValue.title),
       updatedAt: Value(selectableValue.updatedAt),
       createdAt: Value(selectableValue.createdAt),
     );

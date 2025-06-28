@@ -1,5 +1,4 @@
 import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
-import 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/characters.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/tables/parameters.dart';
 import 'package:dle_server/kernel/infrastructure/database/converters/pg_date_time_converter.dart';
@@ -8,7 +7,6 @@ import 'package:dle_server/kernel/infrastructure/database/database.dart';
 import 'package:dle_server/kernel/infrastructure/database/types/dialect_timestamp.dart';
 
 export 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
-export 'package:dle_server/contexts/dle/infrastructure/persistence/converters/parameter_value_converter.dart';
 
 @UseRowClass(CharacterParameter)
 @TableIndex(
@@ -40,8 +38,7 @@ class CharacterParameters extends Table {
           .map(const UuidValueToStringConverter())
           .nullable()();
 
-  Column<Object> get value =>
-      customType(PgTypes.jsonb).map(const ParameterValueConverter())();
+  TextColumn get value => text()();
 
   IntColumn get index => integer()();
 

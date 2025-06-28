@@ -29,9 +29,9 @@ class CharacterMapper extends ClassMapperBase<Character> {
   static List<String> _$aliases(Character v) => v.aliases;
   static const Field<Character, List<String>> _f$aliases =
       Field('aliases', _$aliases);
-  static String? _$imageId(Character v) => v.imageId;
-  static const Field<Character, String> _f$imageId =
-      Field('imageId', _$imageId);
+  static String? _$assetId(Character v) => v.assetId;
+  static const Field<Character, String> _f$assetId =
+      Field('assetId', _$assetId);
   static bool _$isHidden(Character v) => v.isHidden;
   static const Field<Character, bool> _f$isHidden =
       Field('isHidden', _$isHidden);
@@ -48,7 +48,7 @@ class CharacterMapper extends ClassMapperBase<Character> {
     #dleId: _f$dleId,
     #name: _f$name,
     #aliases: _f$aliases,
-    #imageId: _f$imageId,
+    #assetId: _f$assetId,
     #isHidden: _f$isHidden,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
@@ -60,7 +60,7 @@ class CharacterMapper extends ClassMapperBase<Character> {
         dleId: data.dec(_f$dleId),
         name: data.dec(_f$name),
         aliases: data.dec(_f$aliases),
-        imageId: data.dec(_f$imageId),
+        assetId: data.dec(_f$assetId),
         isHidden: data.dec(_f$isHidden),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt));
@@ -122,7 +122,7 @@ abstract class CharacterCopyWith<$R, $In extends Character, $Out>
       String? dleId,
       String? name,
       List<String>? aliases,
-      String? imageId,
+      String? assetId,
       bool? isHidden,
       DateTime? updatedAt,
       DateTime? createdAt});
@@ -147,7 +147,7 @@ class _CharacterCopyWithImpl<$R, $Out>
           String? dleId,
           String? name,
           List<String>? aliases,
-          Object? imageId = $none,
+          Object? assetId = $none,
           bool? isHidden,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
@@ -156,7 +156,7 @@ class _CharacterCopyWithImpl<$R, $Out>
         if (dleId != null) #dleId: dleId,
         if (name != null) #name: name,
         if (aliases != null) #aliases: aliases,
-        if (imageId != $none) #imageId: imageId,
+        if (assetId != $none) #assetId: assetId,
         if (isHidden != null) #isHidden: isHidden,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
@@ -167,7 +167,7 @@ class _CharacterCopyWithImpl<$R, $Out>
       dleId: data.get(#dleId, or: $value.dleId),
       name: data.get(#name, or: $value.name),
       aliases: data.get(#aliases, or: $value.aliases),
-      imageId: data.get(#imageId, or: $value.imageId),
+      assetId: data.get(#assetId, or: $value.assetId),
       isHidden: data.get(#isHidden, or: $value.isHidden),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt));

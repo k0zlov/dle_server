@@ -23,6 +23,7 @@ mixin _$EditAssetParams {
   String get dleId => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   DleAssetType get type => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   List<int>? get bytes => throw _privateConstructorUsedError;
   String? get mimeType => throw _privateConstructorUsedError;
 
@@ -46,6 +47,7 @@ abstract class $EditAssetParamsCopyWith<$Res> {
       {String dleId,
       String userId,
       DleAssetType type,
+      String? description,
       List<int>? bytes,
       String? mimeType});
 }
@@ -68,6 +70,7 @@ class _$EditAssetParamsCopyWithImpl<$Res, $Val extends EditAssetParams>
     Object? dleId = null,
     Object? userId = null,
     Object? type = null,
+    Object? description = freezed,
     Object? bytes = freezed,
     Object? mimeType = freezed,
   }) {
@@ -84,6 +87,10 @@ class _$EditAssetParamsCopyWithImpl<$Res, $Val extends EditAssetParams>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as DleAssetType,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       bytes: freezed == bytes
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
@@ -108,6 +115,7 @@ abstract class _$$EditAssetParamsImplCopyWith<$Res>
       {String dleId,
       String userId,
       DleAssetType type,
+      String? description,
       List<int>? bytes,
       String? mimeType});
 }
@@ -128,6 +136,7 @@ class __$$EditAssetParamsImplCopyWithImpl<$Res>
     Object? dleId = null,
     Object? userId = null,
     Object? type = null,
+    Object? description = freezed,
     Object? bytes = freezed,
     Object? mimeType = freezed,
   }) {
@@ -144,6 +153,10 @@ class __$$EditAssetParamsImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as DleAssetType,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       bytes: freezed == bytes
           ? _value._bytes
           : bytes // ignore: cast_nullable_to_non_nullable
@@ -163,6 +176,7 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
       {required this.dleId,
       required this.userId,
       required this.type,
+      this.description,
       final List<int>? bytes,
       this.mimeType})
       : _bytes = bytes;
@@ -176,6 +190,8 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
   final String userId;
   @override
   final DleAssetType type;
+  @override
+  final String? description;
   final List<int>? _bytes;
   @override
   List<int>? get bytes {
@@ -191,7 +207,7 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
 
   @override
   String toString() {
-    return 'EditAssetParams(dleId: $dleId, userId: $userId, type: $type, bytes: $bytes, mimeType: $mimeType)';
+    return 'EditAssetParams(dleId: $dleId, userId: $userId, type: $type, description: $description, bytes: $bytes, mimeType: $mimeType)';
   }
 
   @override
@@ -202,6 +218,8 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
             (identical(other.dleId, dleId) || other.dleId == dleId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             const DeepCollectionEquality().equals(other._bytes, _bytes) &&
             (identical(other.mimeType, mimeType) ||
                 other.mimeType == mimeType));
@@ -209,7 +227,7 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, dleId, userId, type,
+  int get hashCode => Object.hash(runtimeType, dleId, userId, type, description,
       const DeepCollectionEquality().hash(_bytes), mimeType);
 
   /// Create a copy of EditAssetParams
@@ -234,6 +252,7 @@ abstract class _EditAssetParams implements EditAssetParams {
       {required final String dleId,
       required final String userId,
       required final DleAssetType type,
+      final String? description,
       final List<int>? bytes,
       final String? mimeType}) = _$EditAssetParamsImpl;
 
@@ -246,6 +265,8 @@ abstract class _EditAssetParams implements EditAssetParams {
   String get userId;
   @override
   DleAssetType get type;
+  @override
+  String? get description;
   @override
   List<int>? get bytes;
   @override

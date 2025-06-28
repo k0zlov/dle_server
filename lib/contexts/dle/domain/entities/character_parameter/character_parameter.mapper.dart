@@ -13,7 +13,6 @@ class CharacterParameterMapper extends ClassMapperBase<CharacterParameter> {
   static CharacterParameterMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CharacterParameterMapper._());
-      ParameterValueMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -30,8 +29,8 @@ class CharacterParameterMapper extends ClassMapperBase<CharacterParameter> {
   static String _$parameterId(CharacterParameter v) => v.parameterId;
   static const Field<CharacterParameter, String> _f$parameterId =
       Field('parameterId', _$parameterId);
-  static ParameterValue? _$value(CharacterParameter v) => v.value;
-  static const Field<CharacterParameter, ParameterValue> _f$value =
+  static String? _$value(CharacterParameter v) => v.value;
+  static const Field<CharacterParameter, String> _f$value =
       Field('value', _$value);
   static int _$index(CharacterParameter v) => v.index;
   static const Field<CharacterParameter, int> _f$index =
@@ -125,12 +124,11 @@ extension CharacterParameterValueCopy<$R, $Out>
 
 abstract class CharacterParameterCopyWith<$R, $In extends CharacterParameter,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  ParameterValueCopyWith<$R, ParameterValue, ParameterValue>? get value;
   $R call(
       {String? id,
       String? characterId,
       String? parameterId,
-      ParameterValue? value,
+      String? value,
       int? index,
       String? selectableId,
       DateTime? updatedAt,
@@ -147,9 +145,6 @@ class _CharacterParameterCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<CharacterParameter> $mapper =
       CharacterParameterMapper.ensureInitialized();
-  @override
-  ParameterValueCopyWith<$R, ParameterValue, ParameterValue>? get value =>
-      $value.value?.copyWith.$chain((v) => call(value: v));
   @override
   $R call(
           {Object? id = $none,

@@ -55,19 +55,10 @@ class Dle extends Entity with DleMappable {
   final DateTime updatedAt;
   final DateTime createdAt;
 
-  /// Check if a user can manage characters
-  bool userCanManageCharacters(String userId) {
+  /// Check if a user can manage dle
+  bool userCanManageDle(String userId) {
     return editors.any((e) => e.userId == userId);
   }
-
-  /// Check if a user can manage hints
-  bool userCanManageHints(String userId) {
-    return editors.any((e) => e.userId == userId);
-  }
-
-  // Get the icon asset
-  DleAsset? get icon =>
-      assets.firstWhereOrNull((e) => e.type == DleAssetType.icon);
 
   // Edit DLE metadata
   Dle edit({String? title, String? description, bool? isPrivate}) {

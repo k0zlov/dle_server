@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:ruta/ruta.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+enum SocketEventType { delete, update }
+
 FutureOr<Response> wsHandler(
   Request req, {
   required void Function(WebSocketChannel, String?) onConnection,
@@ -92,28 +94,21 @@ class WebSocketManager {
   ///
   /// If the user has multiple channels, the message is sent to all of them.
   void send({
-    required String userId,
-    required dynamic data,
     required String id,
+    required dynamic data,
+    required String userId,
+    required SocketEventType type,
   }) {
     if (userChannels.containsKey(userId)) {
-      final encodedData = jsonEncode({'id': id, 'data': data});
+      final encodedData = jsonEncode({
+        'id': id,
+        'data': data,
+        'type': type.name,
+      });
       for (final channel in userChannels[userId]!) {
         channel.sink.add(encodedData);
       }
     }
-  }
-
-  /// Broadcasts a message to **all users across all channels**.
-  ///
-  /// Sends the message to every active WebSocketChannel across all users.
-  void broadcastMessage(dynamic data) {
-    final encodedData = jsonEncode(data);
-    userChannels.forEach((userId, channels) {
-      for (final channel in channels) {
-        channel.sink.add(encodedData);
-      }
-    });
   }
 
   /// Closes all WebSocket channels for all users and clears the manager.
