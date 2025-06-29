@@ -21,11 +21,11 @@ EditAssetParams _$EditAssetParamsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$EditAssetParams {
   String get dleId => throw _privateConstructorUsedError;
+  String get assetId => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  DleAssetType get type => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
   List<int>? get bytes => throw _privateConstructorUsedError;
   String? get mimeType => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   /// Serializes this EditAssetParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,11 +45,11 @@ abstract class $EditAssetParamsCopyWith<$Res> {
   @useResult
   $Res call(
       {String dleId,
+      String assetId,
       String userId,
-      DleAssetType type,
-      String? description,
       List<int>? bytes,
-      String? mimeType});
+      String? mimeType,
+      String? description});
 }
 
 /// @nodoc
@@ -68,29 +68,25 @@ class _$EditAssetParamsCopyWithImpl<$Res, $Val extends EditAssetParams>
   @override
   $Res call({
     Object? dleId = null,
+    Object? assetId = null,
     Object? userId = null,
-    Object? type = null,
-    Object? description = freezed,
     Object? bytes = freezed,
     Object? mimeType = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       dleId: null == dleId
           ? _value.dleId
           : dleId // ignore: cast_nullable_to_non_nullable
               as String,
+      assetId: null == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
+              as String,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as DleAssetType,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
       bytes: freezed == bytes
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
@@ -98,6 +94,10 @@ class _$EditAssetParamsCopyWithImpl<$Res, $Val extends EditAssetParams>
       mimeType: freezed == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -113,11 +113,11 @@ abstract class _$$EditAssetParamsImplCopyWith<$Res>
   @useResult
   $Res call(
       {String dleId,
+      String assetId,
       String userId,
-      DleAssetType type,
-      String? description,
       List<int>? bytes,
-      String? mimeType});
+      String? mimeType,
+      String? description});
 }
 
 /// @nodoc
@@ -134,29 +134,25 @@ class __$$EditAssetParamsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? dleId = null,
+    Object? assetId = null,
     Object? userId = null,
-    Object? type = null,
-    Object? description = freezed,
     Object? bytes = freezed,
     Object? mimeType = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$EditAssetParamsImpl(
       dleId: null == dleId
           ? _value.dleId
           : dleId // ignore: cast_nullable_to_non_nullable
               as String,
+      assetId: null == assetId
+          ? _value.assetId
+          : assetId // ignore: cast_nullable_to_non_nullable
+              as String,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as DleAssetType,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
       bytes: freezed == bytes
           ? _value._bytes
           : bytes // ignore: cast_nullable_to_non_nullable
@@ -164,6 +160,10 @@ class __$$EditAssetParamsImplCopyWithImpl<$Res>
       mimeType: freezed == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -174,11 +174,11 @@ class __$$EditAssetParamsImplCopyWithImpl<$Res>
 class _$EditAssetParamsImpl implements _EditAssetParams {
   const _$EditAssetParamsImpl(
       {required this.dleId,
+      required this.assetId,
       required this.userId,
-      required this.type,
-      this.description,
       final List<int>? bytes,
-      this.mimeType})
+      this.mimeType,
+      this.description})
       : _bytes = bytes;
 
   factory _$EditAssetParamsImpl.fromJson(Map<String, dynamic> json) =>
@@ -187,11 +187,9 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
   @override
   final String dleId;
   @override
+  final String assetId;
+  @override
   final String userId;
-  @override
-  final DleAssetType type;
-  @override
-  final String? description;
   final List<int>? _bytes;
   @override
   List<int>? get bytes {
@@ -204,10 +202,12 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
 
   @override
   final String? mimeType;
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'EditAssetParams(dleId: $dleId, userId: $userId, type: $type, description: $description, bytes: $bytes, mimeType: $mimeType)';
+    return 'EditAssetParams(dleId: $dleId, assetId: $assetId, userId: $userId, bytes: $bytes, mimeType: $mimeType, description: $description)';
   }
 
   @override
@@ -216,19 +216,19 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
         (other.runtimeType == runtimeType &&
             other is _$EditAssetParamsImpl &&
             (identical(other.dleId, dleId) || other.dleId == dleId) &&
+            (identical(other.assetId, assetId) || other.assetId == assetId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
             const DeepCollectionEquality().equals(other._bytes, _bytes) &&
             (identical(other.mimeType, mimeType) ||
-                other.mimeType == mimeType));
+                other.mimeType == mimeType) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, dleId, userId, type, description,
-      const DeepCollectionEquality().hash(_bytes), mimeType);
+  int get hashCode => Object.hash(runtimeType, dleId, assetId, userId,
+      const DeepCollectionEquality().hash(_bytes), mimeType, description);
 
   /// Create a copy of EditAssetParams
   /// with the given fields replaced by the non-null parameter values.
@@ -250,11 +250,11 @@ class _$EditAssetParamsImpl implements _EditAssetParams {
 abstract class _EditAssetParams implements EditAssetParams {
   const factory _EditAssetParams(
       {required final String dleId,
+      required final String assetId,
       required final String userId,
-      required final DleAssetType type,
-      final String? description,
       final List<int>? bytes,
-      final String? mimeType}) = _$EditAssetParamsImpl;
+      final String? mimeType,
+      final String? description}) = _$EditAssetParamsImpl;
 
   factory _EditAssetParams.fromJson(Map<String, dynamic> json) =
       _$EditAssetParamsImpl.fromJson;
@@ -262,15 +262,15 @@ abstract class _EditAssetParams implements EditAssetParams {
   @override
   String get dleId;
   @override
+  String get assetId;
+  @override
   String get userId;
-  @override
-  DleAssetType get type;
-  @override
-  String? get description;
   @override
   List<int>? get bytes;
   @override
   String? get mimeType;
+  @override
+  String? get description;
 
   /// Create a copy of EditAssetParams
   /// with the given fields replaced by the non-null parameter values.

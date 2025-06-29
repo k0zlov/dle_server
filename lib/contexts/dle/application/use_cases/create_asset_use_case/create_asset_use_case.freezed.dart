@@ -22,10 +22,9 @@ CreateAssetParams _$CreateAssetParamsFromJson(Map<String, dynamic> json) {
 mixin _$CreateAssetParams {
   String get userId => throw _privateConstructorUsedError;
   String get dleId => throw _privateConstructorUsedError;
-  DleAssetType get type => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
-  List<int>? get bytes => throw _privateConstructorUsedError;
-  String? get mimeType => throw _privateConstructorUsedError;
+  List<int> get bytes => throw _privateConstructorUsedError;
+  String get mimeType => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
 
   /// Serializes this CreateAssetParams to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +45,9 @@ abstract class $CreateAssetParamsCopyWith<$Res> {
   $Res call(
       {String userId,
       String dleId,
-      DleAssetType type,
-      String? description,
-      List<int>? bytes,
-      String? mimeType});
+      List<int> bytes,
+      String mimeType,
+      String description});
 }
 
 /// @nodoc
@@ -69,10 +67,9 @@ class _$CreateAssetParamsCopyWithImpl<$Res, $Val extends CreateAssetParams>
   $Res call({
     Object? userId = null,
     Object? dleId = null,
-    Object? type = null,
-    Object? description = freezed,
-    Object? bytes = freezed,
-    Object? mimeType = freezed,
+    Object? bytes = null,
+    Object? mimeType = null,
+    Object? description = null,
   }) {
     return _then(_value.copyWith(
       userId: null == userId
@@ -83,22 +80,18 @@ class _$CreateAssetParamsCopyWithImpl<$Res, $Val extends CreateAssetParams>
           ? _value.dleId
           : dleId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as DleAssetType,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      bytes: freezed == bytes
+      bytes: null == bytes
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
+              as List<int>,
+      mimeType: null == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -114,10 +107,9 @@ abstract class _$$CreateAssetParamsImplCopyWith<$Res>
   $Res call(
       {String userId,
       String dleId,
-      DleAssetType type,
-      String? description,
-      List<int>? bytes,
-      String? mimeType});
+      List<int> bytes,
+      String mimeType,
+      String description});
 }
 
 /// @nodoc
@@ -135,10 +127,9 @@ class __$$CreateAssetParamsImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? dleId = null,
-    Object? type = null,
-    Object? description = freezed,
-    Object? bytes = freezed,
-    Object? mimeType = freezed,
+    Object? bytes = null,
+    Object? mimeType = null,
+    Object? description = null,
   }) {
     return _then(_$CreateAssetParamsImpl(
       userId: null == userId
@@ -149,22 +140,18 @@ class __$$CreateAssetParamsImplCopyWithImpl<$Res>
           ? _value.dleId
           : dleId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as DleAssetType,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      bytes: freezed == bytes
+      bytes: null == bytes
           ? _value._bytes
           : bytes // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      mimeType: freezed == mimeType
+              as List<int>,
+      mimeType: null == mimeType
           ? _value.mimeType
           : mimeType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -175,10 +162,9 @@ class _$CreateAssetParamsImpl implements _CreateAssetParams {
   const _$CreateAssetParamsImpl(
       {required this.userId,
       required this.dleId,
-      required this.type,
-      this.description,
-      final List<int>? bytes,
-      this.mimeType})
+      required final List<int> bytes,
+      required this.mimeType,
+      this.description = ''})
       : _bytes = bytes;
 
   factory _$CreateAssetParamsImpl.fromJson(Map<String, dynamic> json) =>
@@ -188,26 +174,23 @@ class _$CreateAssetParamsImpl implements _CreateAssetParams {
   final String userId;
   @override
   final String dleId;
+  final List<int> _bytes;
   @override
-  final DleAssetType type;
-  @override
-  final String? description;
-  final List<int>? _bytes;
-  @override
-  List<int>? get bytes {
-    final value = _bytes;
-    if (value == null) return null;
+  List<int> get bytes {
     if (_bytes is EqualUnmodifiableListView) return _bytes;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_bytes);
   }
 
   @override
-  final String? mimeType;
+  final String mimeType;
+  @override
+  @JsonKey()
+  final String description;
 
   @override
   String toString() {
-    return 'CreateAssetParams(userId: $userId, dleId: $dleId, type: $type, description: $description, bytes: $bytes, mimeType: $mimeType)';
+    return 'CreateAssetParams(userId: $userId, dleId: $dleId, bytes: $bytes, mimeType: $mimeType, description: $description)';
   }
 
   @override
@@ -217,18 +200,17 @@ class _$CreateAssetParamsImpl implements _CreateAssetParams {
             other is _$CreateAssetParamsImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.dleId, dleId) || other.dleId == dleId) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
             const DeepCollectionEquality().equals(other._bytes, _bytes) &&
             (identical(other.mimeType, mimeType) ||
-                other.mimeType == mimeType));
+                other.mimeType == mimeType) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, dleId, type, description,
-      const DeepCollectionEquality().hash(_bytes), mimeType);
+  int get hashCode => Object.hash(runtimeType, userId, dleId,
+      const DeepCollectionEquality().hash(_bytes), mimeType, description);
 
   /// Create a copy of CreateAssetParams
   /// with the given fields replaced by the non-null parameter values.
@@ -251,10 +233,9 @@ abstract class _CreateAssetParams implements CreateAssetParams {
   const factory _CreateAssetParams(
       {required final String userId,
       required final String dleId,
-      required final DleAssetType type,
-      final String? description,
-      final List<int>? bytes,
-      final String? mimeType}) = _$CreateAssetParamsImpl;
+      required final List<int> bytes,
+      required final String mimeType,
+      final String description}) = _$CreateAssetParamsImpl;
 
   factory _CreateAssetParams.fromJson(Map<String, dynamic> json) =
       _$CreateAssetParamsImpl.fromJson;
@@ -264,13 +245,11 @@ abstract class _CreateAssetParams implements CreateAssetParams {
   @override
   String get dleId;
   @override
-  DleAssetType get type;
+  List<int> get bytes;
   @override
-  String? get description;
+  String get mimeType;
   @override
-  List<int>? get bytes;
-  @override
-  String? get mimeType;
+  String get description;
 
   /// Create a copy of CreateAssetParams
   /// with the given fields replaced by the non-null parameter values.

@@ -8,4 +8,6 @@ class InvitationCanceledException implements DomainException {}
 
 class WrongHintValueTypeException implements DomainException {}
 
-class TooManyParametersInBasicDle implements DomainException {}
+class TooManyParametersInBasicDleException implements DomainException {}
+
+class MultipleValuesNotAllowedException implements DomainException {}

@@ -9,6 +9,7 @@ import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_invitation/dle_invitation.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/exceptions/dle_exceptions.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

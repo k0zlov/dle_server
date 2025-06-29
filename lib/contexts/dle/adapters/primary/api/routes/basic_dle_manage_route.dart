@@ -76,25 +76,30 @@ class BasicDleManageRoute extends Route {
 
   Endpoint get createCharacterParameter {
     return Endpoint.post(
-      path: '<id>/character-parameters/<characterId>',
+      path: '<id>/parameters/<parameterId>/character-parameters/<characterId>',
       authRequired: true,
-      handler: handler,
+      body: [Field<String>('value'), Field<int>('index', isRequired: false)],
+      handler: parametersController.createCharacterParameter,
     );
   }
 
-  Endpoint get updateCharacterParameter {
+  Endpoint get editCharacterParameter {
     return Endpoint.put(
       path: '<id>/character-parameters/<characterParameterId>',
       authRequired: true,
-      handler: handler,
+      body: [
+        Field<String>('value', isRequired: false),
+        Field<int>('index', isRequired: false),
+      ],
+      handler: parametersController.editCharacterParameter,
     );
   }
 
-  Endpoint get deleteCharacterParameter {
+  Endpoint get removeCharacterParameter {
     return Endpoint.delete(
       path: '<id>/character-parameters/<characterParameterId>',
       authRequired: true,
-      handler: handler,
+      handler: parametersController.removeCharacterParameter,
     );
   }
 

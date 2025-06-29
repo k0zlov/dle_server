@@ -15,7 +15,6 @@ _$ManageCharacterParameterDtoImpl _$$ManageCharacterParameterDtoImplFromJson(
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
       index: (json['index'] as num).toInt(),
-      selectableId: json['selectableId'] as String?,
       value: json['value'] as String?,
     );
 
@@ -28,6 +27,5 @@ Map<String, dynamic> _$$ManageCharacterParameterDtoImplToJson(
       'updatedAt': instance.updatedAt.toIso8601String(),
       'createdAt': instance.createdAt.toIso8601String(),
       'index': instance.index,
-      'selectableId': instance.selectableId,
       'value': instance.value,
     };

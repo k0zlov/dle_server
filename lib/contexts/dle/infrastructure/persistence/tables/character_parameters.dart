@@ -31,13 +31,6 @@ class CharacterParameters extends Table {
           .references(Characters, #id, onDelete: KeyAction.cascade)
           .map(const UuidValueToStringConverter())();
 
-  @ReferenceName('CharacterParametersInSelectables')
-  UuidColumn get selectableId =>
-      customType(PgTypes.uuid)
-          .references(Characters, #id, onDelete: KeyAction.setNull)
-          .map(const UuidValueToStringConverter())
-          .nullable()();
-
   TextColumn get value => text()();
 
   IntColumn get index => integer()();

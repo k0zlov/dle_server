@@ -27,7 +27,6 @@ mixin _$ManageCharacterParameterDto {
   DateTime get updatedAt => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   int get index => throw _privateConstructorUsedError;
-  String? get selectableId => throw _privateConstructorUsedError;
   String? get value => throw _privateConstructorUsedError;
 
   /// Serializes this ManageCharacterParameterDto to a JSON map.
@@ -55,7 +54,6 @@ abstract class $ManageCharacterParameterDtoCopyWith<$Res> {
       DateTime updatedAt,
       DateTime createdAt,
       int index,
-      String? selectableId,
       String? value});
 }
 
@@ -81,7 +79,6 @@ class _$ManageCharacterParameterDtoCopyWithImpl<$Res,
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? index = null,
-    Object? selectableId = freezed,
     Object? value = freezed,
   }) {
     return _then(_value.copyWith(
@@ -109,10 +106,6 @@ class _$ManageCharacterParameterDtoCopyWithImpl<$Res,
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
-      selectableId: freezed == selectableId
-          ? _value.selectableId
-          : selectableId // ignore: cast_nullable_to_non_nullable
-              as String?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -137,7 +130,6 @@ abstract class _$$ManageCharacterParameterDtoImplCopyWith<$Res>
       DateTime updatedAt,
       DateTime createdAt,
       int index,
-      String? selectableId,
       String? value});
 }
 
@@ -162,7 +154,6 @@ class __$$ManageCharacterParameterDtoImplCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? createdAt = null,
     Object? index = null,
-    Object? selectableId = freezed,
     Object? value = freezed,
   }) {
     return _then(_$ManageCharacterParameterDtoImpl(
@@ -190,10 +181,6 @@ class __$$ManageCharacterParameterDtoImplCopyWithImpl<$Res>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
-      selectableId: freezed == selectableId
-          ? _value.selectableId
-          : selectableId // ignore: cast_nullable_to_non_nullable
-              as String?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -213,7 +200,6 @@ class _$ManageCharacterParameterDtoImpl
       required this.updatedAt,
       required this.createdAt,
       required this.index,
-      this.selectableId,
       this.value});
 
   factory _$ManageCharacterParameterDtoImpl.fromJson(
@@ -233,13 +219,11 @@ class _$ManageCharacterParameterDtoImpl
   @override
   final int index;
   @override
-  final String? selectableId;
-  @override
   final String? value;
 
   @override
   String toString() {
-    return 'ManageCharacterParameterDto(id: $id, characterId: $characterId, parameterId: $parameterId, updatedAt: $updatedAt, createdAt: $createdAt, index: $index, selectableId: $selectableId, value: $value)';
+    return 'ManageCharacterParameterDto(id: $id, characterId: $characterId, parameterId: $parameterId, updatedAt: $updatedAt, createdAt: $createdAt, index: $index, value: $value)';
   }
 
   @override
@@ -257,15 +241,13 @@ class _$ManageCharacterParameterDtoImpl
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.index, index) || other.index == index) &&
-            (identical(other.selectableId, selectableId) ||
-                other.selectableId == selectableId) &&
             (identical(other.value, value) || other.value == value));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, characterId, parameterId,
-      updatedAt, createdAt, index, selectableId, value);
+      updatedAt, createdAt, index, value);
 
   /// Create a copy of ManageCharacterParameterDto
   /// with the given fields replaced by the non-null parameter values.
@@ -293,7 +275,6 @@ abstract class _ManageCharacterParameterDto
       required final DateTime updatedAt,
       required final DateTime createdAt,
       required final int index,
-      final String? selectableId,
       final String? value}) = _$ManageCharacterParameterDtoImpl;
 
   factory _ManageCharacterParameterDto.fromJson(Map<String, dynamic> json) =
@@ -311,8 +292,6 @@ abstract class _ManageCharacterParameterDto
   DateTime get createdAt;
   @override
   int get index;
-  @override
-  String? get selectableId;
   @override
   String? get value;
 

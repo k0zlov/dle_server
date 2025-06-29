@@ -5,8 +5,11 @@ import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.da
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_asset/dle_asset.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
+import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
+import 'package:dle_server/kernel/domain/entities/upload/upload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -19,10 +22,9 @@ class CreateAssetParams with _$CreateAssetParams {
   const factory CreateAssetParams({
     required String userId,
     required String dleId,
-    required DleAssetType type,
-    String? description,
-    List<int>? bytes,
-    String? mimeType,
+    required List<int> bytes,
+    required String mimeType,
+    @Default('') String description,
   }) = _CreateAssetParams;
 
   factory CreateAssetParams.fromJson(Map<String, dynamic> json) =>
@@ -33,11 +35,13 @@ class CreateAssetParams with _$CreateAssetParams {
 class CreateAssetUseCase implements UseCase<Dle, CreateAssetParams> {
   const CreateAssetUseCase({
     required this.repository,
+    required this.saveUploadUseCase,
     @dleContext required this.eventBus,
   });
 
   final DomainEventBus eventBus;
   final DleRepositoryPort repository;
+  final SaveUploadUseCase saveUploadUseCase;
 
   @override
   Future<Dle> call(CreateAssetParams params) async {
@@ -53,6 +57,32 @@ class CreateAssetUseCase implements UseCase<Dle, CreateAssetParams> {
       throw EditorPermissionsException();
     }
 
-    throw UnimplementedError();
+    final Upload upload;
+
+    try {
+      upload = await saveUploadUseCase(
+        SaveUploadParams(
+          mimeType: params.mimeType,
+          bytes: params.bytes,
+          userId: params.userId,
+        ),
+      );
+    } catch (e) {
+      throw CouldNotUploadFileException();
+    }
+
+    final DleAsset asset = DleAsset.create(
+      userId: params.userId,
+      dleId: params.dleId,
+      uploadId: upload.id,
+      type: DleAssetType.other,
+      description: params.description,
+    );
+
+    final Dle newDle = dle.addAsset(asset);
+    await repository.save(newDle);
+
+    eventBus.publish(DleUpdatedEvent(dle: newDle));
+    return newDle;
   }
 }

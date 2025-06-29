@@ -18,8 +18,6 @@ class InvitationNotFoundException implements AppException {}
 
 class InvalidInvitationUserException implements AppException {}
 
-class InvitationCanceledException implements AppException {}
-
 class RoleUpgradeNotAllowedException implements AppException {}
 
 class OwnerCannotLeaveDleException implements AppException {}
@@ -36,4 +34,9 @@ class ParameterNotFoundException implements AppException {}
 
 class SelectableValueNotFoundException implements AppException {}
 
+class CharacterParameterNotFoundException implements AppException {}
+
 class InvalidParameterValueType implements AppException {}
+
+//
+class DleAssetNotFoundException implements AppException {}

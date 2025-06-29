@@ -2,7 +2,6 @@ import 'package:dle_server/contexts/dle/adapters/primary/api/dto/manage_dle_dto/
 import 'package:dle_server/contexts/dle/adapters/primary/api/exceptions/dle_exceptions_mapper.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/accept_invitation_use_case/accept_invitation_use_case.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/create_dle_use_case/create_dle_use_case.dart';
-import 'package:dle_server/contexts/dle/application/use_cases/edit_asset_use_case/edit_asset_use_case.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/edit_dle_use_case/edit_dle_use_case.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/edit_editor_use_case/edit_editor_use_case.dart';
 import 'package:dle_server/contexts/dle/application/use_cases/get_user_dle_use_case/get_user_dle_use_case.dart';
@@ -24,7 +23,6 @@ class DleManageRestController {
     required this.createDleUseCase,
     required this.getUserDleUseCase,
     required this.editDleUseCase,
-    required this.editAssetUseCase,
     required this.inviteEditorUseCase,
     required this.acceptInvitationUseCase,
     required this.kickEditorUseCase,
@@ -36,7 +34,6 @@ class DleManageRestController {
   final CreateDleUseCase createDleUseCase;
   final GetUserDleUseCase getUserDleUseCase;
   final EditDleUseCase editDleUseCase;
-  final EditAssetUseCase editAssetUseCase;
   final InviteEditorUseCase inviteEditorUseCase;
   final AcceptInvitationUseCase acceptInvitationUseCase;
   final KickEditorUseCase kickEditorUseCase;
@@ -79,33 +76,6 @@ class DleManageRestController {
 
     try {
       final Dle dle = await editDleUseCase(params);
-      return Response.json(body: ManageDleDto.fromEntity(dle));
-    } catch (e) {
-      throw mapper(e);
-    }
-  }
-
-  Future<Response> editAsset(Request req) async {
-    final String dleId = req.url.pathSegments.first;
-    final String userId = req.payload.userId;
-
-    final FormData formData = await req.formData();
-
-    final UploadedFile? asset = formData.files['asset'];
-
-    final List<int>? assetBytes = await asset?.readAsBytes();
-
-    final EditAssetParams params = EditAssetParams.fromJson(
-      req.data.copyWith({
-        'userId': userId,
-        'dleId': dleId,
-        'bytes': assetBytes,
-        'mimeType': asset?.contentType.mimeType,
-      }),
-    );
-
-    try {
-      final Dle dle = await editAssetUseCase(params);
       return Response.json(body: ManageDleDto.fromEntity(dle));
     } catch (e) {
       throw mapper(e);

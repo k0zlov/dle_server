@@ -10,28 +10,22 @@ _$EditAssetParamsImpl _$$EditAssetParamsImplFromJson(
         Map<String, dynamic> json) =>
     _$EditAssetParamsImpl(
       dleId: json['dleId'] as String,
+      assetId: json['assetId'] as String,
       userId: json['userId'] as String,
-      type: $enumDecode(_$DleAssetTypeEnumMap, json['type']),
-      description: json['description'] as String?,
       bytes: (json['bytes'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toList(),
       mimeType: json['mimeType'] as String?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$$EditAssetParamsImplToJson(
         _$EditAssetParamsImpl instance) =>
     <String, dynamic>{
       'dleId': instance.dleId,
+      'assetId': instance.assetId,
       'userId': instance.userId,
-      'type': _$DleAssetTypeEnumMap[instance.type]!,
-      'description': instance.description,
       'bytes': instance.bytes,
       'mimeType': instance.mimeType,
+      'description': instance.description,
     };
-
-const _$DleAssetTypeEnumMap = {
-  DleAssetType.preview: 'preview',
-  DleAssetType.character: 'character',
-  DleAssetType.other: 'other',
-};

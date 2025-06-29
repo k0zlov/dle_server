@@ -90,6 +90,8 @@ import 'package:dle_server/contexts/dle/application/use_cases/accept_invitation_
     as _i292;
 import 'package:dle_server/contexts/dle/application/use_cases/create_asset_use_case/create_asset_use_case.dart'
     as _i610;
+import 'package:dle_server/contexts/dle/application/use_cases/create_character_parameter_use_case/create_character_parameter_use_case.dart'
+    as _i828;
 import 'package:dle_server/contexts/dle/application/use_cases/create_character_use_case/create_character_use_case.dart'
     as _i861;
 import 'package:dle_server/contexts/dle/application/use_cases/create_dle_use_case/create_dle_use_case.dart'
@@ -102,6 +104,8 @@ import 'package:dle_server/contexts/dle/application/use_cases/create_selectable_
     as _i638;
 import 'package:dle_server/contexts/dle/application/use_cases/edit_asset_use_case/edit_asset_use_case.dart'
     as _i1039;
+import 'package:dle_server/contexts/dle/application/use_cases/edit_character_parameter_use_case/edit_character_parameter_use_case.dart'
+    as _i294;
 import 'package:dle_server/contexts/dle/application/use_cases/edit_character_use_case/edit_character_use_case.dart'
     as _i84;
 import 'package:dle_server/contexts/dle/application/use_cases/edit_dle_use_case/edit_dle_use_case.dart'
@@ -126,6 +130,10 @@ import 'package:dle_server/contexts/dle/application/use_cases/leave_dle_use_case
     as _i543;
 import 'package:dle_server/contexts/dle/application/use_cases/manage_character_hint_use_case/manage_character_hint_use_case.dart'
     as _i747;
+import 'package:dle_server/contexts/dle/application/use_cases/remove_asset_use_case/remove_asset_use_case.dart'
+    as _i345;
+import 'package:dle_server/contexts/dle/application/use_cases/remove_character_parameter_use_case/remove_character_parameter_use_case.dart'
+    as _i1058;
 import 'package:dle_server/contexts/dle/application/use_cases/remove_character_use_case/remove_character_use_case.dart'
     as _i586;
 import 'package:dle_server/contexts/dle/application/use_cases/remove_hint_use_case/remove_hint_use_case.dart'
@@ -224,8 +232,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i862.DleExceptionsMapper>(
         () => _i862.DleExceptionsMapper());
     gh.lazySingleton<_i434.WebSocketManager>(() => _i434.WebSocketManager());
-    gh.lazySingleton<_i659.AssetsRestController>(
-        () => _i659.AssetsRestController());
     gh.factory<_i295.JwtClient>(
       () => dependencyContainer.accessJwtClient,
       instanceName: 'accessJwtClient',
@@ -328,11 +334,6 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.lazySingletonAsync<_i747.ManageCharacterHintUseCase>(
         () async => _i747.ManageCharacterHintUseCase(
-              repository: await getAsync<_i452.DleRepositoryPort>(),
-              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
-            ));
-    gh.lazySingletonAsync<_i610.CreateAssetUseCase>(
-        () async => _i610.CreateAssetUseCase(
               repository: await getAsync<_i452.DleRepositoryPort>(),
               eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
             ));
@@ -459,6 +460,24 @@ extension GetItInjectableX on _i174.GetIt {
               dleRepository: await getAsync<_i452.DleRepositoryPort>(),
               eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
             ));
+    gh.lazySingletonAsync<_i828.CreateCharacterParameterUseCase>(
+        () async => _i828.CreateCharacterParameterUseCase(
+              repository: await getAsync<_i309.BasicDleRepositoryPort>(),
+              dleRepository: await getAsync<_i452.DleRepositoryPort>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
+    gh.lazySingletonAsync<_i294.EditCharacterParameterUseCase>(
+        () async => _i294.EditCharacterParameterUseCase(
+              repository: await getAsync<_i309.BasicDleRepositoryPort>(),
+              dleRepository: await getAsync<_i452.DleRepositoryPort>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
+    gh.lazySingletonAsync<_i1058.RemoveCharacterParameterUseCase>(
+        () async => _i1058.RemoveCharacterParameterUseCase(
+              repository: await getAsync<_i309.BasicDleRepositoryPort>(),
+              dleRepository: await getAsync<_i452.DleRepositoryPort>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
     gh.lazySingletonAsync<_i274.EditProfileUseCase>(
         () async => _i274.EditProfileUseCase(
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
@@ -524,6 +543,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingletonAsync<_i102.RevokeSessionUseCase>(() async =>
         _i102.RevokeSessionUseCase(
             repository: await getAsync<_i221.UsersRepositoryPort>()));
+    gh.lazySingletonAsync<_i610.CreateAssetUseCase>(
+        () async => _i610.CreateAssetUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
     gh.factoryAsync<_i287.DomainEventBus>(
       () async => authDependencyContainer
           .domainEventBus(await getAsync<_i689.UserRegisteredDomainListener>()),
@@ -539,6 +564,13 @@ extension GetItInjectableX on _i174.GetIt {
               deleteUploadUseCase: await getAsync<_i16.DeleteUploadUseCase>(),
               eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
             ));
+    gh.lazySingletonAsync<_i345.RemoveAssetUseCase>(
+        () async => _i345.RemoveAssetUseCase(
+              repository: await getAsync<_i452.DleRepositoryPort>(),
+              saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
+              deleteUploadUseCase: await getAsync<_i16.DeleteUploadUseCase>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            ));
     gh.lazySingletonAsync<_i879.SetUpProfileUseCase>(
         () async => _i879.SetUpProfileUseCase(
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
@@ -549,6 +581,27 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i747.ProfilesRepositoryPort>(),
               saveUploadUseCase: await getAsync<_i109.SaveUploadUseCase>(),
             ));
+    gh.lazySingletonAsync<_i571.ParametersRestController>(() async =>
+        _i571.ParametersRestController(
+          mapper: gh<_i862.DleExceptionsMapper>(),
+          createParameterUseCase:
+              await getAsync<_i230.CreateParameterUseCase>(),
+          editParameterUseCase: await getAsync<_i363.EditParameterUseCase>(),
+          removeParameterUseCase:
+              await getAsync<_i231.RemoveParameterUseCase>(),
+          createSelectableValueUseCase:
+              await getAsync<_i638.CreateSelectableValueUseCase>(),
+          editSelectableValueUseCase:
+              await getAsync<_i356.EditSelectableValueUseCase>(),
+          removeSelectableValueUseCase:
+              await getAsync<_i969.RemoveSelectableValueUseCase>(),
+          createCharacterParameterUseCase:
+              await getAsync<_i828.CreateCharacterParameterUseCase>(),
+          editCharacterParameterUseCase:
+              await getAsync<_i294.EditCharacterParameterUseCase>(),
+          removeCharacterParameterUseCase:
+              await getAsync<_i1058.RemoveCharacterParameterUseCase>(),
+        ));
     gh.lazySingletonAsync<_i264.ProfilesRestController>(
         () async => _i264.ProfilesRestController(
               mapper: gh<_i611.ProfilesExceptionsMapper>(),
@@ -585,21 +638,6 @@ extension GetItInjectableX on _i174.GetIt {
           changePasswordUseCase: await getAsync<_i852.ChangePasswordUseCase>(),
           mapper: gh<_i406.AuthExceptionsMapper>(),
         ));
-    gh.lazySingletonAsync<_i571.ParametersRestController>(() async =>
-        _i571.ParametersRestController(
-          mapper: gh<_i862.DleExceptionsMapper>(),
-          createParameterUseCase:
-              await getAsync<_i230.CreateParameterUseCase>(),
-          editParameterUseCase: await getAsync<_i363.EditParameterUseCase>(),
-          removeParameterUseCase:
-              await getAsync<_i231.RemoveParameterUseCase>(),
-          createSelectableValueUseCase:
-              await getAsync<_i638.CreateSelectableValueUseCase>(),
-          editSelectableValueUseCase:
-              await getAsync<_i356.EditSelectableValueUseCase>(),
-          removeSelectableValueUseCase:
-              await getAsync<_i969.RemoveSelectableValueUseCase>(),
-        ));
     gh.factoryAsync<
         List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
       () async => profilesDependencyContainer.integrationListeners(
@@ -622,12 +660,32 @@ extension GetItInjectableX on _i174.GetIt {
                       _i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
               instanceName: 'profilesContext'),
         ));
+    gh.lazySingletonAsync<_i659.AssetsRestController>(
+        () async => _i659.AssetsRestController(
+              mapper: gh<_i862.DleExceptionsMapper>(),
+              createAssetUseCase: await getAsync<_i610.CreateAssetUseCase>(),
+              editAssetUseCase: await getAsync<_i1039.EditAssetUseCase>(),
+              removeAssetUseCase: await getAsync<_i345.RemoveAssetUseCase>(),
+            ));
     gh.lazySingletonAsync<_i402.InviteEditorUseCase>(
         () async => _i402.InviteEditorUseCase(
               repository: await getAsync<_i452.DleRepositoryPort>(),
               invitationsRepository:
                   await getAsync<_i891.DleInvitationsRepositoryPort>(),
               integrationEventBus: await getAsync<_i287.IntegrationEventBus>(),
+            ));
+    gh.lazySingletonAsync<_i46.DleManageRestController>(
+        () async => _i46.DleManageRestController(
+              mapper: gh<_i862.DleExceptionsMapper>(),
+              createDleUseCase: await getAsync<_i746.CreateDleUseCase>(),
+              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
+              editDleUseCase: await getAsync<_i9.EditDleUseCase>(),
+              inviteEditorUseCase: await getAsync<_i402.InviteEditorUseCase>(),
+              acceptInvitationUseCase:
+                  await getAsync<_i292.AcceptInvitationUseCase>(),
+              kickEditorUseCase: await getAsync<_i678.KickEditorUseCase>(),
+              editEditorUseCase: await getAsync<_i568.EditEditorUseCase>(),
+              leaveDleUseCase: await getAsync<_i543.LeaveDleUseCase>(),
             ));
     gh.lazySingletonAsync<_i288.RegisterUseCase>(() async =>
         _i288.RegisterUseCase(
@@ -636,20 +694,6 @@ extension GetItInjectableX on _i174.GetIt {
           domainEventBus:
               await getAsync<_i287.DomainEventBus>(instanceName: 'authContext'),
         ));
-    gh.lazySingletonAsync<_i46.DleManageRestController>(
-        () async => _i46.DleManageRestController(
-              mapper: gh<_i862.DleExceptionsMapper>(),
-              createDleUseCase: await getAsync<_i746.CreateDleUseCase>(),
-              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
-              editDleUseCase: await getAsync<_i9.EditDleUseCase>(),
-              editAssetUseCase: await getAsync<_i1039.EditAssetUseCase>(),
-              inviteEditorUseCase: await getAsync<_i402.InviteEditorUseCase>(),
-              acceptInvitationUseCase:
-                  await getAsync<_i292.AcceptInvitationUseCase>(),
-              kickEditorUseCase: await getAsync<_i678.KickEditorUseCase>(),
-              editEditorUseCase: await getAsync<_i568.EditEditorUseCase>(),
-              leaveDleUseCase: await getAsync<_i543.LeaveDleUseCase>(),
-            ));
     gh.lazySingletonAsync<_i685.AuthController>(() async =>
         _i685.AuthController(
           registerUseCase: await getAsync<_i288.RegisterUseCase>(),

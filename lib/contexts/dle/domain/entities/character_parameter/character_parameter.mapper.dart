@@ -29,15 +29,12 @@ class CharacterParameterMapper extends ClassMapperBase<CharacterParameter> {
   static String _$parameterId(CharacterParameter v) => v.parameterId;
   static const Field<CharacterParameter, String> _f$parameterId =
       Field('parameterId', _$parameterId);
-  static String? _$value(CharacterParameter v) => v.value;
+  static String _$value(CharacterParameter v) => v.value;
   static const Field<CharacterParameter, String> _f$value =
       Field('value', _$value);
   static int _$index(CharacterParameter v) => v.index;
   static const Field<CharacterParameter, int> _f$index =
       Field('index', _$index);
-  static String? _$selectableId(CharacterParameter v) => v.selectableId;
-  static const Field<CharacterParameter, String> _f$selectableId =
-      Field('selectableId', _$selectableId);
   static DateTime _$updatedAt(CharacterParameter v) => v.updatedAt;
   static const Field<CharacterParameter, DateTime> _f$updatedAt =
       Field('updatedAt', _$updatedAt);
@@ -52,7 +49,6 @@ class CharacterParameterMapper extends ClassMapperBase<CharacterParameter> {
     #parameterId: _f$parameterId,
     #value: _f$value,
     #index: _f$index,
-    #selectableId: _f$selectableId,
     #updatedAt: _f$updatedAt,
     #createdAt: _f$createdAt,
   };
@@ -64,7 +60,6 @@ class CharacterParameterMapper extends ClassMapperBase<CharacterParameter> {
         parameterId: data.dec(_f$parameterId),
         value: data.dec(_f$value),
         index: data.dec(_f$index),
-        selectableId: data.dec(_f$selectableId),
         updatedAt: data.dec(_f$updatedAt),
         createdAt: data.dec(_f$createdAt));
   }
@@ -130,7 +125,6 @@ abstract class CharacterParameterCopyWith<$R, $In extends CharacterParameter,
       String? parameterId,
       String? value,
       int? index,
-      String? selectableId,
       DateTime? updatedAt,
       DateTime? createdAt});
   CharacterParameterCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -150,18 +144,16 @@ class _CharacterParameterCopyWithImpl<$R, $Out>
           {Object? id = $none,
           String? characterId,
           String? parameterId,
-          Object? value = $none,
+          String? value,
           int? index,
-          Object? selectableId = $none,
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (characterId != null) #characterId: characterId,
         if (parameterId != null) #parameterId: parameterId,
-        if (value != $none) #value: value,
+        if (value != null) #value: value,
         if (index != null) #index: index,
-        if (selectableId != $none) #selectableId: selectableId,
         if (updatedAt != null) #updatedAt: updatedAt,
         if (createdAt != null) #createdAt: createdAt
       }));
@@ -172,7 +164,6 @@ class _CharacterParameterCopyWithImpl<$R, $Out>
       parameterId: data.get(#parameterId, or: $value.parameterId),
       value: data.get(#value, or: $value.value),
       index: data.get(#index, or: $value.index),
-      selectableId: data.get(#selectableId, or: $value.selectableId),
       updatedAt: data.get(#updatedAt, or: $value.updatedAt),
       createdAt: data.get(#createdAt, or: $value.createdAt));
 

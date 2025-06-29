@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
@@ -38,14 +39,16 @@ class BasicDle extends Entity with BasicDleMappable {
 
   BasicDle editParameter(Parameter parameter) {
     if (parameters.length > 8) {
-      throw TooManyParametersInBasicDle();
+      throw TooManyParametersInBasicDleException();
     }
 
-    List<CharacterParameter>? newCharacterParameters;
+    List<CharacterParameter> newCharacterParameters = characterParameters;
 
     if (!parameter.allowsMultipleValues) {
       final List<CharacterParameter> characterParametersOfThisParameter =
-          characterParameters.where((e) => e.id == parameter.id).toList();
+          characterParameters
+              .where((e) => e.parameterId == parameter.id)
+              .toList();
 
       final Map<String, CharacterParameter> uniqueCharacterParameters = {};
 
@@ -87,6 +90,23 @@ class BasicDle extends Entity with BasicDleMappable {
   }
 
   BasicDle addCharacterParameter(CharacterParameter characterParameter) {
+    final Parameter p = parameters.firstWhere(
+      (e) => e.id == characterParameter.parameterId,
+    );
+
+    if (!p.allowsMultipleValues) {
+      final CharacterParameter? existingCp = characterParameters
+          .firstWhereOrNull(
+            (e) =>
+                e.parameterId == p.id &&
+                e.characterId == characterParameter.characterId,
+          );
+
+      if (existingCp != null) {
+        throw MultipleValuesNotAllowedException();
+      }
+    }
+
     return editCharacterParameter(characterParameter);
   }
 

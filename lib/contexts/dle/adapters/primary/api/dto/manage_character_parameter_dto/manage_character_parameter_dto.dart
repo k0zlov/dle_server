@@ -14,7 +14,6 @@ class ManageCharacterParameterDto with _$ManageCharacterParameterDto {
     required DateTime updatedAt,
     required DateTime createdAt,
     required int index,
-    String? selectableId,
     String? value,
   }) = _ManageCharacterParameterDto;
 

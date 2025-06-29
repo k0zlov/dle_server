@@ -4,6 +4,7 @@ import 'package:dle_server/contexts/dle/domain/entities/character_parameter/char
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/basic_dle_extension.dart';
+import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/character_parameter_extension.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/parameter_extension.dart';
 import 'package:dle_server/contexts/dle/infrastructure/persistence/extensions/selectable_value_extension.dart';
 import 'package:dle_server/kernel/infrastructure/database/database.dart';
@@ -67,6 +68,15 @@ class BasicDleRepositoryDrift implements BasicDleRepositoryPort {
             tbl.id.isNotIn(characterParamIds.map(UuidValue.fromString)) &
             tbl.parameterId.isIn(parameterIds),
       );
+
+      await db.batch((batch) {
+        batch.insertAllOnConflictUpdate(
+          db.characterParameters,
+          basicDle.characterParameters.map(
+            CharacterParameterMapperExtension.fromEntity,
+          ),
+        );
+      });
     });
   }
 

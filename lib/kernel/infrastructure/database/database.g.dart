@@ -4103,15 +4103,6 @@ class $CharacterParametersTable extends CharacterParameters
                   'REFERENCES characters (id) ON DELETE CASCADE'))
           .withConverter<String>(
               $CharacterParametersTable.$convertercharacterId);
-  @override
-  late final GeneratedColumnWithTypeConverter<String?, UuidValue> selectableId =
-      GeneratedColumn<UuidValue>('selectable_id', aliasedName, true,
-              type: PgTypes.uuid,
-              requiredDuringInsert: false,
-              defaultConstraints: GeneratedColumn.constraintIsAlways(
-                  'REFERENCES characters (id) ON DELETE SET NULL'))
-          .withConverter<String?>(
-              $CharacterParametersTable.$converterselectableIdn);
   static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
   late final GeneratedColumn<String> value = GeneratedColumn<String>(
@@ -4139,16 +4130,8 @@ class $CharacterParametersTable extends CharacterParameters
           .withConverter<DateTime>(
               $CharacterParametersTable.$convertercreatedAt);
   @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        parameterId,
-        characterId,
-        selectableId,
-        value,
-        index,
-        updatedAt,
-        createdAt
-      ];
+  List<GeneratedColumn> get $columns =>
+      [id, parameterId, characterId, value, index, updatedAt, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4193,9 +4176,6 @@ class $CharacterParametersTable extends CharacterParameters
           .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
       index: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}index'])!,
-      selectableId: $CharacterParametersTable.$converterselectableIdn.fromSql(
-          attachedDatabase.typeMapping
-              .read(PgTypes.uuid, data['${effectivePrefix}selectable_id'])),
       updatedAt: $CharacterParametersTable.$converterupdatedAt.fromSql(
           attachedDatabase.typeMapping.read(
               dialectAwareTimestamp, data['${effectivePrefix}updated_at'])!),
@@ -4216,10 +4196,6 @@ class $CharacterParametersTable extends CharacterParameters
       const UuidValueToStringConverter();
   static TypeConverter<String, UuidValue> $convertercharacterId =
       const UuidValueToStringConverter();
-  static TypeConverter<String, UuidValue> $converterselectableId =
-      const UuidValueToStringConverter();
-  static TypeConverter<String?, UuidValue?> $converterselectableIdn =
-      NullAwareTypeConverter.wrap($converterselectableId);
   static TypeConverter<DateTime, PgDateTime> $converterupdatedAt =
       const PgDateTimeConverter();
   static TypeConverter<DateTime, PgDateTime> $convertercreatedAt =
@@ -4230,7 +4206,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
   final Value<String> id;
   final Value<String> parameterId;
   final Value<String> characterId;
-  final Value<String?> selectableId;
   final Value<String> value;
   final Value<int> index;
   final Value<DateTime> updatedAt;
@@ -4240,7 +4215,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
     this.id = const Value.absent(),
     this.parameterId = const Value.absent(),
     this.characterId = const Value.absent(),
-    this.selectableId = const Value.absent(),
     this.value = const Value.absent(),
     this.index = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -4251,7 +4225,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
     this.id = const Value.absent(),
     required String parameterId,
     required String characterId,
-    this.selectableId = const Value.absent(),
     required String value,
     required int index,
     this.updatedAt = const Value.absent(),
@@ -4265,7 +4238,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
     Expression<UuidValue>? id,
     Expression<UuidValue>? parameterId,
     Expression<UuidValue>? characterId,
-    Expression<UuidValue>? selectableId,
     Expression<String>? value,
     Expression<int>? index,
     Expression<PgDateTime>? updatedAt,
@@ -4276,7 +4248,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
       if (id != null) 'id': id,
       if (parameterId != null) 'parameter_id': parameterId,
       if (characterId != null) 'character_id': characterId,
-      if (selectableId != null) 'selectable_id': selectableId,
       if (value != null) 'value': value,
       if (index != null) 'index': index,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -4289,7 +4260,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
       {Value<String>? id,
       Value<String>? parameterId,
       Value<String>? characterId,
-      Value<String?>? selectableId,
       Value<String>? value,
       Value<int>? index,
       Value<DateTime>? updatedAt,
@@ -4299,7 +4269,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
       id: id ?? this.id,
       parameterId: parameterId ?? this.parameterId,
       characterId: characterId ?? this.characterId,
-      selectableId: selectableId ?? this.selectableId,
       value: value ?? this.value,
       index: index ?? this.index,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -4325,12 +4294,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
       map['character_id'] = Variable<UuidValue>(
           $CharacterParametersTable.$convertercharacterId
               .toSql(characterId.value),
-          PgTypes.uuid);
-    }
-    if (selectableId.present) {
-      map['selectable_id'] = Variable<UuidValue>(
-          $CharacterParametersTable.$converterselectableIdn
-              .toSql(selectableId.value),
           PgTypes.uuid);
     }
     if (value.present) {
@@ -4361,7 +4324,6 @@ class CharacterParametersCompanion extends UpdateCompanion<CharacterParameter> {
           ..write('id: $id, ')
           ..write('parameterId: $parameterId, ')
           ..write('characterId: $characterId, ')
-          ..write('selectableId: $selectableId, ')
           ..write('value: $value, ')
           ..write('index: $index, ')
           ..write('updatedAt: $updatedAt, ')
@@ -4620,13 +4582,6 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('character_parameters', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('characters',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('character_parameters', kind: UpdateKind.update),
             ],
           ),
         ],
@@ -8550,26 +8505,6 @@ final class $$CharactersTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
-
-  static MultiTypedResultKey<$CharacterParametersTable,
-      List<CharacterParameter>> _CharacterParametersInSelectablesTable(
-          _$Database db) =>
-      MultiTypedResultKey.fromTable(db.characterParameters,
-          aliasName: $_aliasNameGenerator(
-              db.characters.id, db.characterParameters.selectableId));
-
-  $$CharacterParametersTableProcessedTableManager
-      get CharacterParametersInSelectables {
-    final manager = $$CharacterParametersTableTableManager(
-            $_db, $_db.characterParameters)
-        .filter(
-            (f) => f.selectableId.id.sqlEquals($_itemColumn<UuidValue>('id')!));
-
-    final cache = $_typedResult
-        .readTableOrNull(_CharacterParametersInSelectablesTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
 }
 
 class $$CharactersTableFilterComposer
@@ -8675,27 +8610,6 @@ class $$CharactersTableFilterComposer
         getCurrentColumn: (t) => t.id,
         referencedTable: $db.characterParameters,
         getReferencedColumn: (t) => t.characterId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharacterParametersTableFilterComposer(
-              $db: $db,
-              $table: $db.characterParameters,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<bool> CharacterParametersInSelectables(
-      Expression<bool> Function($$CharacterParametersTableFilterComposer f) f) {
-    final $$CharacterParametersTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.characterParameters,
-        getReferencedColumn: (t) => t.selectableId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
@@ -8889,29 +8803,6 @@ class $$CharactersTableAnnotationComposer
                 ));
     return f(composer);
   }
-
-  Expression<T> CharacterParametersInSelectables<T extends Object>(
-      Expression<T> Function($$CharacterParametersTableAnnotationComposer a)
-          f) {
-    final $$CharacterParametersTableAnnotationComposer composer =
-        $composerBuilder(
-            composer: this,
-            getCurrentColumn: (t) => t.id,
-            referencedTable: $db.characterParameters,
-            getReferencedColumn: (t) => t.selectableId,
-            builder: (joinBuilder,
-                    {$addJoinBuilderToRootComposer,
-                    $removeJoinBuilderFromRootComposer}) =>
-                $$CharacterParametersTableAnnotationComposer(
-                  $db: $db,
-                  $table: $db.characterParameters,
-                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                  joinBuilder: joinBuilder,
-                  $removeJoinBuilderFromRootComposer:
-                      $removeJoinBuilderFromRootComposer,
-                ));
-    return f(composer);
-  }
 }
 
 class $$CharactersTableTableManager extends RootTableManager<
@@ -8929,8 +8820,7 @@ class $$CharactersTableTableManager extends RootTableManager<
         {bool dleId,
         bool assetId,
         bool CharacterHintsInCharacters,
-        bool CharacterParametersInCharacters,
-        bool CharacterParametersInSelectables})> {
+        bool CharacterParametersInCharacters})> {
   $$CharactersTableTableManager(_$Database db, $CharactersTable table)
       : super(TableManagerState(
           db: db,
@@ -8995,14 +8885,12 @@ class $$CharactersTableTableManager extends RootTableManager<
               {dleId = false,
               assetId = false,
               CharacterHintsInCharacters = false,
-              CharacterParametersInCharacters = false,
-              CharacterParametersInSelectables = false}) {
+              CharacterParametersInCharacters = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (CharacterHintsInCharacters) db.characterHints,
-                if (CharacterParametersInCharacters) db.characterParameters,
-                if (CharacterParametersInSelectables) db.characterParameters
+                if (CharacterParametersInCharacters) db.characterParameters
               ],
               addJoins: <
                   T extends TableManagerState<
@@ -9067,19 +8955,6 @@ class $$CharactersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.characterId == item.id),
-                        typedResults: items),
-                  if (CharacterParametersInSelectables)
-                    await $_getPrefetchedData<Character, $CharactersTable,
-                            CharacterParameter>(
-                        currentTable: table,
-                        referencedTable: $$CharactersTableReferences
-                            ._CharacterParametersInSelectablesTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$CharactersTableReferences(db, table, p0)
-                                .CharacterParametersInSelectables,
-                        referencedItemsForCurrentItem:
-                            (item, referencedItems) => referencedItems
-                                .where((e) => e.selectableId == item.id),
                         typedResults: items)
                 ];
               },
@@ -9103,8 +8978,7 @@ typedef $$CharactersTableProcessedTableManager = ProcessedTableManager<
         {bool dleId,
         bool assetId,
         bool CharacterHintsInCharacters,
-        bool CharacterParametersInCharacters,
-        bool CharacterParametersInSelectables})>;
+        bool CharacterParametersInCharacters})>;
 typedef $$DleEditorsTableCreateCompanionBuilder = DleEditorsCompanion Function({
   Value<String> id,
   required String dleId,
@@ -11921,7 +11795,6 @@ typedef $$CharacterParametersTableCreateCompanionBuilder
   Value<String> id,
   required String parameterId,
   required String characterId,
-  Value<String?> selectableId,
   required String value,
   required int index,
   Value<DateTime> updatedAt,
@@ -11933,7 +11806,6 @@ typedef $$CharacterParametersTableUpdateCompanionBuilder
   Value<String> id,
   Value<String> parameterId,
   Value<String> characterId,
-  Value<String?> selectableId,
   Value<String> value,
   Value<int> index,
   Value<DateTime> updatedAt,
@@ -11971,21 +11843,6 @@ final class $$CharacterParametersTableReferences extends BaseReferences<
     final manager = $$CharactersTableTableManager($_db, $_db.characters)
         .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_characterIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-
-  static $CharactersTable _selectableIdTable(_$Database db) =>
-      db.characters.createAlias($_aliasNameGenerator(
-          db.characterParameters.selectableId, db.characters.id));
-
-  $$CharactersTableProcessedTableManager? get selectableId {
-    final $_column = $_itemColumn<UuidValue>('selectable_id');
-    if ($_column == null) return null;
-    final manager = $$CharactersTableTableManager($_db, $_db.characters)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_selectableIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -12046,26 +11903,6 @@ class $$CharacterParametersTableFilterComposer
     final $$CharactersTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.characterId,
-        referencedTable: $db.characters,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharactersTableFilterComposer(
-              $db: $db,
-              $table: $db.characters,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$CharactersTableFilterComposer get selectableId {
-    final $$CharactersTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.selectableId,
         referencedTable: $db.characters,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
@@ -12146,26 +11983,6 @@ class $$CharacterParametersTableOrderingComposer
             ));
     return composer;
   }
-
-  $$CharactersTableOrderingComposer get selectableId {
-    final $$CharactersTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.selectableId,
-        referencedTable: $db.characters,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharactersTableOrderingComposer(
-              $db: $db,
-              $table: $db.characters,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$CharacterParametersTableAnnotationComposer
@@ -12231,26 +12048,6 @@ class $$CharacterParametersTableAnnotationComposer
             ));
     return composer;
   }
-
-  $$CharactersTableAnnotationComposer get selectableId {
-    final $$CharactersTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.selectableId,
-        referencedTable: $db.characters,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$CharactersTableAnnotationComposer(
-              $db: $db,
-              $table: $db.characters,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$CharacterParametersTableTableManager extends RootTableManager<
@@ -12264,8 +12061,7 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
     $$CharacterParametersTableUpdateCompanionBuilder,
     (CharacterParameter, $$CharacterParametersTableReferences),
     CharacterParameter,
-    PrefetchHooks Function(
-        {bool parameterId, bool characterId, bool selectableId})> {
+    PrefetchHooks Function({bool parameterId, bool characterId})> {
   $$CharacterParametersTableTableManager(
       _$Database db, $CharacterParametersTable table)
       : super(TableManagerState(
@@ -12283,7 +12079,6 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<String> parameterId = const Value.absent(),
             Value<String> characterId = const Value.absent(),
-            Value<String?> selectableId = const Value.absent(),
             Value<String> value = const Value.absent(),
             Value<int> index = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
@@ -12294,7 +12089,6 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             id: id,
             parameterId: parameterId,
             characterId: characterId,
-            selectableId: selectableId,
             value: value,
             index: index,
             updatedAt: updatedAt,
@@ -12305,7 +12099,6 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             required String parameterId,
             required String characterId,
-            Value<String?> selectableId = const Value.absent(),
             required String value,
             required int index,
             Value<DateTime> updatedAt = const Value.absent(),
@@ -12316,7 +12109,6 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
             id: id,
             parameterId: parameterId,
             characterId: characterId,
-            selectableId: selectableId,
             value: value,
             index: index,
             updatedAt: updatedAt,
@@ -12329,10 +12121,7 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
                     $$CharacterParametersTableReferences(db, table, e)
                   ))
               .toList(),
-          prefetchHooksCallback: (
-              {parameterId = false,
-              characterId = false,
-              selectableId = false}) {
+          prefetchHooksCallback: ({parameterId = false, characterId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -12371,17 +12160,6 @@ class $$CharacterParametersTableTableManager extends RootTableManager<
                         .id,
                   ) as T;
                 }
-                if (selectableId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.selectableId,
-                    referencedTable: $$CharacterParametersTableReferences
-                        ._selectableIdTable(db),
-                    referencedColumn: $$CharacterParametersTableReferences
-                        ._selectableIdTable(db)
-                        .id,
-                  ) as T;
-                }
 
                 return state;
               },
@@ -12404,8 +12182,7 @@ typedef $$CharacterParametersTableProcessedTableManager = ProcessedTableManager<
     $$CharacterParametersTableUpdateCompanionBuilder,
     (CharacterParameter, $$CharacterParametersTableReferences),
     CharacterParameter,
-    PrefetchHooks Function(
-        {bool parameterId, bool characterId, bool selectableId})>;
+    PrefetchHooks Function({bool parameterId, bool characterId})>;
 
 class $DatabaseManager {
   final _$Database _db;

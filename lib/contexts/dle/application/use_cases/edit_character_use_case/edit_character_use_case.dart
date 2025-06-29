@@ -6,6 +6,7 @@ import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.da
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/character/character.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
+import 'package:dle_server/contexts/dle/domain/entities/dle_asset/dle_asset.dart';
 import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -65,14 +66,33 @@ class EditCharacterUseCase implements UseCase<Dle, EditCharacterParams> {
       throw CharacterNotFoundException();
     }
 
-    final Character editedCharacter = character.edit(
+    Dle updatedDle = dle;
+
+    if (params.assetId != null) {
+      final DleAsset? asset = dle.assets.firstWhereOrNull(
+        (e) => e.id == params.assetId,
+      );
+
+      if (asset == null) {
+        throw DleAssetNotFoundException();
+      }
+
+      final DleAsset newDleAsset = asset.setType(DleAssetType.character);
+      updatedDle.editAsset(newDleAsset);
+    }
+
+    Character editedCharacter = character.edit(
       name: params.name,
       aliases: params.aliases,
       isHidden: params.isHidden,
-      assetId: params.deleteImage ? null : params.assetId,
+      assetId: params.assetId,
     );
 
-    final Dle updatedDle = dle.editCharacter(editedCharacter);
+    if (params.deleteImage) {
+      editedCharacter = editedCharacter.removeImage();
+    }
+
+    updatedDle = updatedDle.editCharacter(editedCharacter);
     await repository.save(
       updatedDle,
       overrideHints: false,

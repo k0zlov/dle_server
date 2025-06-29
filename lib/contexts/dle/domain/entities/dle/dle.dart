@@ -72,15 +72,19 @@ class Dle extends Entity with DleMappable {
 
   // --- Asset management ---
   Dle addAsset(DleAsset asset) {
+    return editAsset(asset);
+  }
+
+  Dle editAsset(DleAsset asset) {
     return copyWith(
-      assets: [asset, ...assets.where((e) => e.type != asset.type)],
+      assets: [asset, ...assets.where((e) => e.id != asset.id)],
       updatedAt: DateTime.now(),
     );
   }
 
-  Dle deleteAsset(DleAssetType assetType) {
+  Dle removeAsset(String assetId) {
     return copyWith(
-      assets: [...assets.where((e) => e.type != assetType)],
+      assets: [...assets.where((e) => e.id != assetId)],
       updatedAt: DateTime.now(),
     );
   }

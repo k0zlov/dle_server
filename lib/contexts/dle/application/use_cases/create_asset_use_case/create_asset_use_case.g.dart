@@ -11,12 +11,11 @@ _$CreateAssetParamsImpl _$$CreateAssetParamsImplFromJson(
     _$CreateAssetParamsImpl(
       userId: json['userId'] as String,
       dleId: json['dleId'] as String,
-      type: $enumDecode(_$DleAssetTypeEnumMap, json['type']),
-      description: json['description'] as String?,
-      bytes: (json['bytes'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
+      bytes: (json['bytes'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
           .toList(),
-      mimeType: json['mimeType'] as String?,
+      mimeType: json['mimeType'] as String,
+      description: json['description'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$CreateAssetParamsImplToJson(
@@ -24,14 +23,7 @@ Map<String, dynamic> _$$CreateAssetParamsImplToJson(
     <String, dynamic>{
       'userId': instance.userId,
       'dleId': instance.dleId,
-      'type': _$DleAssetTypeEnumMap[instance.type]!,
-      'description': instance.description,
       'bytes': instance.bytes,
       'mimeType': instance.mimeType,
+      'description': instance.description,
     };
-
-const _$DleAssetTypeEnumMap = {
-  DleAssetType.preview: 'preview',
-  DleAssetType.character: 'character',
-  DleAssetType.other: 'other',
-};

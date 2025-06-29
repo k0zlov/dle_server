@@ -51,6 +51,8 @@ class RefreshSessionUseCase
       deviceInfo: params.deviceInfo,
     );
 
+    await repository.updateSession(session);
+
     return AuthTokens(
       refreshToken: session.refreshToken,
       accessToken: tokenService.generateAccessToken(

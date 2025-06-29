@@ -1,3 +1,4 @@
+import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/assets_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/characters_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_socket_controller.dart';
@@ -15,6 +16,7 @@ class DleManageRoute extends Route {
     required this.socketController,
     required this.charactersController,
     required this.hintsController,
+    required this.assetsRestController,
   });
 
   final DleManageRestController controller;
@@ -22,6 +24,7 @@ class DleManageRoute extends Route {
   final DleManageSocketController socketController;
   final CharactersRestController charactersController;
   final HintsRestController hintsController;
+  final AssetsRestController assetsRestController;
 
   @override
   String get name => 'dle/manage';
@@ -71,13 +74,30 @@ class DleManageRoute extends Route {
     );
   }
 
+  Endpoint get createAsset {
+    return Endpoint.post(
+      path: '<id>/assets',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: assetsRestController.create,
+    );
+  }
+
   Endpoint get editAsset {
     return Endpoint.put(
-      path: '<id>/edit-asset',
+      path: '<id>/assets/<assetId>',
       authRequired: true,
-      query: [Field<String>('type')],
       middlewares: [authMiddleware],
-      handler: controller.editAsset,
+      handler: assetsRestController.edit,
+    );
+  }
+
+  Endpoint get removeAsset {
+    return Endpoint.delete(
+      path: '<id>/assets/<assetId>',
+      authRequired: true,
+      middlewares: [authMiddleware],
+      handler: assetsRestController.remove,
     );
   }
 

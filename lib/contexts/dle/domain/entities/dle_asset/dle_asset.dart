@@ -36,4 +36,16 @@ class DleAsset extends Entity with DleAssetMappable {
 
   final DateTime updatedAt;
   final DateTime createdAt;
+
+  DleAsset setType(DleAssetType type) {
+    return copyWith(type: type, updatedAt: DateTime.now());
+  }
+
+  DleAsset edit({String? description, String? uploadId}) {
+    return copyWith(
+      description: description,
+      uploadId: uploadId,
+      updatedAt: DateTime.now(),
+    );
+  }
 }

@@ -11,7 +11,6 @@ extension CharacterParameterMapperExtension on CharacterParametersCompanion {
       parameterId: Value(characterParameter.parameterId),
       index: Value(characterParameter.index),
       value: Value.absentIfNull(characterParameter.value),
-      selectableId: Value(characterParameter.selectableId),
       updatedAt: Value(characterParameter.updatedAt),
       createdAt: Value(characterParameter.createdAt),
     );

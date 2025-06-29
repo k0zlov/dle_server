@@ -11,32 +11,29 @@ import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/delete_upload_use_case/delete_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
-import 'package:dle_server/kernel/domain/entities/upload/upload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
-part 'edit_asset_use_case.freezed.dart';
+part 'remove_asset_use_case.freezed.dart';
 
-part 'edit_asset_use_case.g.dart';
+part 'remove_asset_use_case.g.dart';
 
 @freezed
-class EditAssetParams with _$EditAssetParams {
-  const factory EditAssetParams({
+class RemoveAssetParams with _$RemoveAssetParams {
+  const factory RemoveAssetParams({
     required String dleId,
     required String assetId,
     required String userId,
-    List<int>? bytes,
-    String? mimeType,
     String? description,
-  }) = _EditAssetParams;
+  }) = _RemoveAssetParams;
 
-  factory EditAssetParams.fromJson(Map<String, dynamic> json) =>
-      _$EditAssetParamsFromJson(json);
+  factory RemoveAssetParams.fromJson(Map<String, dynamic> json) =>
+      _$RemoveAssetParamsFromJson(json);
 }
 
 @lazySingleton
-class EditAssetUseCase implements UseCase<Dle, EditAssetParams> {
-  const EditAssetUseCase({
+class RemoveAssetUseCase implements UseCase<Dle, RemoveAssetParams> {
+  const RemoveAssetUseCase({
     required this.repository,
     required this.saveUploadUseCase,
     required this.deleteUploadUseCase,
@@ -49,7 +46,7 @@ class EditAssetUseCase implements UseCase<Dle, EditAssetParams> {
   final DeleteUploadUseCase deleteUploadUseCase;
 
   @override
-  Future<Dle> call(EditAssetParams params) async {
+  Future<Dle> call(RemoveAssetParams params) async {
     final Dle? dle = await repository.find(params.dleId);
 
     if (dle == null) {
@@ -68,33 +65,7 @@ class EditAssetUseCase implements UseCase<Dle, EditAssetParams> {
       throw DleAssetNotFoundException();
     }
 
-    String? uploadId;
-
-    if (params.mimeType != null && params.bytes != null) {
-      try {
-        final Upload upload = await saveUploadUseCase(
-          SaveUploadParams(
-            mimeType: params.mimeType!,
-            bytes: params.bytes!,
-            userId: params.userId,
-          ),
-        );
-        uploadId = upload.id;
-
-        unawaited(
-          deleteUploadUseCase(DeleteUploadParams(uploadId: asset.uploadId)),
-        );
-      } catch (e) {
-        throw CouldNotUploadFileException();
-      }
-    }
-
-    final DleAsset newAsset = asset.edit(
-      description: params.description,
-      uploadId: uploadId,
-    );
-
-    final Dle newDle = dle.editAsset(newAsset);
+    final Dle newDle = dle.removeAsset(asset.id);
     await repository.save(
       newDle,
       overrideEditors: false,
