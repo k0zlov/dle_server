@@ -148,16 +148,6 @@ class DleManageRoute extends Route {
     );
   }
 
-  Endpoint get listenDleUpdates {
-    return Endpoint.get(
-      path: 'listen',
-      authRequired: true,
-      middlewares: [authMiddleware],
-      query: [Field<String>('token')],
-      handler: socketController.listenDleUpdates,
-    );
-  }
-
   Endpoint get createCharacter {
     return Endpoint.post(
       path: '<id>/characters',

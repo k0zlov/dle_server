@@ -6,7 +6,7 @@ import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.da
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/character/character.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle/characters_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -68,7 +68,13 @@ class RemoveCharacterUseCase implements UseCase<Dle, RemoveCharacterParams> {
       overrideEditors: false,
     );
 
-    eventBus.publish(DleUpdatedEvent(dle: updatedDle));
+    eventBus.publish(
+      CharactersUpdatedEvent(
+        dle: updatedDle,
+        isDeletionUpdate: true,
+        changedCharacters: [character],
+      ),
+    );
 
     return updatedDle;
   }

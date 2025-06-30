@@ -9,7 +9,7 @@ import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/selectable_value/selectable_value.dart';
-import 'package:dle_server/contexts/dle/domain/events/basic_dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/basic_dle/selectable_values_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -100,7 +100,12 @@ class EditSelectableValueUseCase
     );
     await repository.save(newBasicDle);
 
-    eventBus.publish(BasicDleUpdatedEvent(dle: dle, basicDle: newBasicDle));
+    eventBus.publish(
+      SelectableValuesUpdatedEvent(
+        dle: dle,
+        changedSelectableValues: [newSelectableValue],
+      ),
+    );
     return newBasicDle;
   }
 }

@@ -7,7 +7,7 @@ import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_created.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle/dle_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -90,7 +90,7 @@ class CreateDleUseCase implements UseCase<Dle, CreateDleParams> {
       rethrow;
     }
 
-    eventBus.publish(DleCreatedEvent(dle: dle));
+    eventBus.publish(DleUpdatedEvent(dle: dle));
     return dle;
   }
 }

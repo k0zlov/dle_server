@@ -6,7 +6,7 @@ import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.da
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_asset/dle_asset.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle/dle_assets_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/delete_upload_use_case/delete_upload_use_case.dart';
 import 'package:dle_server/kernel/application/use_cases/save_upload_use_case/save_upload_use_case.dart';
@@ -73,7 +73,13 @@ class RemoveAssetUseCase implements UseCase<Dle, RemoveAssetParams> {
       overrideHints: false,
     );
 
-    eventBus.publish(DleUpdatedEvent(dle: newDle));
+    eventBus.publish(
+      DleAssetsUpdatedEvent(
+        dle: newDle,
+        isDeletionUpdate: true,
+        changedAssets: [asset],
+      ),
+    );
     return newDle;
   }
 }

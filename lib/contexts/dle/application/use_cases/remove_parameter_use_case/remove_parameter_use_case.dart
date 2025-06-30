@@ -7,7 +7,8 @@ import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.da
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
-import 'package:dle_server/contexts/dle/domain/events/basic_dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
+import 'package:dle_server/contexts/dle/domain/events/basic_dle/parameters_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -64,20 +65,29 @@ class RemoveParameterUseCase
       throw EditorPermissionsException();
     }
 
-    final bool isParameterFound =
-        basicDle.parameters.firstWhereOrNull(
-          (e) => e.id == params.parameterId,
-        ) !=
-        null;
+    final Parameter? parameter = basicDle.parameters.firstWhereOrNull(
+      (e) => e.id == params.parameterId,
+    );
 
-    if (!isParameterFound) {
+    if (parameter == null) {
       throw ParameterNotFoundException();
     }
 
     final BasicDle newBasicDle = basicDle.removeParameter(params.parameterId);
     await repository.save(newBasicDle);
 
-    eventBus.publish(BasicDleUpdatedEvent(dle: dle, basicDle: newBasicDle));
+    eventBus.publish(
+      ParametersUpdatedEvent(
+        dle: dle,
+        isDeletionUpdate: true,
+        changedParameters: [parameter],
+        changedCharacterParameters: [
+          ...basicDle.characterParameters.where(
+            (e) => e.parameterId == parameter.id,
+          ),
+        ],
+      ),
+    );
     return newBasicDle;
   }
 }

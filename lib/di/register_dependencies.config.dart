@@ -162,6 +162,8 @@ import 'package:dle_server/contexts/profiles/application/use_cases/set_up_profil
 import 'package:dle_server/contexts/profiles/profiles_dependency_container.dart'
     as _i118;
 import 'package:dle_server/di/di_container.dart' as _i432;
+import 'package:dle_server/kernel/adapters/primary/api/controllers/socket_controller.dart'
+    as _i1073;
 import 'package:dle_server/kernel/adapters/primary/api/controllers/uploads_rest_controller.dart'
     as _i426;
 import 'package:dle_server/kernel/adapters/primary/api/exceptions/uploads_exceptions_mapper.dart'
@@ -263,10 +265,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => dependencyContainer.uploadsBaseDirectory,
       instanceName: 'uploadsBaseDirectory',
     );
-    gh.factory<_i434.WebSocketManager>(
-      () => dleDependencyContainer.dleManageWsManager,
-      instanceName: 'dleContext',
-    );
     gh.factory<List<_i1056.IntegrationEventListener<_i839.IntegrationEvent>>>(
       () => dleDependencyContainer.integrationListeners(),
       instanceName: 'dleContext',
@@ -337,6 +335,8 @@ extension GetItInjectableX on _i174.GetIt {
               repository: await getAsync<_i452.DleRepositoryPort>(),
               eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
             ));
+    gh.lazySingleton<_i1073.SocketController>(
+        () => _i1073.SocketController(wsManager: gh<_i434.WebSocketManager>()));
     gh.lazySingletonAsync<_i891.DleInvitationsRepositoryPort>(() async =>
         _i1003.DleInvitationsRepositoryDrift(
             db: await getAsync<_i780.Database>()));
@@ -374,13 +374,6 @@ extension GetItInjectableX on _i174.GetIt {
           mailService: gh<_i44.MailService>(),
           acceptInvitationUrl: gh<String>(instanceName: 'acceptInvitationUrl'),
         ));
-    gh.lazySingletonAsync<_i553.DleManageSocketController>(
-        () async => _i553.DleManageSocketController(
-              mapper: gh<_i862.DleExceptionsMapper>(),
-              wsManager: gh<_i434.WebSocketManager>(instanceName: 'dleContext'),
-              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
-              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
-            )..init());
     gh.lazySingletonAsync<_i677.BasicDleManageSocketController>(
         () async => _i677.BasicDleManageSocketController(
               mapper: gh<_i862.DleExceptionsMapper>(),
@@ -395,6 +388,13 @@ extension GetItInjectableX on _i174.GetIt {
                   await getAsync<_i765.EmailCodesRepositoryPort>(),
               mailService: gh<_i44.MailService>(),
             ));
+    gh.lazySingletonAsync<_i553.DleManageSocketController>(
+        () async => _i553.DleManageSocketController(
+              mapper: gh<_i862.DleExceptionsMapper>(),
+              wsManager: gh<_i434.WebSocketManager>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
+            )..init());
     gh.lazySingletonAsync<_i522.GetBasicDleUseCase>(
         () async => _i522.GetBasicDleUseCase(
               repository: await getAsync<_i309.BasicDleRepositoryPort>(),

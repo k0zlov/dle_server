@@ -9,7 +9,7 @@ import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart
 import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
-import 'package:dle_server/contexts/dle/domain/events/basic_dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/basic_dle/character_parameters_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -95,7 +95,12 @@ class EditCharacterParameterUseCase
     final BasicDle newBasicDle = basicDle.editCharacterParameter(newCp);
     await repository.save(newBasicDle);
 
-    eventBus.publish(BasicDleUpdatedEvent(dle: dle, basicDle: newBasicDle));
+    eventBus.publish(
+      CharacterParametersUpdatedEvent(
+        dle: dle,
+        changedCharacterParameters: [newCp],
+      ),
+    );
     return newBasicDle;
   }
 }

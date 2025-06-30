@@ -8,7 +8,7 @@ import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
-import 'package:dle_server/contexts/dle/domain/events/basic_dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/basic_dle/parameters_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -50,7 +50,9 @@ class EditParameterUseCase implements UseCase<BasicDle, EditParameterParams> {
 
   @override
   Future<BasicDle> call(EditParameterParams params) async {
-    final BasicDle? basicDle = await repository.find(basicDleId: params.basicDleId);
+    final BasicDle? basicDle = await repository.find(
+      basicDleId: params.basicDleId,
+    );
 
     if (basicDle == null) {
       throw DleNotFoundException();
@@ -88,7 +90,17 @@ class EditParameterUseCase implements UseCase<BasicDle, EditParameterParams> {
     final BasicDle newBasicDle = basicDle.editParameter(newParameter);
     await repository.save(newBasicDle);
 
-    eventBus.publish(BasicDleUpdatedEvent(dle: dle, basicDle: newBasicDle));
+    eventBus.publish(
+      ParametersUpdatedEvent(
+        dle: dle,
+        changedParameters: [newParameter],
+        changedCharacterParameters: [
+          ...newBasicDle.characterParameters.where(
+            (e) => e.parameterId == newParameter.id,
+          ),
+        ],
+      ),
+    );
     return newBasicDle;
   }
 }

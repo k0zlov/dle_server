@@ -8,7 +8,7 @@ import 'package:dle_server/contexts/dle/domain/entities/character/character.dart
 import 'package:dle_server/contexts/dle/domain/entities/character_hint/character_hint.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/hint/hint.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle/character_hint_updated.dart';
 import 'package:dle_server/contexts/dle/domain/value_objects/hint_value/hint_value.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -78,6 +78,8 @@ class ManageCharacterHintUseCase
 
     Dle updatedDle = dle;
 
+    bool isDeletionUpdate = false;
+
     if (params.value != null && characterHint == null) {
       hint.checkValue(params.value);
 
@@ -98,6 +100,7 @@ class ManageCharacterHintUseCase
       updatedDle = updatedDle.editCharacterHint(characterHint);
     } else if (params.value == null && characterHint != null) {
       updatedDle = updatedDle.removeCharacterHint(characterHint.id);
+      isDeletionUpdate = true;
     } else {
       throw CharacterHintNotFoundException();
     }
@@ -109,7 +112,13 @@ class ManageCharacterHintUseCase
       overrideCharacters: false,
     );
 
-    eventBus.publish(DleUpdatedEvent(dle: updatedDle));
+    eventBus.publish(
+      CharacterHintUpdatedEvent(
+        dle: updatedDle,
+        isDeletionUpdate: isDeletionUpdate,
+        changedCharacterHints: [characterHint],
+      ),
+    );
     return updatedDle;
   }
 }

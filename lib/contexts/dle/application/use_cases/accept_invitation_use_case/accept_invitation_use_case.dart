@@ -8,7 +8,7 @@ import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle_invitation/dle_invitation.dart';
-import 'package:dle_server/contexts/dle/domain/events/dle_updated.dart';
+import 'package:dle_server/contexts/dle/domain/events/dle/dle_editors_updated.dart';
 import 'package:dle_server/contexts/dle/domain/exceptions/dle_exceptions.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -90,8 +90,9 @@ class AcceptInvitationUseCase implements UseCase<Dle, AcceptInvitationParams> {
     final DleInvitation acceptedInvitation = invitation.accept();
     await invitationsRepository.save(acceptedInvitation);
 
-    eventBus.publish(DleUpdatedEvent(dle: dleWithEditor));
-
+    eventBus.publish(
+      DleEditorsUpdatedEvent(dle: dleWithEditor, changedEditors: [editor]),
+    );
     return dleWithEditor;
   }
 }
