@@ -5,10 +5,8 @@ import 'package:dle_server/contexts/dle/application/ports/basic_dle_repository_p
 import 'package:dle_server/contexts/dle/application/ports/dle_repository_port.dart';
 import 'package:dle_server/contexts/dle/dle_dependency_container.dart';
 import 'package:dle_server/contexts/dle/domain/entities/basic_dle/basic_dle.dart';
-import 'package:dle_server/contexts/dle/domain/entities/character_parameter/character_parameter.dart';
 import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
 import 'package:dle_server/contexts/dle/domain/entities/parameter/parameter.dart';
-import 'package:dle_server/contexts/dle/domain/events/basic_dle/character_parameters_updated.dart';
 import 'package:dle_server/contexts/dle/domain/events/basic_dle/parameters_updated.dart';
 import 'package:dle_server/kernel/application/ports/event_bus.dart';
 import 'package:dle_server/kernel/application/use_cases/use_case.dart';
@@ -88,29 +86,14 @@ class CreateParameterUseCase
     final BasicDle newBasicDle = basicDle.addParameter(parameter);
     await repository.save(newBasicDle);
 
-    final Set<String> remainingCpIds =
-        newBasicDle.characterParameters.map((e) => e.id).toSet();
-
-    final List<CharacterParameter> cpToRemove =
-        basicDle.characterParameters
-            .where((e) => !remainingCpIds.contains(e.id))
-            .toList();
-
-    eventBus
-      ..publish(
-        ParametersUpdatedEvent(
-          dle: dle,
-          changedParameters: [parameter],
-          changedCharacterParameters: [],
-        ),
-      )
-      ..publish(
-        CharacterParametersUpdatedEvent(
-          dle: dle,
-          isDeletionUpdate: true,
-          changedCharacterParameters: cpToRemove,
-        ),
-      );
+    eventBus.publish(
+      ParametersUpdatedEvent(
+        dle: dle,
+        changedParameters: [parameter],
+        changedCharacterParameters: [],
+        changedSelectableValues: [],
+      ),
+    );
     return newBasicDle;
   }
 }

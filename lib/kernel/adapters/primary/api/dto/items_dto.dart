@@ -1,9 +1,10 @@
 class ItemsDto<T> {
-  const ItemsDto(this.items);
+  const ItemsDto(this.items, {this.itemsName = 'items'});
 
+  final String itemsName;
   final Iterable<T> items;
 
   Map<String, dynamic> toJson() {
-    return {'items': items.toList()};
+    return {itemsName: items.toList()};
   }
 }

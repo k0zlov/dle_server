@@ -45,8 +45,9 @@ class WebSocketManager {
 
         try {
           final dynamic decodedData = jsonDecode(data as String);
-          decodedData as List<String>;
-          events = decodedData.toSet();
+          decodedData as List;
+
+          events = decodedData.cast<String>().toSet();
         } catch (e) {
           connection.channel.sink.addError('Could not parse events list.');
           return;
@@ -86,7 +87,7 @@ class WebSocketManager {
     userConnections.remove(userId); // Remove the user from the map
   }
 
-  void send<T>({required String userId, required SocketMessage<T> message}) {
+  void send({required String userId, required SocketMessage message}) {
     if (userConnections[userId]?.isEmpty ?? true) return;
 
     final String event = message.event;

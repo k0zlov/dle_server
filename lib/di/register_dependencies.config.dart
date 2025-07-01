@@ -374,13 +374,6 @@ extension GetItInjectableX on _i174.GetIt {
           mailService: gh<_i44.MailService>(),
           acceptInvitationUrl: gh<String>(instanceName: 'acceptInvitationUrl'),
         ));
-    gh.lazySingletonAsync<_i677.BasicDleManageSocketController>(
-        () async => _i677.BasicDleManageSocketController(
-              mapper: gh<_i862.DleExceptionsMapper>(),
-              wsManager: gh<_i434.WebSocketManager>(instanceName: 'dleContext'),
-              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
-              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
-            )..init());
     gh.lazySingletonAsync<_i546.SendEmailCodeUseCase>(
         () async => _i546.SendEmailCodeUseCase(
               repository: await getAsync<_i221.UsersRepositoryPort>(),
@@ -388,13 +381,6 @@ extension GetItInjectableX on _i174.GetIt {
                   await getAsync<_i765.EmailCodesRepositoryPort>(),
               mailService: gh<_i44.MailService>(),
             ));
-    gh.lazySingletonAsync<_i553.DleManageSocketController>(
-        () async => _i553.DleManageSocketController(
-              mapper: gh<_i862.DleExceptionsMapper>(),
-              wsManager: gh<_i434.WebSocketManager>(),
-              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
-              getUserDleUseCase: await getAsync<_i571.GetUserDleUseCase>(),
-            )..init());
     gh.lazySingletonAsync<_i522.GetBasicDleUseCase>(
         () async => _i522.GetBasicDleUseCase(
               repository: await getAsync<_i309.BasicDleRepositoryPort>(),
@@ -454,6 +440,16 @@ extension GetItInjectableX on _i174.GetIt {
               emailCodesRepository:
                   await getAsync<_i765.EmailCodesRepositoryPort>(),
             ));
+    gh.singleton<_i553.DleManageSocketController>(
+        () => _i553.DleManageSocketController(
+              wsManager: gh<_i434.WebSocketManager>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            )..init());
+    gh.singleton<_i677.BasicDleManageSocketController>(
+        () => _i677.BasicDleManageSocketController(
+              wsManager: gh<_i434.WebSocketManager>(),
+              eventBus: gh<_i287.DomainEventBus>(instanceName: 'dleContext'),
+            )..init());
     gh.lazySingletonAsync<_i363.EditParameterUseCase>(
         () async => _i363.EditParameterUseCase(
               repository: await getAsync<_i309.BasicDleRepositoryPort>(),

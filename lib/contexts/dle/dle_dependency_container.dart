@@ -4,7 +4,6 @@ import 'package:dle_server/kernel/infrastructure/events/event_listener.dart';
 import 'package:injectable/injectable.dart';
 
 const dleContext = Named('dleContext');
-const dleManage = Named('dleContext');
 
 @module
 abstract class DleDependencyContainer {

@@ -1,7 +1,6 @@
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/assets_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/characters_rest_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_rest_controller.dart';
-import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/dle_manage_socket_controller.dart';
 import 'package:dle_server/contexts/dle/adapters/primary/api/controllers/hints_rest_controller.dart';
 import 'package:dle_server/kernel/adapters/primary/api/middlewares/auth_middleware.dart';
 import 'package:dle_server/kernel/infrastructure/validators/validators.dart';
@@ -13,7 +12,6 @@ class DleManageRoute extends Route {
   DleManageRoute({
     required this.controller,
     required this.authMiddleware,
-    required this.socketController,
     required this.charactersController,
     required this.hintsController,
     required this.assetsRestController,
@@ -21,7 +19,6 @@ class DleManageRoute extends Route {
 
   final DleManageRestController controller;
   final AuthMiddleware authMiddleware;
-  final DleManageSocketController socketController;
   final CharactersRestController charactersController;
   final HintsRestController hintsController;
   final AssetsRestController assetsRestController;

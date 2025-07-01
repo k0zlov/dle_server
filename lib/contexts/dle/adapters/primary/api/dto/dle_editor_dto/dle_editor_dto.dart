@@ -1,4 +1,4 @@
-import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
+import 'package:dle_server/contexts/dle/domain/entities/dle_editor/dle_editor.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dle_editor_dto.freezed.dart';
@@ -16,8 +16,8 @@ class DleEditorDto with _$DleEditorDto {
     required DateTime createdAt,
   }) = _DleEditorDto;
 
-  factory DleEditorDto.fromEntity(Dle dle) {
-    return DleEditorDto.fromJson(dle.toMap());
+  factory DleEditorDto.fromEntity(DleEditor editor) {
+    return DleEditorDto.fromJson(editor.toMap());
   }
 
   factory DleEditorDto.fromJson(Map<String, dynamic> json) =>

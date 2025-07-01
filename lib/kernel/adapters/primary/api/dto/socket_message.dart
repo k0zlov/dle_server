@@ -1,6 +1,6 @@
 enum SocketEventAction { delete, update }
 
-class SocketMessage<T> {
+class SocketMessage {
   const SocketMessage({
     required this.event,
     required this.action,
@@ -9,9 +9,9 @@ class SocketMessage<T> {
 
   final String event;
   final SocketEventAction action;
-  final List<T> data;
+  final dynamic data;
 
   Map<String, dynamic> toJson() {
-    return {'event': event, 'action': action, 'data': data};
+    return {'event': event, 'action': action.name, 'data': data};
   }
 }

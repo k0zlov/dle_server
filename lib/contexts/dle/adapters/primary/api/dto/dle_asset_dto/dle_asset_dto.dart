@@ -1,4 +1,4 @@
-import 'package:dle_server/contexts/dle/domain/entities/dle/dle.dart';
+import 'package:dle_server/contexts/dle/domain/entities/dle_asset/dle_asset.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dle_asset_dto.freezed.dart';
@@ -17,8 +17,8 @@ class DleAssetDto with _$DleAssetDto {
     required DateTime createdAt,
   }) = _DleAssetDto;
 
-  factory DleAssetDto.fromEntity(Dle dle) {
-    return DleAssetDto.fromJson(dle.toMap());
+  factory DleAssetDto.fromEntity(DleAsset asset) {
+    return DleAssetDto.fromJson(asset.toMap());
   }
 
   factory DleAssetDto.fromJson(Map<String, dynamic> json) =>

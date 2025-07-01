@@ -12,7 +12,7 @@ class SocketRoute extends Route {
 
   Endpoint get connect {
     return Endpoint.get(
-      path: 'socket/connect',
+      path: 'connect',
       authRequired: true,
       middlewares: [authMiddleware],
       query: [Field<String>('token')],

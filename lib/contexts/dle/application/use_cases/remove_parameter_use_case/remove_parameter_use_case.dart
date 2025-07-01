@@ -81,6 +81,11 @@ class RemoveParameterUseCase
         dle: dle,
         isDeletionUpdate: true,
         changedParameters: [parameter],
+        changedSelectableValues: [
+          ...basicDle.selectableValues.where(
+            (e) => e.parameterId == parameter.id,
+          ),
+        ],
         changedCharacterParameters: [
           ...basicDle.characterParameters.where(
             (e) => e.parameterId == parameter.id,

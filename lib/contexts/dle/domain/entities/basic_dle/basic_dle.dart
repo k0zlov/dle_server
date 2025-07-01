@@ -77,6 +77,8 @@ class BasicDle extends Entity with BasicDleMappable {
   BasicDle removeParameter(String parameterId) {
     return copyWith(
       parameters: parameters.where((e) => e.id != parameterId).toList(),
+      selectableValues:
+          selectableValues.where((e) => e.parameterId != parameterId).toList(),
       characterParameters:
           characterParameters
               .where((e) => e.parameterId != parameterId)
